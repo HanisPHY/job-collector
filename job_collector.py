@@ -8,6 +8,7 @@ import re
 import csv
 import time
 import hashlib
+from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 from urllib.parse import urlparse
@@ -53,6 +54,69 @@ class JobPosting:
     sponsorship_status: str = ""
     company_type: str = ""
     unique_id: str = ""
+    date_posted: str = ""
+    date_recorded: str = ""
+
+
+def format_datetime_with_hour(dt_value) -> str:
+    """
+    Format datetime to 'YYYY-MM-DD HH:MM' format (more readable with dashes and minutes).
+    
+    Args:
+        dt_value: datetime object, date object, or string
+        
+    Returns:
+        Formatted string in 'YYYY-MM-DD HH:MM' format, or empty string if invalid
+    """
+    if dt_value is None:
+        return ''
+    
+    try:
+        # Handle pandas datetime
+        if pd is not None and pd.notna(dt_value):
+            if hasattr(dt_value, 'strftime'):
+                # datetime object - use hour and minute
+                return dt_value.strftime('%Y-%m-%d %H:%M')
+            elif hasattr(dt_value, 'date'):
+                # datetime with date() method - if it's a date object, use 00:00
+                if hasattr(dt_value, 'hour'):
+                    return dt_value.strftime('%Y-%m-%d %H:%M')
+                else:
+                    return dt_value.date().strftime('%Y-%m-%d') + ' 00:00'
+        else:
+            # Check if it's a datetime object
+            if hasattr(dt_value, 'strftime'):
+                if hasattr(dt_value, 'hour'):
+                    return dt_value.strftime('%Y-%m-%d %H:%M')
+                else:
+                    return dt_value.strftime('%Y-%m-%d') + ' 00:00'
+            elif hasattr(dt_value, 'date'):
+                return dt_value.date().strftime('%Y-%m-%d') + ' 00:00'
+            elif isinstance(dt_value, str):
+                # Try to parse string date
+                dt_value = dt_value.strip()
+                if dt_value and dt_value.lower() not in ['none', 'nan', 'nat', '']:
+                    # Try common date formats
+                    for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y.%m.%d %H:%M', '%Y.%m.%d %H', '%Y.%m.%d']:
+                        try:
+                            parsed = datetime.strptime(dt_value, fmt)
+                            return parsed.strftime('%Y-%m-%d %H:%M')
+                        except ValueError:
+                            continue
+    except Exception:
+        pass
+    
+    return ''
+
+
+def get_current_datetime_formatted() -> str:
+    """
+    Get current datetime formatted as 'YYYY-MM-DD HH:MM' (more readable format).
+    
+    Returns:
+        Current datetime in 'YYYY-MM-DD HH:MM' format
+    """
+    return datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
 def generate_job_id(job_link: str) -> str:
@@ -146,6 +210,33 @@ class LinkedInCollector:
                     company_name = str(row.get('company', '')) or str(row.get('company_name', ''))
                     job_description = str(row.get('description', '')) or str(row.get('job_description', ''))
                     
+                    # Extract date posted - try common field names and format with hours
+                    date_posted = ''
+                    # Try to get date_posted field (JobSpy uses this field name)
+                    date_value = row.get('date_posted')
+                    
+                    # Format date_posted with hours if available
+                    if date_value is not None:
+                        date_posted = format_datetime_with_hour(date_value)
+                    
+                    # If still empty, try alternative field names
+                    if not date_posted:
+                        for alt_field in ['posted_date', 'date', 'posted', 'posted_at', 'created_at']:
+                            alt_value = row.get(alt_field)
+                            if alt_value is not None:
+                                date_posted = format_datetime_with_hour(alt_value)
+                                if date_posted:
+                                    break
+                    
+                    # Note: If date_posted is still empty, it means JobSpy/LinkedIn didn't provide the date.
+                    # This is a known limitation: LinkedIn often shows relative dates ("3 days ago") in HTML
+                    # instead of exact posting dates. The actual date may exist in LinkedIn's internal API
+                    # (originalListedAt field), but python-jobspy doesn't access it. The date_posted field
+                    # will remain empty in these cases, which is expected behavior.
+                    
+                    # Get current datetime for date_recorded (when this job was collected)
+                    date_recorded = get_current_datetime_formatted()
+                    
                     # Generate unique ID
                     unique_id = generate_job_id(job_link)
                     
@@ -154,7 +245,9 @@ class LinkedInCollector:
                         job_link=job_link,
                         company_name=company_name,
                         job_description=job_description,
-                        unique_id=unique_id
+                        unique_id=unique_id,
+                        date_posted=date_posted,
+                        date_recorded=date_recorded
                     ))
                 
                 print(f"Successfully collected {len(jobs)} jobs using JobSpy")
@@ -622,7 +715,9 @@ class JobClassificationPipeline:
                                 job_description=row.get('job_description', ''),
                                 sponsorship_status=row.get('sponsorship_status', ''),
                                 company_type=row.get('company_type', ''),
-                                unique_id=unique_id
+                                unique_id=unique_id,
+                                date_posted=str(row.get('date_posted', '')) if pd.notna(row.get('date_posted', '')) else '',
+                                date_recorded=str(row.get('date_recorded', '')) if pd.notna(row.get('date_recorded', '')) else ''
                             )
                 else:
                     # Use standard CSV reader
@@ -639,7 +734,9 @@ class JobClassificationPipeline:
                                     job_description=row.get('job_description', ''),
                                     sponsorship_status=row.get('sponsorship_status', ''),
                                     company_type=row.get('company_type', ''),
-                                    unique_id=unique_id
+                                    unique_id=unique_id,
+                                    date_posted=row.get('date_posted', ''),
+                                    date_recorded=row.get('date_recorded', '')
                                 )
             except Exception as e:
                 print(f"Warning: Could not read existing file {output_file}: {e}")
@@ -681,7 +778,9 @@ class JobClassificationPipeline:
                                 job_description=row.get('job_description', ''),
                                 sponsorship_status=row.get('sponsorship_status', ''),
                                 company_type=row.get('company_type', ''),
-                                unique_id=str(row.get('unique_id', ''))
+                                unique_id=str(row.get('unique_id', '')),
+                                date_posted=str(row.get('date_posted', '')) if pd.notna(row.get('date_posted', '')) else '',
+                                date_recorded=str(row.get('date_recorded', '')) if pd.notna(row.get('date_recorded', '')) else ''
                             ))
                 else:
                     # Use standard CSV reader
@@ -697,7 +796,9 @@ class JobClassificationPipeline:
                                     job_description=row.get('job_description', ''),
                                     sponsorship_status=row.get('sponsorship_status', ''),
                                     company_type=row.get('company_type', ''),
-                                    unique_id=row['unique_id']
+                                    unique_id=row['unique_id'],
+                                    date_posted=row.get('date_posted', ''),
+                                    date_recorded=row.get('date_recorded', '')
                                 ))
             except Exception as e:
                 print(f"Warning: Could not read existing file {output_file}: {e}")
@@ -713,12 +814,12 @@ class JobClassificationPipeline:
             print(f"Total jobs in file: {len(existing_jobs)}")
             return
         
-        # Combine existing and new jobs
-        all_jobs = existing_jobs + new_jobs
+        # Combine new jobs at the beginning, then existing jobs
+        all_jobs = new_jobs + existing_jobs
         
         # Prepare data for CSV
         fieldnames = ['unique_id', 'job_title', 'job_link', 'company_name', 
-                     'sponsorship_status', 'company_type', 'category']
+                     'sponsorship_status', 'company_type', 'date_posted', 'date_recorded', 'category']
         
         if pd is not None:
             # Use pandas for cleaner CSV writing
@@ -731,12 +832,13 @@ class JobClassificationPipeline:
                     'company_name': job.company_name,
                     'sponsorship_status': job.sponsorship_status,
                     'company_type': job.company_type,
+                    'date_posted': job.date_posted,
+                    'date_recorded': job.date_recorded,
                     'category': f"{job.sponsorship_status} & {job.company_type}"
                 })
             
             df = pd.DataFrame(data)
-            # Sort by category for logical grouping
-            df = df.sort_values(['sponsorship_status', 'company_type'])
+            # Keep existing jobs in their original order, append new jobs at the end
             df.to_csv(output_file, index=False, encoding='utf-8-sig')
         else:
             # Fallback to standard CSV writer
@@ -744,10 +846,8 @@ class JobClassificationPipeline:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 
-                # Sort jobs by category
-                sorted_jobs = sorted(all_jobs, key=lambda x: (x.sponsorship_status, x.company_type))
-                
-                for job in sorted_jobs:
+                # Keep existing jobs in their original order, append new jobs at the end
+                for job in all_jobs:
                     writer.writerow({
                         'unique_id': job.unique_id,
                         'job_title': job.job_title,
@@ -755,6 +855,8 @@ class JobClassificationPipeline:
                         'company_name': job.company_name,
                         'sponsorship_status': job.sponsorship_status,
                         'company_type': job.company_type,
+                        'date_posted': job.date_posted,
+                        'date_recorded': job.date_recorded,
                         'category': f"{job.sponsorship_status} & {job.company_type}"
                     })
         

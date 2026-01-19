@@ -1,0 +1,20 @@
+# Core dependencies
+pandas>=2.0.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Web scraping
+selenium>=4.15.0
+webdriver-manager>=4.0.0
+
+# Job scraping library (recommended - more reliable than Selenium)
+# Note: Package name is python-jobspy, not jobspy
+python-jobspy>=1.0.0
+
+# LLM support (optional)
+openai>=1.0.0
+
+# Additional utilities
+python-dotenv>=1.0.0
+

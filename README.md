@@ -6,7 +6,7 @@ A Python-based system for collecting job postings from LinkedIn and classifying 
 
 - **Data Collection**: Attempts LinkedIn Jobs API first, falls back to web scraping
 - **Visa Sponsorship Classification**: Analyzes job descriptions for sponsorship-related keywords
-- **Company Type Classification**: Extensible approach using known Big Tech list and optional LLM classification
+- **Company Type Classification**: Dynamic database approach loading from multiple sources (GitHub, Fortune 500, unicorn lists) with optional LLM classification
 - **CSV Output**: Generates structured CSV with all required columns and category grouping
 
 ## Setup
@@ -147,21 +147,49 @@ The system searches for these keywords in job descriptions:
 - `immigration`, `green card`, `permanent residency`
 
 If **at least one** keyword is found → classified as **Sponsor**
+
+### Company Type Classification
+
+The system uses a **dynamic company database** that loads from multiple sources:
+
+1. **Built-in Big Tech List**: Includes major tech companies (Google, Microsoft, Apple, Amazon, Meta, etc.)
+2. **GitHub Tech Companies**: Automatically fetches from public GitHub repository
+3. **Fortune 500 Companies**: Loads from local `fortune_500_companies.csv` file (if available)
+4. **Unicorn Companies**: Loads from local `unicorn_companies.csv` file (if available)
+5. **SEC EDGAR API**: Can optionally fetch publicly traded companies (commented out by default due to size)
+
+The database is cached locally in `company_database_cache.json` and refreshes every 30 days automatically.
+
+#### Adding Company Lists
+
+To enhance the database, you can download and add CSV files:
+
+**Fortune 500 Companies:**
+- Download from: https://www.gigasheet.com/sample-data/fortune-500-companies
+- Save as `fortune_500_companies.csv` in the project directory
+- CSV should have a column named `company`, `name`, `Company`, or `Name`
+
+**Unicorn Companies:**
+- Download from: https://www.kaggle.com/datasets/ritwikb3/unicorn-companies
+- Save as `unicorn_companies.csv` in the project directory
+- CSV should have a column named `company`, `name`, `Company`, or `Name`
+
+The system will automatically load these files on the next run.
+
+If a company is not found in the database, the system can optionally use LLM classification (if enabled and API key provided).
 Otherwise → classified as **Not (Maybe Not) Sponsor**
 
 ### Company Type
 
 Companies are classified as **独角兽/上市公司/Big Tech** if they are:
 - Known Big Tech companies (Google, Microsoft, Apple, Amazon, Meta, etc.)
-- Unicorn startups (private valuation ≥ $1B) - detected via LLM if enabled
-- Publicly listed companies - detected via LLM if enabled
+- Unicorn startups (private valuation ≥ $1B)
+- Publicly listed companies
+- Large, established, and prestigious companies or institutions
 
 Otherwise → classified as **Others**
 
-The system uses:
-1. Hard-coded list of known Big Tech companies
-2. Optional LLM classification for unknown companies
-3. Extensible architecture for future integration with external data sources
+The system uses a dynamic database that loads from multiple sources (see Company Type Classification section above).
 
 ## Limitations and Notes
 

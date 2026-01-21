@@ -6,12 +6,19 @@ Collects job postings from LinkedIn and classifies them by visa sponsorship and 
 import os
 import re
 import csv
+import json
 import time
 import hashlib
 from datetime import datetime
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Set
 from dataclasses import dataclass
 from urllib.parse import urlparse
+
+try:
+    import requests
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
 
 # Load environment variables from .env file
 try:
@@ -202,6 +209,9 @@ class LinkedInCollector:
             
             if jobs_df is not None and not jobs_df.empty:
                 print(f"JobSpy found {len(jobs_df)} jobs")
+                
+                # save jobs_df to csv
+                jobs_df.to_csv('jobs_df.csv', index=False)
                 
                 # Convert DataFrame rows to JobPosting objects
                 for _, row in jobs_df.iterrows():
@@ -396,18 +406,261 @@ class LLMCostTracker:
         self.model_used = None
 
 
-class CompanyTypeClassifier:
-    """Classifies companies into categories using extensible approach."""
+class CompanyDatabase:
+    """Dynamic company database that loads from multiple sources."""
     
-    # Well-known Big Tech companies
-    BIG_TECH_COMPANIES = {
+    CACHE_FILE = "company_database_cache.json"
+    CACHE_EXPIRY_DAYS = 30  # Refresh cache every 30 days
+    
+    # Well-known Big Tech companies (fallback if database fails to load)
+    FALLBACK_COMPANIES = {
         'google', 'alphabet', 'microsoft', 'apple', 'amazon', 'meta', 'facebook',
         'netflix', 'nvidia', 'oracle', 'salesforce', 'adobe', 'intel', 'ibm',
         'cisco', 'qualcomm', 'paypal', 'uber', 'lyft', 'airbnb', 'tesla',
         'twitter', 'x.com', 'snapchat', 'spotify', 'zoom', 'slack', 'dropbox'
     }
     
-    def __init__(self, use_llm: bool = True, openai_key: Optional[str] = None, cost_tracker: Optional[LLMCostTracker] = None):
+    def __init__(self, cache_file: str = None):
+        """
+        Initialize company database.
+        
+        Args:
+            cache_file: Path to cache file (default: company_database_cache.json)
+        """
+        self.cache_file = cache_file or self.CACHE_FILE
+        self.companies: Set[str] = set()
+        self._load_database()
+    
+    def _load_database(self):
+        """Load company database from cache or build it."""
+        # Try to load from cache first
+        if os.path.exists(self.cache_file):
+            try:
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    cache_data = json.load(f)
+                    cache_date = datetime.fromisoformat(cache_data.get('last_updated', '2000-01-01'))
+                    days_old = (datetime.now() - cache_date).days
+                    
+                    if days_old < self.CACHE_EXPIRY_DAYS:
+                        self.companies = set(cache_data.get('companies', []))
+                        print(f"Loaded {len(self.companies)} companies from cache ({days_old} days old)")
+                        return
+                    else:
+                        print(f"Cache expired ({days_old} days old), rebuilding...")
+            except Exception as e:
+                print(f"Error loading cache: {e}, rebuilding...")
+        
+        # Build database from sources
+        self._build_database()
+    
+    def _build_database(self):
+        """Build company database from multiple sources."""
+        print("Building company database from multiple sources...")
+        companies = set()
+        
+        # 1. Add fallback companies
+        companies.update(self.FALLBACK_COMPANIES)
+        
+        # 2. Load from GitHub tech companies CSV (if available)
+        companies.update(self._load_github_tech_companies())
+        
+        # 3. Load Fortune 500 companies (if CSV available)
+        companies.update(self._load_fortune_500())
+        
+        # 4. Load unicorn companies (if CSV available)
+        companies.update(self._load_unicorn_companies())
+        
+        # 5. Fetch public companies from SEC EDGAR (optional, can be slow)
+        # Uncomment if you want to fetch from SEC API
+        # companies.update(self._fetch_sec_companies())
+        
+        self.companies = companies
+        
+        # Save to cache
+        self._save_cache()
+        print(f"Database built with {len(self.companies)} companies")
+    
+    def _load_github_tech_companies(self) -> Set[str]:
+        """Load tech companies from GitHub CSV."""
+        companies = set()
+        url = "https://raw.githubusercontent.com/connor11528/tech-companies-and-startups/master/companies.csv"
+        
+        if not REQUESTS_AVAILABLE:
+            print("  requests library not available, skipping GitHub tech companies")
+            return companies
+        
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                content = response.text
+                reader = csv.DictReader(content.splitlines())
+                for row in reader:
+                    # Try common column names
+                    company_name = row.get('company', '') or row.get('name', '') or row.get('Company', '') or row.get('Name', '')
+                    if company_name:
+                        companies.add(company_name.lower().strip())
+                print(f"  Loaded {len(companies)} companies from GitHub tech companies list")
+        except Exception as e:
+            print(f"  Error loading GitHub tech companies: {e}")
+        
+        return companies
+    
+    def _load_fortune_500(self) -> Set[str]:
+        """Load Fortune 500 companies from local CSV or download."""
+        companies = set()
+        fortune_file = "fortune_500_companies.csv"
+        
+        # Try to load from local file first
+        if os.path.exists(fortune_file):
+            try:
+                with open(fortune_file, 'r', encoding='utf-8') as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        # Try common column names
+                        company_name = (row.get('company', '') or row.get('name', '') or 
+                                       row.get('Company', '') or row.get('Name', '') or
+                                       row.get('Company Name', ''))
+                        if company_name:
+                            companies.add(company_name.lower().strip())
+                print(f"  Loaded {len(companies)} companies from local Fortune 500 file")
+            except Exception as e:
+                print(f"  Error loading local Fortune 500 file: {e}")
+        
+        return companies
+    
+    def _load_unicorn_companies(self) -> Set[str]:
+        """Load unicorn companies from local CSV."""
+        companies = set()
+        unicorn_file = "unicorn_companies.csv"
+        
+        # Try to load from local file
+        if os.path.exists(unicorn_file):
+            try:
+                with open(unicorn_file, 'r', encoding='utf-8') as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        # Try common column names
+                        company_name = (row.get('company', '') or row.get('name', '') or 
+                                       row.get('Company', '') or row.get('Name', '') or
+                                       row.get('Company Name', ''))
+                        if company_name:
+                            companies.add(company_name.lower().strip())
+                print(f"  Loaded {len(companies)} companies from local unicorn file")
+            except Exception as e:
+                print(f"  Error loading local unicorn file: {e}")
+        
+        return companies
+    
+    def _fetch_sec_companies(self) -> Set[str]:
+        """Fetch public companies from SEC EDGAR API (slow, optional)."""
+        companies = set()
+        
+        if not REQUESTS_AVAILABLE:
+            print("  requests library not available, skipping SEC companies")
+            return companies
+        
+        try:
+            # SEC requires User-Agent header
+            headers = {
+                'User-Agent': 'Job Classifier (contact@example.com)',
+                'Accept': 'application/json'
+            }
+            
+            # Get list of all companies (this is a large file)
+            url = "https://www.sec.gov/files/company_tickers.json"
+            response = requests.get(url, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                for ticker_info in data.values():
+                    company_name = ticker_info.get('title', '')
+                    if company_name:
+                        companies.add(company_name.lower().strip())
+                print(f"  Loaded {len(companies)} companies from SEC EDGAR")
+        except Exception as e:
+            print(f"  Error fetching SEC companies: {e}")
+        
+        return companies
+    
+    def _save_cache(self):
+        """Save company database to cache file."""
+        try:
+            cache_data = {
+                'last_updated': datetime.now().isoformat(),
+                'companies': list(self.companies)
+            }
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"Error saving cache: {e}")
+    
+    def is_big_tech_or_public(self, company_name: str) -> bool:
+        """
+        Check if company name matches any company in the database.
+        Uses case-insensitive matching with improved logic.
+        
+        Args:
+            company_name: Company name to check
+            
+        Returns:
+            True if company matches, False otherwise
+        """
+        if not company_name:
+            return False
+        
+        # Normalize input: lowercase and strip
+        company_lower = company_name.lower().strip()
+        if not company_lower:
+            return False
+        
+        # Normalize: remove common suffixes/prefixes for better matching
+        # Remove common corporate suffixes
+        normalized_input = company_lower
+        for suffix in [' inc', ' inc.', ' llc', ' llc.', ' corp', ' corp.', 
+                       ' corporation', ' ltd', ' ltd.', ' limited', ' company', ' co', ' co.']:
+            if normalized_input.endswith(suffix):
+                normalized_input = normalized_input[:-len(suffix)].strip()
+        
+        # Check exact match first (fastest)
+        if company_lower in self.companies or normalized_input in self.companies:
+            return True
+        
+        # Check if any database company is a substring of the input
+        # This handles cases like "Microsoft Corporation" matching "microsoft"
+        for db_company in self.companies:
+            # Normalize database company name too
+            normalized_db = db_company
+            for suffix in [' inc', ' inc.', ' llc', ' llc.', ' corp', ' corp.', 
+                           ' corporation', ' ltd', ' ltd.', ' limited', ' company', ' co', ' co.']:
+                if normalized_db.endswith(suffix):
+                    normalized_db = normalized_db[:-len(suffix)].strip()
+            
+            # Check if database company (or normalized) is in input
+            if (db_company in company_lower or 
+                normalized_db in company_lower or
+                normalized_db in normalized_input):
+                return True
+            
+            # Check if input (or normalized) is in database company (for exact matches)
+            # Only if input is substantial (at least 3 chars) to avoid false positives
+            if len(company_lower) >= 3:
+                if (company_lower in db_company or 
+                    normalized_input in db_company or
+                    normalized_input in normalized_db):
+                    return True
+        
+        return False
+    
+    def refresh(self):
+        """Force refresh of the database."""
+        print("Refreshing company database...")
+        self._build_database()
+
+
+class CompanyTypeClassifier:
+    """Classifies companies into categories using extensible approach."""
+    
+    def __init__(self, use_llm: bool = True, openai_key: Optional[str] = None, cost_tracker: Optional[LLMCostTracker] = None, company_database: Optional[CompanyDatabase] = None):
         """
         Initialize company type classifier.
         
@@ -415,10 +668,12 @@ class CompanyTypeClassifier:
             use_llm: Whether to use LLM for classification when needed
             openai_key: OpenAI API key for LLM classification
             cost_tracker: Optional cost tracker for API usage
+            company_database: Optional company database instance (creates new one if not provided)
         """
         self.use_llm = use_llm and OPENAI_AVAILABLE
         self.openai_key = openai_key or os.getenv('OPENAI_API_KEY')
         self.cost_tracker = cost_tracker
+        self.company_database = company_database or CompanyDatabase()
         if self.use_llm and self.openai_key:
             openai.api_key = self.openai_key
     
@@ -433,27 +688,28 @@ class CompanyTypeClassifier:
         Returns:
             '独角兽/上市公司/Big Tech' or 'Others'
         """
-        company_lower = company_name.lower().strip()
+        if not company_name:
+            return "Others"
         
-        # Check if it's a known Big Tech company
-        for big_tech in self.BIG_TECH_COMPANIES:
-            if big_tech in company_lower:
-                return "独角兽/上市公司/Big Tech"
+        # Step 1: Check if it's in the company database (Big Tech, public companies, unicorns)
+        # This uses case-insensitive matching
+        if self.company_database.is_big_tech_or_public(company_name):
+            return "独角兽/上市公司/Big Tech"
         
-        # Try to determine if it's a unicorn or public company using LLM
+        # Step 2: Company not found in database - use LLM as fallback
+        # Only use LLM if it's enabled and API key is available
         if self.use_llm and self.openai_key:
+            print("Use LLM as fallback")
             try:
                 result = self._classify_with_llm(company_name, job_description)
-                print(f"classification result for {company_name}: {result}")
                 if result:
+                    print(f"LLM classification for {company_name}: {result}")
                     return result
             except Exception as e:
                 print(f"LLM classification failed for {company_name}: {e}")
         
-        # Try to check via web search/API (placeholder for external data sources)
-        # This could integrate with Crunchbase API, SEC filings, etc.
-        
-        # Default to Others if cannot determine
+        # Step 3: Default to Others if cannot determine
+        # (Either LLM not enabled, API key missing, or LLM classification failed)
         return "Others"
     
     def _classify_with_llm(self, company_name: str, job_description: str) -> Optional[str]:
@@ -760,6 +1016,7 @@ class JobClassificationPipeline:
         # Read existing jobs if file exists
         existing_ids = set()
         existing_jobs = []
+        applied_values = {}  # Dictionary to store 'applied' values by unique_id
         file_exists = os.path.exists(output_file)
         
         if file_exists:
@@ -771,6 +1028,7 @@ class JobClassificationPipeline:
                         existing_ids = set(existing_df['unique_id'].astype(str))
                         # Convert existing rows back to JobPosting objects for merging
                         for _, row in existing_df.iterrows():
+                            unique_id = str(row.get('unique_id', ''))
                             existing_jobs.append(JobPosting(
                                 job_title=row.get('job_title', ''),
                                 job_link=row.get('job_link', ''),
@@ -778,17 +1036,25 @@ class JobClassificationPipeline:
                                 job_description=row.get('job_description', ''),
                                 sponsorship_status=row.get('sponsorship_status', ''),
                                 company_type=row.get('company_type', ''),
-                                unique_id=str(row.get('unique_id', '')),
+                                unique_id=unique_id,
                                 date_posted=str(row.get('date_posted', '')) if pd.notna(row.get('date_posted', '')) else '',
                                 date_recorded=str(row.get('date_recorded', '')) if pd.notna(row.get('date_recorded', '')) else ''
                             ))
+                            # Store 'applied' value if it exists
+                            if 'applied' in existing_df.columns:
+                                applied_val = row.get('applied', '')
+                                if pd.notna(applied_val):
+                                    applied_values[unique_id] = str(applied_val)
+                                else:
+                                    applied_values[unique_id] = ''
                 else:
                     # Use standard CSV reader
                     with open(output_file, 'r', newline='', encoding='utf-8-sig') as f:
                         reader = csv.DictReader(f)
                         for row in reader:
                             if 'unique_id' in row and row['unique_id']:
-                                existing_ids.add(row['unique_id'])
+                                unique_id = row['unique_id']
+                                existing_ids.add(unique_id)
                                 existing_jobs.append(JobPosting(
                                     job_title=row.get('job_title', ''),
                                     job_link=row.get('job_link', ''),
@@ -796,15 +1062,18 @@ class JobClassificationPipeline:
                                     job_description=row.get('job_description', ''),
                                     sponsorship_status=row.get('sponsorship_status', ''),
                                     company_type=row.get('company_type', ''),
-                                    unique_id=row['unique_id'],
+                                    unique_id=unique_id,
                                     date_posted=row.get('date_posted', ''),
                                     date_recorded=row.get('date_recorded', '')
                                 ))
+                                # Store 'applied' value if it exists
+                                applied_values[unique_id] = row.get('applied', '')
             except Exception as e:
                 print(f"Warning: Could not read existing file {output_file}: {e}")
                 print("Creating new file...")
                 existing_ids = set()
                 existing_jobs = []
+                applied_values = {}
         
         # Filter out jobs that already exist
         new_jobs = [job for job in jobs if job.unique_id not in existing_ids]
@@ -819,12 +1088,14 @@ class JobClassificationPipeline:
         
         # Prepare data for CSV
         fieldnames = ['unique_id', 'job_title', 'job_link', 'company_name', 
-                     'sponsorship_status', 'company_type', 'date_posted', 'date_recorded', 'category']
+                     'sponsorship_status', 'company_type', 'date_posted', 'date_recorded', 'category', 'applied']
         
         if pd is not None:
             # Use pandas for cleaner CSV writing
             data = []
             for job in all_jobs:
+                # Get 'applied' value from stored values or use empty string for new jobs
+                applied_value = applied_values.get(job.unique_id, '')
                 data.append({
                     'unique_id': job.unique_id,
                     'job_title': job.job_title,
@@ -834,7 +1105,8 @@ class JobClassificationPipeline:
                     'company_type': job.company_type,
                     'date_posted': job.date_posted,
                     'date_recorded': job.date_recorded,
-                    'category': f"{job.sponsorship_status} & {job.company_type}"
+                    'category': f"{job.sponsorship_status} & {job.company_type}",
+                    'applied': applied_value
                 })
             
             df = pd.DataFrame(data)
@@ -848,6 +1120,8 @@ class JobClassificationPipeline:
                 
                 # Keep existing jobs in their original order, append new jobs at the end
                 for job in all_jobs:
+                    # Get 'applied' value from stored values or use empty string for new jobs
+                    applied_value = applied_values.get(job.unique_id, '')
                     writer.writerow({
                         'unique_id': job.unique_id,
                         'job_title': job.job_title,
@@ -857,7 +1131,8 @@ class JobClassificationPipeline:
                         'company_type': job.company_type,
                         'date_posted': job.date_posted,
                         'date_recorded': job.date_recorded,
-                        'category': f"{job.sponsorship_status} & {job.company_type}"
+                        'category': f"{job.sponsorship_status} & {job.company_type}",
+                        'applied': applied_value
                     })
         
         print(f"\nResults saved to {output_file}")

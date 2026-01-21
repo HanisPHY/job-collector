@@ -677,13 +677,15 @@ class CompanyTypeClassifier:
         if self.use_llm and self.openai_key:
             openai.api_key = self.openai_key
     
-    def classify(self, company_name: str, job_description: str = "") -> str:
+    def classify(self, company_name: str, job_description: str = "", use_llm_immediately: bool = True) -> str:
         """
         Classify company type.
         
         Args:
             company_name: Name of the company
             job_description: Optional job description for context
+            use_llm_immediately: If True, use LLM immediately when not in database.
+                                If False, return "Others" and skip LLM (for batch processing)
             
         Returns:
             '独角兽/上市公司/Big Tech' or 'Others'
@@ -697,8 +699,8 @@ class CompanyTypeClassifier:
             return "独角兽/上市公司/Big Tech"
         
         # Step 2: Company not found in database - use LLM as fallback
-        # Only use LLM if it's enabled and API key is available
-        if self.use_llm and self.openai_key:
+        # Only use LLM if it's enabled, API key is available, and use_llm_immediately is True
+        if use_llm_immediately and self.use_llm and self.openai_key:
             print("Use LLM as fallback")
             try:
                 result = self._classify_with_llm(company_name, job_description)
@@ -709,8 +711,141 @@ class CompanyTypeClassifier:
                 print(f"LLM classification failed for {company_name}: {e}")
         
         # Step 3: Default to Others if cannot determine
-        # (Either LLM not enabled, API key missing, or LLM classification failed)
+        # (Either LLM not enabled, API key missing, LLM classification failed, or batch mode)
         return "Others"
+    
+    def batch_classify_with_llm(self, companies_with_context: List[Tuple[str, str]]) -> Dict[str, str]:
+        """
+        Batch classify multiple companies using LLM in a single API call.
+        
+        Args:
+            companies_with_context: List of tuples (company_name, job_description)
+            
+        Returns:
+            Dictionary mapping company_name to classification result
+        """
+        if not self.use_llm or not self.openai_key or not OPENAI_AVAILABLE:
+            # Return "Others" for all if LLM not available
+            return {company_name: "Others" for company_name, _ in companies_with_context}
+        
+        if not companies_with_context:
+            return {}
+        
+        # Build batch prompt
+        companies_list = []
+        for i, (company_name, job_description) in enumerate(companies_with_context, 1):
+            desc_preview = job_description[:200] if job_description else "N/A"
+            companies_list.append(f"{i}. Company: {company_name}\n   Context: {desc_preview}")
+        
+        companies_text = "\n\n".join(companies_list)
+        
+        prompt = f"""Classify each of the following companies into one of these categories:
+
+1. "独角兽/上市公司/Big Tech" - if the company is ANY of the following:
+   - A unicorn startup (private valuation ≥ $1B)
+   - A publicly listed company
+   - A well-known Big Tech company
+   - A large, established, and prestigious company or institution,
+     even if privately held
+     (e.g., quantitative trading firms, hedge funds, major consulting firms,
+      global financial institutions, or core tech infrastructure companies)
+
+2. "Others" - small startups, early-stage companies, unknown firms, or local businesses
+
+When in doubt, prefer classifying well-known large companies as "独角兽/上市公司/Big Tech".
+
+Companies to classify:
+{companies_text}
+
+Respond with a JSON object mapping each company name to its classification.
+Format: {{"Company Name 1": "独角兽/上市公司/Big Tech", "Company Name 2": "Others", ...}}
+Only include the JSON object, no other text.
+"""
+        
+        model_name = "gpt-3.5-turbo"
+        results = {}
+        
+        try:
+            # Try new API format (openai >= 1.0.0)
+            try:
+                from openai import OpenAI
+                client = OpenAI(api_key=self.openai_key)
+                response = client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": "You are a company classification assistant. Respond with only a valid JSON object mapping company names to classifications."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500,  # Increased for batch responses
+                    temperature=0,
+                    response_format={"type": "json_object"} if hasattr(client.chat.completions.create, '__annotations__') else None
+                )
+                result_text = response.choices[0].message.content.strip()
+                
+                # Track token usage if cost tracker is available
+                if self.cost_tracker:
+                    usage = response.usage
+                    input_tokens = usage.prompt_tokens if hasattr(usage, 'prompt_tokens') else 0
+                    output_tokens = usage.completion_tokens if hasattr(usage, 'completion_tokens') else 0
+                    self.cost_tracker.record_usage(model_name, input_tokens, output_tokens)
+                
+                # Parse JSON response
+                try:
+                    results = json.loads(result_text)
+                    # Validate and normalize results
+                    for company_name, _ in companies_with_context:
+                        if company_name in results:
+                            classification = results[company_name]
+                            if classification not in ["独角兽/上市公司/Big Tech", "Others"]:
+                                results[company_name] = "Others"
+                        else:
+                            # Company not in response, default to Others
+                            results[company_name] = "Others"
+                except json.JSONDecodeError:
+                    print(f"Warning: Failed to parse LLM batch response as JSON. Defaulting to 'Others' for all companies.")
+                    results = {company_name: "Others" for company_name, _ in companies_with_context}
+                    
+            except (ImportError, AttributeError):
+                # Fallback to old API format (openai < 1.0.0)
+                response = openai.ChatCompletion.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": "You are a company classification assistant. Respond with only a valid JSON object mapping company names to classifications."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500,
+                    temperature=0
+                )
+                result_text = response.choices[0].message.content.strip()
+                
+                # Track token usage if cost tracker is available
+                if self.cost_tracker:
+                    usage = response.usage
+                    input_tokens = usage.get('prompt_tokens', 0) if isinstance(usage, dict) else (usage.prompt_tokens if hasattr(usage, 'prompt_tokens') else 0)
+                    output_tokens = usage.get('completion_tokens', 0) if isinstance(usage, dict) else (usage.completion_tokens if hasattr(usage, 'completion_tokens') else 0)
+                    self.cost_tracker.record_usage(model_name, input_tokens, output_tokens)
+                
+                # Parse JSON response
+                try:
+                    results = json.loads(result_text)
+                    # Validate and normalize results
+                    for company_name, _ in companies_with_context:
+                        if company_name in results:
+                            classification = results[company_name]
+                            if classification not in ["独角兽/上市公司/Big Tech", "Others"]:
+                                results[company_name] = "Others"
+                        else:
+                            results[company_name] = "Others"
+                except json.JSONDecodeError:
+                    print(f"Warning: Failed to parse LLM batch response as JSON. Defaulting to 'Others' for all companies.")
+                    results = {company_name: "Others" for company_name, _ in companies_with_context}
+        
+        except Exception as e:
+            print(f"Batch LLM classification error: {e}")
+            # Default to "Others" for all companies on error
+            results = {company_name: "Others" for company_name, _ in companies_with_context}
+        
+        return results
     
     def _classify_with_llm(self, company_name: str, job_description: str) -> Optional[str]:
         """
@@ -891,22 +1026,65 @@ class JobClassificationPipeline:
         # Only classify new jobs
         if new_jobs:
             print("Starting classification for new jobs...\n")
+            
+            # Step 1: Classify sponsorship and check database for company types
+            companies_needing_llm = []  # List of (job_index, company_name, job_description)
+            
             for i, job in enumerate(new_jobs):
                 print(f"Classifying job {i+1}/{len(new_jobs)}: {job.job_title}")
                 
-                # Classify sponsorship
+                # Classify sponsorship (always done individually)
                 job.sponsorship_status = self.sponsorship_classifier.classify(job.job_description)
                 
-                # Classify company type
-                job.company_type = self.company_classifier.classify(job.company_name, job.job_description)
+                # Check company type in database first (without LLM)
+                job.company_type = self.company_classifier.classify(
+                    job.company_name, 
+                    job.job_description, 
+                    use_llm_immediately=False
+                )
+                
+                # If company not found in database and LLM is enabled, collect for batch processing
+                if (job.company_type == "Others" and 
+                    self.company_classifier.use_llm and 
+                    self.company_classifier.openai_key):
+                    companies_needing_llm.append((i, job.company_name, job.job_description))
                 
                 print(f"  -> Sponsorship: {job.sponsorship_status}")
                 # Handle Unicode encoding for Windows console
                 try:
-                    print(f"  -> Company Type: {job.company_type}\n")
+                    print(f"  -> Company Type: {job.company_type}")
+                    if (i, job.company_name, job.job_description) in companies_needing_llm:
+                        print(f"     (Will be classified with LLM in batch)")
                 except UnicodeEncodeError:
                     safe_company_type = job.company_type.encode('ascii', 'ignore').decode('ascii')
-                    print(f"  -> Company Type: {safe_company_type}\n")
+                    print(f"  -> Company Type: {safe_company_type}")
+                print()
+            
+            # Step 2: Batch classify companies that need LLM
+            if companies_needing_llm:
+                print(f"\n{'='*60}")
+                print(f"Batch LLM Classification: {len(companies_needing_llm)} companies")
+                print(f"{'='*60}\n")
+                
+                # Prepare list for batch classification
+                batch_companies = [(company_name, job_description) 
+                                  for _, company_name, job_description in companies_needing_llm]
+                
+                # Perform batch classification
+                batch_results = self.company_classifier.batch_classify_with_llm(batch_companies)
+                
+                # Map results back to jobs
+                for job_idx, company_name, _ in companies_needing_llm:
+                    if company_name in batch_results:
+                        new_jobs[job_idx].company_type = batch_results[company_name]
+                        print(f"LLM classification for {company_name}: {batch_results[company_name]}")
+                    else:
+                        # Fallback if company not in results
+                        new_jobs[job_idx].company_type = "Others"
+                
+                print(f"\n{'='*60}")
+                print("Batch LLM Classification Complete")
+                print(f"{'='*60}\n")
         
         # Combine existing and new jobs
         all_jobs = existing_jobs_found + new_jobs

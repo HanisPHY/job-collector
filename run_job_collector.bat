@@ -14,7 +14,7 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-python main.py --query "software engineer intern" --limit 50 --time-filter 20 --no-llm
+python main.py --query "software engineer intern" --limit 50 --time-filter 20
 REM To disable LLM classification (faster, less accurate), add --no-llm flag above
 
 REM Optional: Log the output to a file

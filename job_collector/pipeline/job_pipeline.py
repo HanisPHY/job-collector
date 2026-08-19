@@ -8,6 +8,7 @@ from typing import List, Optional
 from ..collectors.linkedin import LinkedInCollector
 from ..classifiers.sponsorship import SponsorshipClassifier
 from ..classifiers.company_type import CompanyTypeClassifier
+from ..classifiers.seniority import SeniorityFilter
 from ..tracking.cost_tracker import LLMCostTracker
 from ..io.csv_handler import CSVHandler
 from ..models import JobPosting
@@ -19,15 +20,18 @@ class JobClassificationPipeline:
     
     def __init__(self, 
                  use_llm: bool = True,
-                 openai_key: Optional[str] = None):
+                 openai_key: Optional[str] = None,
+                 exclude_senior: bool = False):
         """
         Initialize the pipeline.
         
         Args:
             use_llm: Whether to use LLM for company classification
             openai_key: OpenAI API key
+            exclude_senior: Whether to drop senior/lead/staff titles before classification
         """
         self.collector = LinkedInCollector()
+        self.exclude_senior = exclude_senior
         self.sponsorship_classifier = SponsorshipClassifier()
         # Initialize cost tracker for LLM usage
         self.cost_tracker = LLMCostTracker() if use_llm else None
@@ -78,6 +82,27 @@ class JobClassificationPipeline:
                 print(f"\nTotal process time: {seconds:.2f} second(s)")
             return []
         
+        # Filter out senior/experienced titles before any classification work.
+        # Done before dedup so excluded jobs never reach the LLM.
+        if self.exclude_senior:
+            jobs, excluded_jobs = SeniorityFilter.filter_jobs(jobs)
+            if excluded_jobs:
+                print(f"\nSeniority filter: excluded {len(excluded_jobs)} non-entry-level jobs")
+                for job in excluded_jobs[:10]:
+                    _, reason = SeniorityFilter.is_excluded(job.job_title)
+                    try:
+                        print(f"  - [{reason}] {job.job_title}")
+                    except UnicodeEncodeError:
+                        safe_title = job.job_title.encode('ascii', 'ignore').decode('ascii')
+                        print(f"  - [{reason}] {safe_title}")
+                if len(excluded_jobs) > 10:
+                    print(f"  ... and {len(excluded_jobs) - 10} more")
+                print()
+
+            if not jobs:
+                print("All collected jobs were filtered out as too senior.")
+                return []
+
         # Ensure all jobs have unique_id before checking for duplicates
         for job in jobs:
             if not job.unique_id:

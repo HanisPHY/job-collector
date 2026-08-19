@@ -31,6 +31,8 @@ def main():
                        help='Disable LLM-based company classification')
     parser.add_argument('--time-filter', type=int, default=None, metavar='MINUTES',
                        help='Filter jobs by posting time in minutes (e.g., 180 for 3 hours, 1440 for 24 hours)')
+    parser.add_argument('--exclude-senior', action='store_true',
+                       help='Drop senior/staff/principal/lead/manager titles (recommended for new grad searches)')
     
     args = parser.parse_args()
     
@@ -44,7 +46,8 @@ def main():
     # Initialize pipeline
     pipeline = JobClassificationPipeline(
         use_llm=not args.no_llm,
-        openai_key=os.getenv('OPENAI_API_KEY')
+        openai_key=os.getenv('OPENAI_API_KEY'),
+        exclude_senior=args.exclude_senior
     )
     
     # Process jobs (pass output file to check for existing jobs)

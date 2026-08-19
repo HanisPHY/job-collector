@@ -190,15 +190,20 @@ class CSVHandler:
                 })
             
             df = pd.DataFrame(data)
-            # Keep existing jobs in their original order, append new jobs at the end
-            df.to_csv(output_file, index=False, encoding='utf-8-sig')
+            # New jobs are written first so they appear at the top of the file.
+            # Write to a temp file then atomically replace, so an interrupted run
+            # cannot truncate the existing file (including the manual 'applied' column).
+            tmp_file = output_file + '.tmp'
+            df.to_csv(tmp_file, index=False, encoding='utf-8-sig')
+            os.replace(tmp_file, output_file)
         else:
             # Fallback to standard CSV writer
-            with open(output_file, 'w', newline='', encoding='utf-8-sig') as f:
+            tmp_file = output_file + '.tmp'
+            with open(tmp_file, 'w', newline='', encoding='utf-8-sig') as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 
-                # Keep existing jobs in their original order, append new jobs at the end
+                # New jobs are written first so they appear at the top of the file.
                 for job in all_jobs:
                     # Get 'applied' value from stored values or use empty string for new jobs
                     applied_value = applied_values.get(job.unique_id, '')
@@ -214,6 +219,7 @@ class CSVHandler:
                         'category': f"{job.sponsorship_status} & {job.company_type}",
                         'applied': applied_value
                     })
+            os.replace(tmp_file, output_file)
         
         print(f"\nResults saved to {output_file}")
         print(f"New jobs added: {len(new_jobs)}")

@@ -32,7 +32,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python main.py --query %%~Q --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 REM Tier 2: catches big-tech new grad roles whose titles carry no
@@ -47,7 +47,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python main.py --query %%~Q --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 REM Tier 3: supplementary phrasings
@@ -59,7 +59,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python main.py --query %%~Q --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 echo.

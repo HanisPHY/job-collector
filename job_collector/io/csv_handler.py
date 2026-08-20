@@ -74,19 +74,31 @@ class CSVHandler:
                                     date_recorded=row.get('date_recorded', '')
                                 )
             except Exception as e:
-                print(f"Warning: Could not read existing file {output_file}: {e}")
-                print("Will treat all jobs as new.")
-        
+                # Do NOT swallow this. Continuing with an empty set makes every
+                # job look new, which downstream means re-classifying everything
+                # and (in save_to_csv) rewriting the file from scratch - losing
+                # the history, the manual 'applied' column, and the original
+                # date_recorded timestamps the daily report is built on.
+                raise RuntimeError(
+                    f"Could not read existing file {output_file}: {e}. "
+                    f"Refusing to continue - fix or move the file first."
+                ) from e
+
         return existing_jobs_dict, existing_ids
     
     @staticmethod
-    def save_to_csv(jobs: List[JobPosting], output_file: str = "job_classifications.csv"):
+    def save_to_csv(jobs: List[JobPosting], output_file: str = "job_classifications.csv") -> Dict[str, int]:
         """
         Save jobs to CSV file. If file exists, only append new jobs (deduplicated by unique_id).
-        
+
         Args:
             jobs: List of JobPosting objects
             output_file: Output CSV file path
+
+        Returns:
+            {'new_jobs': int, 'total_jobs': int} - reported by main.py into
+            logs/runs.jsonl so the daily report can tell "nothing new today"
+            apart from "the collector never ran".
         """
         # Ensure all jobs have unique_id
         for job in jobs:
@@ -149,20 +161,25 @@ class CSVHandler:
                                 # Store 'applied' value if it exists
                                 applied_values[unique_id] = row.get('applied', '')
             except Exception as e:
-                print(f"Warning: Could not read existing file {output_file}: {e}")
-                print("Creating new file...")
-                existing_ids = set()
-                existing_jobs = []
-                applied_values = {}
-        
+                # Clearing these would make every job look new and rewrite the
+                # whole file from this batch alone - wiping the history, the
+                # manual 'applied' column, and every original date_recorded.
+                # Fail loudly instead; the file on disk stays untouched.
+                raise RuntimeError(
+                    f"Could not read existing file {output_file}: {e}. "
+                    f"Refusing to overwrite it - fix or move the file first."
+                ) from e
+
         # Filter out jobs that already exist
         new_jobs = [job for job in jobs if job.unique_id not in existing_ids]
-        
+
         if not new_jobs:
             print(f"\nNo new jobs to add. All {len(jobs)} jobs already exist in {output_file}")
             print(f"Total jobs in file: {len(existing_jobs)}")
-            return
-        
+            # Most common path on the hourly new-grad schedule - must still
+            # return counts, not None.
+            return {'new_jobs': 0, 'total_jobs': len(existing_jobs)}
+
         # Combine new jobs at the beginning, then existing jobs
         all_jobs = new_jobs + existing_jobs
         
@@ -239,3 +256,5 @@ class CSVHandler:
                 # Fallback for encoding issues
                 safe_cat = cat.encode('ascii', 'ignore').decode('ascii')
                 print(f"  {safe_cat}: {count}")
+
+        return {'new_jobs': len(new_jobs), 'total_jobs': len(all_jobs)}

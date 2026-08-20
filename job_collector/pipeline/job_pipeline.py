@@ -37,6 +37,11 @@ class JobClassificationPipeline:
         self.cost_tracker = LLMCostTracker() if use_llm else None
         self.company_classifier = CompanyTypeClassifier(use_llm, openai_key, self.cost_tracker)
         self.csv_handler = CSVHandler()
+        # Filled in by process() on every exit path, including the early ones.
+        # main.py folds this into the run summary in logs/runs.jsonl so that
+        # "collected nothing" is distinguishable from "never ran".
+        self.last_run_stats = {'collected': 0, 'already_existing': 0,
+                               'needed_classification': 0, 'reason': None}
     
     def process(self, search_query: str = "software engineer", limit: int = 50, time_filter_minutes: Optional[int] = None, output_file: str = "job_classifications.csv") -> List[JobPosting]:
         """
@@ -71,6 +76,7 @@ class JobClassificationPipeline:
         jobs = self.collector.collect_jobs(search_query, limit, time_filter_minutes)
         
         if not jobs:
+            self.last_run_stats['reason'] = 'no_jobs_collected'
             print("No jobs collected. Please check your setup.")
             # Calculate elapsed time even if no jobs collected
             elapsed_time = time.time() - start_time
@@ -100,6 +106,7 @@ class JobClassificationPipeline:
                 print()
 
             if not jobs:
+                self.last_run_stats['reason'] = 'all_filtered_senior'
                 print("All collected jobs were filtered out as too senior.")
                 return []
 
@@ -124,6 +131,12 @@ class JobClassificationPipeline:
                 # New job, needs classification
                 new_jobs.append(job)
         
+        self.last_run_stats.update({
+            'collected': len(jobs),
+            'already_existing': len(existing_jobs_found),
+            'needed_classification': len(new_jobs),
+        })
+
         print(f"\nCollected {len(jobs)} jobs.")
         print(f"  - {len(existing_jobs_found)} jobs already exist in output file (skipping classification)")
         print(f"  - {len(new_jobs)} new jobs need classification\n")
@@ -216,7 +229,11 @@ class JobClassificationPipeline:
             print(f"Input tokens: {cost_summary['input_tokens']:,}")
             print(f"Output tokens: {cost_summary['output_tokens']:,}")
             print(f"Total tokens: {cost_summary['total_tokens']:,}")
-            print(f"Estimated cost: ${cost_summary['cost_usd']:.6f} USD")
+            if cost_summary['cost_usd'] is None:
+                print(f"Estimated cost: unpriced - no entry for '{cost_summary['model']}' "
+                      f"in LLMCostTracker.MODEL_PRICING")
+            else:
+                print(f"Estimated cost: ${cost_summary['cost_usd']:.6f} USD")
             print(f"{'='*60}\n")
         
         print(f"{'='*60}\n")
@@ -226,9 +243,12 @@ class JobClassificationPipeline:
     def save_to_csv(self, jobs: List[JobPosting], output_file: str = "job_classifications.csv"):
         """
         Save jobs to CSV file.
-        
+
         Args:
             jobs: List of JobPosting objects
             output_file: Output CSV file path
+
+        Returns:
+            {'new_jobs': int, 'total_jobs': int} from the CSV handler.
         """
-        self.csv_handler.save_to_csv(jobs, output_file)
+        return self.csv_handler.save_to_csv(jobs, output_file)

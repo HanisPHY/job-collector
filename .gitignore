@@ -46,6 +46,8 @@ job_classifications.csv
 
 # Logs
 *.log
+# run_logged.bat output, runs.jsonl and the daily reports
+logs/
 
 # OS
 .DS_Store

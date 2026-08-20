@@ -55,37 +55,42 @@ class LLMCostTracker:
         self.total_output_tokens += output_tokens
         self.api_calls += 1
     
-    def calculate_cost(self) -> float:
+    def calculate_cost(self):
         """
         Calculate total cost based on token usage.
-        
+
         Returns:
-            Total cost in USD
+            Total cost in USD, or None if the model has no entry in
+            MODEL_PRICING. Returning None rather than silently billing an
+            unknown model at gpt-3.5-turbo rates keeps the daily report from
+            presenting a fabricated number as fact - swap the model and the
+            report says "unpriced" until MODEL_PRICING is updated.
         """
         if not self.model_used or self.model_used not in self.MODEL_PRICING:
-            # Default to gpt-3.5-turbo if model not found
-            self.model_used = "gpt-3.5-turbo"
-        
+            return None
+
         pricing = self.MODEL_PRICING[self.model_used]
         input_cost = (self.total_input_tokens / 1000) * pricing["input"]
         output_cost = (self.total_output_tokens / 1000) * pricing["output"]
-        
+
         return input_cost + output_cost
-    
+
     def get_summary(self) -> Dict[str, Any]:
         """
         Get summary of API usage and costs.
-        
+
         Returns:
             Dictionary with usage statistics
         """
+        cost = self.calculate_cost()
         return {
             "model": self.model_used or "N/A",
             "api_calls": self.api_calls,
             "input_tokens": self.total_input_tokens,
             "output_tokens": self.total_output_tokens,
             "total_tokens": self.total_input_tokens + self.total_output_tokens,
-            "cost_usd": self.calculate_cost()
+            "cost_usd": cost,
+            "priced": cost is not None,
         }
     
     def reset(self):

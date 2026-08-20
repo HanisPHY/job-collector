@@ -1,231 +1,245 @@
-# Scheduling the Job Collector
+# Scheduling & Logging
 
-This guide explains how to set up automated scheduling for the job collector to run every 30 minutes.
+Three collectors run on a schedule, each writing to its own CSV:
 
-## Windows Task Scheduler (Recommended for Windows)
+| Wrapper argument | Collector | Output CSV | Suggested schedule |
+|---|---|---|---|
+| `run_newgrad_collector` | LinkedIn via JobSpy, 9 queries per run | `newgrad_classifications.csv` | every 60 min |
+| `run_ats_collector` | company ATS APIs (Greenhouse, Lever, Ashby, ...) | `ats_jobs.csv` | every 6-12 hours |
+| `run_ddg_collector` | DuckDuckGo X-ray discovery | `ddg_jobs.csv` | 2-3 times per day, **never hourly** |
+| `run_daily_report` | reads the above, writes the daily report | `logs/daily/*.md` | once a day, e.g. 08:00 |
 
-Since you're on Windows, use Task Scheduler instead of cron.
+> `run_job_collector.bat` (the old "software engineer intern" search) is **deprecated**.
+> It has no `--output`, so it writes into the default `job_classifications.csv`, which
+> nothing else reads and whose last entry is from 2026-02. It is not covered by the
+> logging system. Delete it or repoint it before relying on it again.
 
-### Step 1: Create a Batch Script
+---
 
-A batch script `run_job_collector.bat` has been created for you. You can customize it by editing the command line arguments:
+## Always schedule through `run_logged.bat`
 
-- `--query`: Job search query (default: "software engineer")
-- `--limit`: Maximum number of jobs to collect (default: 50)
-- `--time-filter`: Filter jobs by posting time in minutes (30 = last 30 minutes)
-- `--output`: Output CSV file path (default: "job_classifications.csv")
-- `--no-llm`: Disable LLM-based company classification (optional)
+Never point Task Scheduler at a collector `.bat` directly. `run_logged.bat` wraps it and:
 
-### Step 2: Set Up Windows Task Scheduler
+- captures all stdout/stderr into `logs/<script_name>/<timestamp>.log`
+- appends a `run_start` / `run_end` pair (with the exit code) to `logs/runs.jsonl`
+- sets `PYTHONUTF8=1` — **required**. Once output is redirected to a file, Python falls
+  back from the console's UTF-8 to the ANSI locale (cp1252 here), and printing a
+  `company_type` containing CJK characters raises `UnicodeEncodeError` mid-run.
+- sets `JOB_UNATTENDED=1` so the collectors skip their double-click hold-open guard.
+  Task Scheduler launches the script as `cmd /c "...\run_ats_collector.bat"`, so
+  the guard's `find` matches the script name in `%cmdcmdline%` and the guard fires. With
+  no interactive console attached it returns immediately rather than blocking, but
+  skipping it outright is cleaner - and the guard now uses `timeout /t 30` instead of
+  `pause`, so it stays bounded even if a task is ever configured to run interactively.
+- sets `JOB_RUN_ID`, which ties all 9 `main.py` invocations of one new-grad run
+  together in `runs.jsonl`.
 
-#### Method A: Using GUI (Easiest)
+Manual runs work the same way:
 
-1. **Open Task Scheduler**:
-   - Press `Win + R`, type `taskschd.msc`, and press Enter
-   - Or search for "Task Scheduler" in the Start menu
+```
+run_logged.bat run_ats_collector
+```
 
-2. **Create Basic Task**:
-   - Click "Create Basic Task..." in the right panel
-   - Name: `Job Collector - Every 30 Minutes`
-   - Description: `Runs job collector script every 30 minutes`
-   - Click Next
+Double-clicking a collector `.bat` directly still works and still holds the window
+open for 30 seconds at the end; it just doesn't produce a log file.
 
-3. **Set Trigger**:
-   - Trigger: `Daily`
-   - Start date: Today's date
-   - Start time: Current time or desired start time
-   - Recur every: `1 days`
-   - Click Next
+---
 
-4. **Set Action**:
-   - Action: `Start a program`
-   - Program/script: Browse and select `run_job_collector.bat`
-   - Start in: Browse and select your project directory (e.g., `D:\OneDrive\work\school\project\Job`)
-   - Click Next
+## Windows Task Scheduler
 
-5. **Finish**:
-   - Check "Open the Properties dialog for this task when I click Finish"
-   - Click Finish
+### Existing tasks need repointing
 
-6. **Configure Advanced Settings**:
-   - In the Properties dialog, go to the **Triggers** tab
-   - Select your trigger and click **Edit**
-   - Check "Repeat task every:" and set to `30 minutes`
-   - Set "for a duration of:" to `Indefinitely`
-   - Click OK
+Eleven enabled tasks were registered to run the collector scripts **directly**, so their
+runs produce no log file and no `runs.jsonl` record:
 
-7. **Configure Additional Settings** (Optional but Recommended):
-   - Go to the **General** tab:
-     - Check "Run whether user is logged on or not" (if you want it to run in background)
-     - Or keep "Run only when user is logged on" (simpler, but requires you to be logged in)
-   - Go to the **Settings** tab:
-     - Check "Allow task to be run on demand"
-     - Check "Run task as soon as possible after a scheduled start is missed"
-     - Set "If the task fails, restart every:" to `10 minutes` (optional)
-   - Click OK
+```
+ATS_03 ATS_06 ATS_09 ATS_12 ATS_15 ATS_18 ATS_21   -> run_ats_collector.bat
+DDG_07 DDG_12 DDG_17                                -> run_ddg_collector.bat
+ng job collector                                    -> run_newgrad_collector.bat
+Job collector                                       -> run_job_collector.bat  (disabled, deprecated)
+```
 
-#### Method B: Using PowerShell (Advanced)
+`repoint_scheduled_tasks.ps1` fixes them. It backs each definition up to
+`logs\_task_backup\<name>.xml`, swaps only the ACTION to `run_logged.bat <collector>`,
+then prints a verification table. Triggers, conditions, principal and run history are
+untouched, and re-running it is a no-op on tasks already pointing at the wrapper.
 
-Run PowerShell as Administrator and execute:
+**It must run elevated.** These tasks' security descriptors only permit an administrator
+to modify them - an ordinary session gets `Access is denied` from both
+`Set-ScheduledTask` and `schtasks /change`. (Registering a *new* task does not need
+elevation; only modifying these existing ones does.)
+
+Open PowerShell with **Run as administrator**, then:
 
 ```powershell
-$action = New-ScheduledTaskAction -Execute "D:\OneDrive\work\school\project\Job\run_job_collector.bat" -WorkingDirectory "D:\OneDrive\work\school\project\Job"
-$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 30) -RepetitionDuration (New-TimeSpan -Days 365)
-$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
-Register-ScheduledTask -TaskName "Job Collector - Every 30 Minutes" -Action $action -Trigger $trigger -Settings $settings -Description "Runs job collector script every 30 minutes"
+cd "D:\OneDrive\work\school\project\Job"
+.\repoint_scheduled_tasks.ps1 -WhatIf     # preview, changes nothing
+.\repoint_scheduled_tasks.ps1             # do it
 ```
 
-### Step 3: Test the Task
+To roll back, from an elevated prompt:
 
-1. In Task Scheduler, find your task
-2. Right-click and select "Run"
-3. Check if it executes successfully
-4. Verify that `job_classifications.csv` is updated
-
-### Step 4: View Task History
-
-1. In Task Scheduler, select your task
-2. Click "History" tab at the bottom to see execution logs
-3. Check for any errors
-
-## Linux/Mac/WSL Cron (Alternative)
-
-If you're using Linux, Mac, or Windows Subsystem for Linux (WSL), you can use cron.
-
-### Step 1: Create a Shell Script
-
-Create a file `run_job_collector.sh`:
-
-```bash
-#!/bin/bash
-# Change to the script directory
-cd "$(dirname "$0")"
-
-# Activate conda environment and run the script
-source $(conda info --base)/etc/profile.d/conda.sh
-conda activate job-classifier
-python job_collector.py --query "software engineer" --limit 50 --time-filter 30
-
-# Optional: Log output
-# python job_collector.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
+```powershell
+Get-ChildItem "logs\_task_backup" -Filter *.xml | ForEach-Object {
+    Register-ScheduledTask -Xml (Get-Content $_.FullName -Raw) -TaskName $_.BaseName -Force
+}
 ```
 
-Make it executable:
-```bash
-chmod +x run_job_collector.sh
+### The daily report task
+
+Already registered as **Job - Daily Report**, running `run_logged.bat run_daily_report`
+daily at 08:00. Creating it needed no elevation. To recreate it from scratch:
+
+```powershell
+$dir = "D:\OneDrive\work\school\project\Job"
+$action  = New-ScheduledTaskAction -Execute "$dir\run_logged.bat" -Argument "run_daily_report"
+$trigger = New-ScheduledTaskTrigger -Daily -At 8am
+Register-ScheduledTask -TaskName "Job - Daily Report" -Action $action -Trigger $trigger
 ```
 
-### Step 2: Set Up Cron Job
+### Creating a task from scratch (GUI)
 
-1. Open crontab:
-   ```bash
-   crontab -e
-   ```
+1. `Win + R` -> `taskschd.msc` -> **Create Basic Task**
+2. Name it, click Next
+3. Trigger: **Daily**, start today, recur every 1 day -> Next
+4. Action: **Start a program**
+   - Program/script: `D:\OneDrive\work\school\project\Job\run_logged.bat`
+   - **Add arguments**: the collector name, e.g. `run_newgrad_collector`
+   - **Start in**: `D:\OneDrive\work\school\project\Job`
+5. Check "Open the Properties dialog..." -> Finish
+6. **Triggers** tab -> Edit -> check "Repeat task every" -> e.g. `1 hour`, duration `Indefinitely`
+7. **Settings** tab -> check "Run task as soon as possible after a scheduled start is missed"
 
-2. Add the following line to run every 30 minutes:
-   ```cron
-   */30 * * * * /path/to/your/project/run_job_collector.sh
-   ```
+### Checking on them
 
-   Replace `/path/to/your/project/` with your actual project path, for example:
-   ```cron
-   */30 * * * * /home/username/projects/Job/run_job_collector.sh
-   ```
+```powershell
+Get-ScheduledTask | Where-Object { ($_.Actions | Where-Object { $_.Execute -like "*project*Job*" }) } |
+  ForEach-Object { $i = $_ | Get-ScheduledTaskInfo
+    [PSCustomObject]@{ Task=$_.TaskName; LastRun=$i.LastRunTime; Result=$i.LastTaskResult } } |
+  Format-Table -AutoSize
+```
 
-3. Save and exit (in vi: press `Esc`, type `:wq`, press Enter)
+`Result` 0 means the last run exited cleanly. Any collector still pointed at its `.bat`
+directly will show up in the daily report as `ran 0 time(s)` even when it did run - it
+just produced no records. To silence a collector you have deliberately disabled, set
+`enabled: False` for it in `EXPECTED_SCRIPTS` at the top of `daily_report.py`.
 
-### Cron Schedule Format
+Keep `--time-filter` roughly double the schedule interval (the new-grad batch uses 120
+minutes on an hourly schedule) so a skipped or delayed run doesn't leave a coverage gap.
 
-The format is: `minute hour day month weekday`
+---
 
-- `*/30 * * * *` = Every 30 minutes
-- `0 */2 * * *` = Every 2 hours
-- `0 9 * * *` = Every day at 9:00 AM
-- `0 9 * * 1-5` = Every weekday at 9:00 AM
+## What lands where
 
-## Customizing the Schedule
+```
+logs/
+  runs.jsonl                                  <- the only file the report parses
+  run_newgrad_collector/2026-08-20_14-00-03.log
+  run_ats_collector/2026-08-20_06-00-12.log
+  run_ddg_collector/2026-08-20_09-00-05.log
+  run_daily_report/2026-08-20_08-00-01.log
+  daily/2026-08-20.md                         <- the report
+```
 
-### Change Frequency
+`runs.jsonl` holds one JSON object per line:
 
-**Windows Task Scheduler:**
-- Edit the task → Triggers → Edit → Change "Repeat task every" to your desired interval
+- `run_start` / `run_end` — written by `run_logged.bat`. A `run_start` with no matching
+  `run_end` means the run was killed or crashed hard.
+- `run_summary` — written by the Python entry points via `run_log.py`, one per
+  invocation (so nine per new-grad run), carrying that collector's own counters:
+  `jobs_fetched`, `jobs_matched`, `new_jobs`, `http_errors`, `rate_limit_hits`,
+  `challenges`, `elapsed_s`, `llm_cost_usd` / `llm_api_calls` / `llm_tokens` /
+  `llm_model` on the LinkedIn path, and `error` / `traceback` on a crash.
 
-**Cron:**
-- Edit crontab and change the schedule:
-  - Every 15 minutes: `*/15 * * * *`
-  - Every hour: `0 * * * *`
-  - Every 2 hours: `0 */2 * * *`
+The `.log` files are never parsed — they exist so you can read the raw output when the
+report points you at one.
 
-### Change Command Arguments
+### ⚠ OneDrive
 
-Edit `run_job_collector.bat` (Windows) or `run_job_collector.sh` (Linux/Mac) to modify:
-- Search query: `--query "your query"`
-- Job limit: `--limit 100`
-- Time filter: `--time-filter 60` (last 60 minutes)
-- Output file: `--output "custom_output.csv"`
-- Disable LLM: Add `--no-llm` flag
+`logs/` sits inside the OneDrive-synced tree. The new-grad collector alone produces
+roughly 1-3 MB of log per day, and OneDrive briefly locks files while uploading, which
+can collide with the atomic `os.replace()` calls the collectors use. Either exclude
+`logs/` from sync in the OneDrive settings, or move it entirely:
+
+```
+setx JOB_LOG_ROOT "%LOCALAPPDATA%\JobCollector\logs"
+```
+
+`run_log.py` and `daily_report.py` both honour `JOB_LOG_ROOT`.
+
+---
+
+## The daily report
+
+```
+python daily_report.py                    # today
+python daily_report.py --date 2026-08-19  # a specific day
+python daily_report.py --no-prune         # keep .log files older than 30 days
+```
+
+Writes `logs/daily/YYYY-MM-DD.md` and prints a summary. Three sections:
+
+1. **今日待投** — jobs first recorded today whose `applied` column is still empty,
+   grouped by company, Big Tech / unicorn / public companies first. Mark a job as
+   applied by putting anything in its `applied` cell in the CSV and it drops off
+   tomorrow's list.
+2. **健康告警** — a collector that didn't run, a non-zero exit code, a run that never
+   finished, zero new jobs all day, rate-limiting, or a mismatch between what the
+   collectors reported writing and what is actually in the CSVs.
+3. **运行概况** — one line per run with its counters, LLM cost, and log path.
+
+### LLM cost
+
+Only the LinkedIn path calls an LLM, and only to classify companies it has not seen
+before; the ATS and DDG collectors never do. Spend runs a few cents a day at
+`gpt-3.5-turbo` rates. The report shows the day's total against yesterday's in section 1,
+the per-run figure in section 3, and raises an alert above
+`LLM_DAILY_COST_ALERT_USD` (default $0.50) — a threshold that only trips if call volume
+or the model changes.
+
+`LLMCostTracker.MODEL_PRICING` in
+[job_collector/tracking/cost_tracker.py](job_collector/tracking/cost_tracker.py) holds the
+per-1K-token rates. **If you switch to a model that is not in that table, the cost comes
+back as `None`** and the report labels those runs "unpriced" rather than billing them at
+`gpt-3.5-turbo` rates — a wrong number presented as fact is worse than a missing one. Add
+the model's rates to the table to restore the figure.
+
+Job counts come from the `date_recorded` column of the CSVs, not from the logs — that
+column is the first-seen timestamp and is preserved verbatim when a CSV is rewritten.
+Rows are deduplicated by `unique_id` across all three files, because `ddg_search`
+discovers ATS boards and genuinely re-finds jobs that `ats_direct` already has.
+
+Sponsorship status is only a real classification on the `ats_direct` path. `ddg_search`
+hardcodes `Not (Maybe Not) Sponsor` (a search results page has no job description) and
+the LinkedIn path rarely finds a positive signal — read those as *unknown*, not as *no*.
+
+Each report run also deletes `.log` files older than 30 days. `runs.jsonl` and the
+reports themselves are never pruned.
+
+---
 
 ## Troubleshooting
 
-### Windows Task Scheduler Issues
+**Task runs but nothing happens** — open the newest file under `logs/<script>/`. If it's
+empty, the failure is before Python started: check that "Start in" is set to the project
+directory and that `conda` is on the PATH of the account running the task.
 
-1. **Task doesn't run**:
-   - Check if conda is in PATH
-   - Try running the batch file manually first
-   - Check Task Scheduler History for errors
-   - Ensure "Start in" directory is set correctly
+**A collector window that never closes** - the collector scripts end with a hold-open
+guard for double-click use. Double-clicked from Explorer it waits, by design: press a
+key or wait 30 seconds. Scheduled runs skip it entirely when launched through
+`run_logged.bat`. If you find `cmd.exe` processes parented to `explorer.exe` lingering
+for hours, those are double-clicked runs sitting on the guard - `taskkill /pid <id>`
+clears them.
 
-2. **Conda not found**:
-   - Add conda to system PATH, or
-   - Modify `run_job_collector.bat` to use full path to conda:
-     ```batch
-     C:\Users\YourUsername\anaconda3\Scripts\activate.bat job-classifier
-     ```
+**`conda` not found** — either add conda to the system PATH, or replace
+`call conda activate job-classifier` in the collector script with the full path:
+`call C:\Users\<you>\anaconda3\Scripts\activate.bat job-classifier`
 
-3. **Python not found**:
-   - Ensure conda environment is activated correctly
-   - Check that Python is installed in the conda environment
+**Report says a count mismatch** — compare the `new_jobs` totals in `runs.jsonl` against
+the CSV rows for that day. Common causes: a long ATS run that started before midnight
+(its jobs are all stamped with the start date), or a CSV edited outside the pipeline.
 
-### Cron Issues
-
-1. **Script doesn't run**:
-   - Check cron logs: `grep CRON /var/log/syslog` (Linux) or check system logs
-   - Ensure script has execute permissions: `chmod +x run_job_collector.sh`
-   - Use absolute paths in the script
-
-2. **Conda not found in cron**:
-   - Use full path to conda in the script
-   - Or source conda initialization in the script:
-     ```bash
-     source ~/anaconda3/etc/profile.d/conda.sh
-     ```
-
-3. **Environment variables not set**:
-   - Set them in the script before activating conda:
-     ```bash
-     export OPENAI_API_KEY="your-key-here"
-     ```
-
-## Logging
-
-To log output to a file, modify the batch/shell script:
-
-**Windows (`run_job_collector.bat`):**
-```batch
-call conda activate job-classifier && python job_collector.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
-```
-
-**Linux/Mac (`run_job_collector.sh`):**
-```bash
-python job_collector.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
-```
-
-This will append all output (including errors) to `job_collector.log`.
-
-## Notes
-
-- The `--time-filter 30` option filters jobs posted in the last 30 minutes, which works well with a 30-minute schedule
-- If you change the schedule frequency, adjust `--time-filter` accordingly
-- Ensure your computer is on and not sleeping for scheduled tasks to run
-- For Windows, if you want tasks to run when the computer is sleeping, you may need to prevent sleep or use a different approach
-
+**`RuntimeError: Could not read existing file ...`** — the CSV is corrupt or locked
+(OneDrive, or open in Excel). The pipeline refuses to continue rather than rewrite the
+file from the current batch, which would erase the history and the `applied` column.
+Close the file or restore it, then re-run.

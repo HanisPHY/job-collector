@@ -1,0 +1,1747 @@
+{
+  "companies": [
+    {
+      "name": "Stripe",
+      "platform": "greenhouse",
+      "slug": "stripe",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Databricks",
+      "platform": "greenhouse",
+      "slug": "databricks",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Anthropic",
+      "platform": "greenhouse",
+      "slug": "anthropic",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Figma",
+      "platform": "greenhouse",
+      "slug": "figma",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Discord",
+      "platform": "greenhouse",
+      "slug": "discord",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Palantir",
+      "platform": "lever",
+      "slug": "palantir",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "OpenAI",
+      "platform": "ashby",
+      "slug": "openai",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "NVIDIA",
+      "platform": "workday",
+      "slug": "nvidia",
+      "host": "nvidia.wd5.myworkdayjobs.com",
+      "tenant": "nvidia",
+      "site": "NVIDIAExternalCareerSite",
+      "source": "seed",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Airbnb",
+      "platform": "greenhouse",
+      "slug": "airbnb",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Coinbase",
+      "platform": "greenhouse",
+      "slug": "coinbase",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Robinhood",
+      "platform": "greenhouse",
+      "slug": "robinhood",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Instacart",
+      "platform": "greenhouse",
+      "slug": "instacart",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Pinterest",
+      "platform": "greenhouse",
+      "slug": "pinterest",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Reddit",
+      "platform": "greenhouse",
+      "slug": "reddit",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Dropbox",
+      "platform": "greenhouse",
+      "slug": "dropbox",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Lyft",
+      "platform": "greenhouse",
+      "slug": "lyft",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Roblox",
+      "platform": "greenhouse",
+      "slug": "roblox",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Datadog",
+      "platform": "greenhouse",
+      "slug": "datadog",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Cloudflare",
+      "platform": "greenhouse",
+      "slug": "cloudflare",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Twilio",
+      "platform": "greenhouse",
+      "slug": "twilio",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "MongoDB",
+      "platform": "greenhouse",
+      "slug": "mongodb",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Elastic",
+      "platform": "greenhouse",
+      "slug": "elastic",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "GitLab",
+      "platform": "greenhouse",
+      "slug": "gitlab",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Asana",
+      "platform": "greenhouse",
+      "slug": "asana",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Duolingo",
+      "platform": "greenhouse",
+      "slug": "duolingo",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Affirm",
+      "platform": "greenhouse",
+      "slug": "affirm",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Chime",
+      "platform": "greenhouse",
+      "slug": "chime",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SoFi",
+      "platform": "greenhouse",
+      "slug": "sofi",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Snowflake",
+      "platform": "ashby",
+      "slug": "snowflake",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Okta",
+      "platform": "greenhouse",
+      "slug": "okta",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Squarespace",
+      "platform": "greenhouse",
+      "slug": "squarespace",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Scale AI",
+      "platform": "greenhouse",
+      "slug": "scaleai",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ramp",
+      "platform": "ashby",
+      "slug": "ramp",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Brex",
+      "platform": "greenhouse",
+      "slug": "brex",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Gusto",
+      "platform": "greenhouse",
+      "slug": "gusto",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Checkr",
+      "platform": "greenhouse",
+      "slug": "checkr",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Flexport",
+      "platform": "greenhouse",
+      "slug": "flexport",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Benchling",
+      "platform": "ashby",
+      "slug": "benchling",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Samsara",
+      "platform": "greenhouse",
+      "slug": "samsara",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Vercel",
+      "platform": "greenhouse",
+      "slug": "vercel",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Notion",
+      "platform": "ashby",
+      "slug": "notion",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Linear",
+      "platform": "ashby",
+      "slug": "linear",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Perplexity",
+      "platform": "ashby",
+      "slug": "perplexity",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Replit",
+      "platform": "ashby",
+      "slug": "replit",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Nuro",
+      "platform": "greenhouse",
+      "slug": "nuro",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Zoox",
+      "platform": "lever",
+      "slug": "zoox",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Sierra",
+      "platform": "ashby",
+      "slug": "sierra",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Together AI",
+      "platform": "greenhouse",
+      "slug": "togetherai",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Modal",
+      "platform": "ashby",
+      "slug": "modal",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Canva",
+      "platform": "smartrecruiters",
+      "slug": "canva",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Airtable",
+      "platform": "greenhouse",
+      "slug": "airtable",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Postman",
+      "platform": "greenhouse",
+      "slug": "postman",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Miro",
+      "platform": "ashby",
+      "slug": "miro",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Attentive",
+      "platform": "greenhouse",
+      "slug": "attentive",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Gemini",
+      "platform": "greenhouse",
+      "slug": "gemini",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Plaid",
+      "platform": "ashby",
+      "slug": "plaid",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "DoorDash",
+      "platform": "greenhouse",
+      "slug": "doordashusa",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Anduril",
+      "platform": "greenhouse",
+      "slug": "andurilindustries",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Zipline",
+      "platform": "greenhouse",
+      "slug": "flyzipline",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Voleon",
+      "platform": "ashby",
+      "slug": "voleon",
+      "source": "probe",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Visa",
+      "platform": "smartrecruiters",
+      "slug": "visa",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Twitch",
+      "platform": "greenhouse",
+      "slug": "twitch",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Applied Intuition",
+      "platform": "ashby",
+      "slug": "applied",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SpaceX",
+      "platform": "greenhouse",
+      "slug": "spacex",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Texas Sports Academy Main",
+      "platform": "workable",
+      "slug": "texas-sports-academy-main",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Verkada",
+      "platform": "greenhouse",
+      "slug": "verkada",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "DV Trading",
+      "platform": "greenhouse",
+      "slug": "dvtrading",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SimpliSafe",
+      "platform": "greenhouse",
+      "slug": "simplisafe",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "National Information Solutions Cooperative",
+      "platform": "greenhouse",
+      "slug": "testnisc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Bosch",
+      "platform": "smartrecruiters",
+      "slug": "boschgroup",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Clera",
+      "platform": "ashby",
+      "slug": "clera",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Handshake",
+      "platform": "ashby",
+      "slug": "handshake",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Pariveda",
+      "platform": "ashby",
+      "slug": "pariveda",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Quora",
+      "platform": "ashby",
+      "slug": "quora",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Zip",
+      "platform": "ashby",
+      "slug": "zip",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "N1",
+      "platform": "ashby",
+      "slug": "n1",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Apex Technology",
+      "platform": "ashby",
+      "slug": "apex-technology-inc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "STR",
+      "platform": "greenhouse",
+      "slug": "systemstechnologyresearch",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Jobgether",
+      "platform": "lever",
+      "slug": "jobgether",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SharkNinja",
+      "platform": "greenhouse",
+      "slug": "sharkninjaoperatingllc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "WeRide.ai",
+      "platform": "lever",
+      "slug": "weride",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "ServiceNow",
+      "platform": "smartrecruiters",
+      "slug": "servicenow",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Crusoe",
+      "platform": "ashby",
+      "slug": "crusoe",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Lightfield",
+      "platform": "ashby",
+      "slug": "lightfield",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Retell AI",
+      "platform": "ashby",
+      "slug": "retell-ai",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Woven by Toyota",
+      "platform": "lever",
+      "slug": "woven-by-toyota",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Appian",
+      "platform": "greenhouse",
+      "slug": "appian",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Vultr",
+      "platform": "ashby",
+      "slug": "vultr",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "KAYAK",
+      "platform": "ashby",
+      "slug": "kayak",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "PMG",
+      "platform": "greenhouse",
+      "slug": "pmg",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Netic",
+      "platform": "ashby",
+      "slug": "netic",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SBT Global",
+      "platform": "smartrecruiters",
+      "slug": "sbtglobalinc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Accenture Federal Services",
+      "platform": "greenhouse",
+      "slug": "accenturefederalservices",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Pylon",
+      "platform": "ashby",
+      "slug": "pylon-labs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "WHOOP",
+      "platform": "ashby",
+      "slug": "whoop",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Saalex",
+      "platform": "workable",
+      "slug": "saalex",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "CHAOS Industries",
+      "platform": "greenhouse",
+      "slug": "chaosindustries",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Sirius",
+      "platform": "ashby",
+      "slug": "thesirius",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "True Anomaly",
+      "platform": "greenhouse",
+      "slug": "trueanomalyinc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Chicago Trading Company",
+      "platform": "greenhouse",
+      "slug": "ctccampusboard",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "StubHub",
+      "platform": "greenhouse",
+      "slug": "stubhubinc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Candid Health",
+      "platform": "ashby",
+      "slug": "candidhealth",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Mandolin",
+      "platform": "ashby",
+      "slug": "mandolin",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Belvedere Trading",
+      "platform": "lever",
+      "slug": "belvederetrading",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Five Rings",
+      "platform": "greenhouse",
+      "slug": "fiveringsllc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Cook Systems",
+      "platform": "greenhouse",
+      "slug": "cooksys",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Syncreon Consulting",
+      "platform": "smartrecruiters",
+      "slug": "syncreonconsulting",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Assyst",
+      "platform": "greenhouse",
+      "slug": "assystinc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Composio",
+      "platform": "ashby",
+      "slug": "composio",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "General Matter",
+      "platform": "greenhouse",
+      "slug": "generalmatter",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "New Relic",
+      "platform": "greenhouse",
+      "slug": "newrelic",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Uniswap Labs",
+      "platform": "ashby",
+      "slug": "uniswap",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Blend",
+      "platform": "greenhouse",
+      "slug": "blend",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Mach Industries",
+      "platform": "ashby",
+      "slug": "mach",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "United Placement Group",
+      "platform": "workable",
+      "slug": "unitedplacementgroup",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Valon Tech",
+      "platform": "ashby",
+      "slug": "valon",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Vector Atomic",
+      "platform": "workable",
+      "slug": "vectoratomic",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Nova Talent",
+      "platform": "ashby",
+      "slug": "nova-talent",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Valsoft Corporation",
+      "platform": "workable",
+      "slug": "valsoft-corp",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Abridge",
+      "platform": "ashby",
+      "slug": "abridge",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Freeform",
+      "platform": "greenhouse",
+      "slug": "freeformfuturecorp",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ace IT Careers",
+      "platform": "workable",
+      "slug": "ace-it-careers-1",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Impact",
+      "platform": "greenhouse",
+      "slug": "impact",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Muon",
+      "platform": "greenhouse",
+      "slug": "muonspace",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Nooks",
+      "platform": "ashby",
+      "slug": "nooks",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Torc Robotics",
+      "platform": "greenhouse",
+      "slug": "torcrobotics",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Agate Software",
+      "platform": "lever",
+      "slug": "agatesoftware",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Idea Entity",
+      "platform": "workable",
+      "slug": "idea-entity",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Confido",
+      "platform": "ashby",
+      "slug": "confido",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Polymarket",
+      "platform": "ashby",
+      "slug": "polymarket",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Smartsheet",
+      "platform": "greenhouse",
+      "slug": "smartsheet",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "The Weather Company",
+      "platform": "greenhouse",
+      "slug": "theweathercompany",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Weekday",
+      "platform": "workable",
+      "slug": "weekday-1",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "FlexCompute",
+      "platform": "workable",
+      "slug": "flexcompute",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Tebra",
+      "platform": "greenhouse",
+      "slug": "tebra",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "RunSybil",
+      "platform": "ashby",
+      "slug": "runsybil-jobs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Blissway",
+      "platform": "ashby",
+      "slug": "blissway",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Observable Space",
+      "platform": "ashby",
+      "slug": "observable-space",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Pipe17",
+      "platform": "greenhouse",
+      "slug": "pipe17",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Rocket Lab",
+      "platform": "greenhouse",
+      "slug": "rocketlab",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Astronomer",
+      "platform": "ashby",
+      "slug": "astronomer",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "MyKargo",
+      "platform": "greenhouse",
+      "slug": "kargo",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Sift",
+      "platform": "ashby",
+      "slug": "sift",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Traba",
+      "platform": "ashby",
+      "slug": "traba",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Antares",
+      "platform": "ashby",
+      "slug": "antares",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "PGTEK",
+      "platform": "workable",
+      "slug": "pgtek",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Neon",
+      "platform": "ashby",
+      "slug": "neon",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Path Robotics",
+      "platform": "greenhouse",
+      "slug": "pathrobotics",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ascend",
+      "platform": "greenhouse",
+      "slug": "ascend21",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "CATHEXIS",
+      "platform": "workable",
+      "slug": "cathexis",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "northwoodspace",
+      "platform": "ashby",
+      "slug": "northwoodspace",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Faros",
+      "platform": "ashby",
+      "slug": "faros-ai",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Sonar",
+      "platform": "lever",
+      "slug": "sonarsource",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Waymark",
+      "platform": "greenhouse",
+      "slug": "waymark",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Obsidian Security",
+      "platform": "greenhouse",
+      "slug": "obsidiansecurity",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "VantageScore",
+      "platform": "greenhouse",
+      "slug": "vantagescore",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Mercury",
+      "platform": "greenhouse",
+      "slug": "mercury",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Valinor",
+      "platform": "ashby",
+      "slug": "valinor",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Protolabs",
+      "platform": "lever",
+      "slug": "protolabs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ridgeline",
+      "platform": "greenhouse",
+      "slug": "ridgeline",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Agile Defense",
+      "platform": "lever",
+      "slug": "agile-defense",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "OptiTrack",
+      "platform": "workable",
+      "slug": "optitrack",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "ThreatLocker",
+      "platform": "greenhouse",
+      "slug": "threatlocker",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Civis Analytics",
+      "platform": "greenhouse",
+      "slug": "civisanalytics",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Cylake",
+      "platform": "ashby",
+      "slug": "cylake-inc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "IonQ",
+      "platform": "greenhouse",
+      "slug": "ionq",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "DataLab USA",
+      "platform": "lever",
+      "slug": "datalabusa",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "ARSIEM",
+      "platform": "lever",
+      "slug": "arsiem",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Plus",
+      "platform": "lever",
+      "slug": "plus-2",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Voxel",
+      "platform": "ashby",
+      "slug": "voxel",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Aircall",
+      "platform": "lever",
+      "slug": "aircall",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "City of San Francisco",
+      "platform": "smartrecruiters",
+      "slug": "cityandcountyofsanfrancisco1",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Rundoo",
+      "platform": "ashby",
+      "slug": "rundoo",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Displai",
+      "platform": "ashby",
+      "slug": "displai",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Fantom Corporation",
+      "platform": "lever",
+      "slug": "fantom-corporation",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Julius",
+      "platform": "ashby",
+      "slug": "julius",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "TickPick",
+      "platform": "workable",
+      "slug": "tickpick",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Dutch",
+      "platform": "lever",
+      "slug": "dutch",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "GovWell Technologies",
+      "platform": "ashby",
+      "slug": "govwell",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "CVector Energy",
+      "platform": "workable",
+      "slug": "cvector",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Thumbtack",
+      "platform": "ashby",
+      "slug": "thumbtack",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Traeger Grills",
+      "platform": "greenhouse",
+      "slug": "traegergrills",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "TP-Link",
+      "platform": "workable",
+      "slug": "tp-link-usa-corp",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Synergy ECP",
+      "platform": "lever",
+      "slug": "synergyecp",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "CLEAR",
+      "platform": "greenhouse",
+      "slug": "clear",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Worldscape Technology",
+      "platform": "lever",
+      "slug": "worldscape-technology",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Zone 5 Technologies",
+      "platform": "greenhouse",
+      "slug": "zone5technologies",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Fuser",
+      "platform": "ashby",
+      "slug": "fuser",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Astranis Space Technologies",
+      "platform": "greenhouse",
+      "slug": "astranis",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Valerie Health",
+      "platform": "ashby",
+      "slug": "valeriehealth",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Artera",
+      "platform": "lever",
+      "slug": "artera-2",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Yotta Labs",
+      "platform": "ashby",
+      "slug": "yotta",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Dune",
+      "platform": "ashby",
+      "slug": "dune",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Warp",
+      "platform": "greenhouse",
+      "slug": "warp",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Clipboard Health",
+      "platform": "ashby",
+      "slug": "clipboard",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Zapier",
+      "platform": "ashby",
+      "slug": "zapier",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "ElevenLabs",
+      "platform": "ashby",
+      "slug": "elevenlabs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Lambda",
+      "platform": "ashby",
+      "slug": "lambda",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Anyscale",
+      "platform": "ashby",
+      "slug": "anyscale",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Persona",
+      "platform": "ashby",
+      "slug": "persona",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Parafin",
+      "platform": "ashby",
+      "slug": "parafin",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Eventual",
+      "platform": "ashby",
+      "slug": "eventualcomputing",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Anima",
+      "platform": "ashby",
+      "slug": "anima",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "EliseAI",
+      "platform": "ashby",
+      "slug": "eliseai",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Decagon",
+      "platform": "ashby",
+      "slug": "decagon",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ellipsis Labs",
+      "platform": "ashby",
+      "slug": "ellipsislabs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Gecko Robotics",
+      "platform": "ashby",
+      "slug": "gecko-robotics",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Cape",
+      "platform": "ashby",
+      "slug": "cape",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Harvey",
+      "platform": "ashby",
+      "slug": "harvey",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Canonical",
+      "platform": "greenhouse",
+      "slug": "canonical",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Suno",
+      "platform": "ashby",
+      "slug": "suno",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Prosidian Consulting",
+      "platform": "smartrecruiters",
+      "slug": "prosidianconsulting",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Ranger",
+      "platform": "lever",
+      "slug": "ranger",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "IMC",
+      "platform": "greenhouse",
+      "slug": "imc",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Sentry",
+      "platform": "ashby",
+      "slug": "sentry",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "SquareTrade",
+      "platform": "smartrecruiters",
+      "slug": "squaretrade1",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Credit Genie",
+      "platform": "ashby",
+      "slug": "creditgenie",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Koah Labs",
+      "platform": "ashby",
+      "slug": "koahlabs",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Relativity Space",
+      "platform": "greenhouse",
+      "slug": "relativity",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "The New York Times",
+      "platform": "greenhouse",
+      "slug": "thenewyorktimes",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "PracticeTek",
+      "platform": "workable",
+      "slug": "practicetek",
+      "source": "github",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Flowengineering",
+      "platform": "ashby",
+      "slug": "flowengineering",
+      "source": "ddg",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Orb",
+      "platform": "ashby",
+      "slug": "orb",
+      "source": "ddg",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Crb",
+      "platform": "smartrecruiters",
+      "slug": "crb",
+      "source": "ddg",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "Westerndigital",
+      "platform": "smartrecruiters",
+      "slug": "westerndigital",
+      "source": "ddg",
+      "added": "2026-08-19"
+    },
+    {
+      "name": "3:15",
+      "platform": "workable",
+      "slug": "315",
+      "source": "github",
+      "added": "2026-08-20"
+    },
+    {
+      "name": "Voltus",
+      "platform": "lever",
+      "slug": "voltus",
+      "source": "ddg",
+      "added": "2026-08-20"
+    }
+  ],
+  "failed_probes": {
+    "Snowflake": {
+      "greenhouse:snowflake": "2026-08-19",
+      "lever:snowflake": "2026-08-19"
+    },
+    "Ramp": {
+      "greenhouse:ramp": "2026-08-19",
+      "lever:ramp": "2026-08-19"
+    },
+    "Benchling": {
+      "greenhouse:benchling": "2026-08-19",
+      "lever:benchling": "2026-08-19"
+    },
+    "Notion": {
+      "greenhouse:notion": "2026-08-19",
+      "lever:notion": "2026-08-19"
+    },
+    "Linear": {
+      "greenhouse:linear": "2026-08-19",
+      "lever:linear": "2026-08-19"
+    },
+    "Perplexity": {
+      "greenhouse:perplexity": "2026-08-19",
+      "lever:perplexity": "2026-08-19"
+    },
+    "Replit": {
+      "greenhouse:replit": "2026-08-19",
+      "lever:replit": "2026-08-19"
+    },
+    "Zoox": {
+      "greenhouse:zoox": "2026-08-19"
+    },
+    "Sierra": {
+      "greenhouse:sierra": "2026-08-19",
+      "lever:sierra": "2026-08-19"
+    },
+    "Modal": {
+      "greenhouse:modal": "2026-08-19",
+      "lever:modal": "2026-08-19"
+    },
+    "Canva": {
+      "greenhouse:canva": "2026-08-19",
+      "lever:canva": "2026-08-19",
+      "ashby:canva": "2026-08-19"
+    },
+    "Miro": {
+      "greenhouse:miro": "2026-08-19",
+      "lever:miro": "2026-08-19"
+    },
+    "Plaid": {
+      "greenhouse:plaid": "2026-08-19",
+      "lever:plaid": "2026-08-19"
+    },
+    "HashiCorp": {
+      "greenhouse:hashicorp": "2026-08-19",
+      "lever:hashicorp": "2026-08-19",
+      "ashby:hashicorp": "2026-08-19",
+      "smartrecruiters:hashicorp": "2026-08-19",
+      "workable:hashicorp": "2026-08-19"
+    },
+    "Voleon": {
+      "greenhouse:voleon": "2026-08-19",
+      "lever:voleon": "2026-08-19"
+    },
+    "Mistral AI": {
+      "lever:mistral": "2026-08-19",
+      "greenhouse:mistralai": "2026-08-19",
+      "lever:mistralai": "2026-08-19",
+      "ashby:mistralai": "2026-08-19",
+      "smartrecruiters:mistralai": "2026-08-19",
+      "workable:mistralai": "2026-08-19",
+      "greenhouse:mistral-ai": "2026-08-19",
+      "lever:mistral-ai": "2026-08-19",
+      "ashby:mistral-ai": "2026-08-19",
+      "smartrecruiters:mistral-ai": "2026-08-19",
+      "workable:mistral-ai": "2026-08-19"
+    },
+    "Grammarly": {
+      "greenhouse:grammarly": "2026-08-19",
+      "lever:grammarly": "2026-08-19",
+      "ashby:grammarly": "2026-08-19",
+      "smartrecruiters:grammarly": "2026-08-19",
+      "workable:grammarly": "2026-08-19"
+    },
+    "Retool": {
+      "greenhouse:retool": "2026-08-19",
+      "lever:retool": "2026-08-19",
+      "ashby:retool": "2026-08-19",
+      "smartrecruiters:retool": "2026-08-19",
+      "workable:retool": "2026-08-19"
+    },
+    "Whatnot": {
+      "greenhouse:whatnot": "2026-08-19",
+      "lever:whatnot": "2026-08-19",
+      "ashby:whatnot": "2026-08-19",
+      "smartrecruiters:whatnot": "2026-08-19",
+      "workable:whatnot": "2026-08-19"
+    },
+    "Deel": {
+      "greenhouse:deel": "2026-08-19",
+      "lever:deel": "2026-08-19",
+      "ashby:deel": "2026-08-19",
+      "smartrecruiters:deel": "2026-08-19",
+      "workable:deel": "2026-08-19"
+    },
+    "Rippling": {
+      "greenhouse:rippling": "2026-08-19",
+      "lever:rippling": "2026-08-19",
+      "ashby:rippling": "2026-08-19",
+      "smartrecruiters:rippling": "2026-08-19",
+      "workable:rippling": "2026-08-19"
+    },
+    "Wiz": {
+      "greenhouse:wiz": "2026-08-19",
+      "lever:wiz": "2026-08-19",
+      "ashby:wiz": "2026-08-19",
+      "smartrecruiters:wiz": "2026-08-19",
+      "workable:wiz": "2026-08-19"
+    },
+    "Snyk": {
+      "greenhouse:snyk": "2026-08-19",
+      "lever:snyk": "2026-08-19",
+      "ashby:snyk": "2026-08-19",
+      "smartrecruiters:snyk": "2026-08-19",
+      "workable:snyk": "2026-08-19"
+    },
+    "Chainalysis": {
+      "greenhouse:chainalysis": "2026-08-19",
+      "lever:chainalysis": "2026-08-19",
+      "ashby:chainalysis": "2026-08-19",
+      "smartrecruiters:chainalysis": "2026-08-19",
+      "workable:chainalysis": "2026-08-19"
+    },
+    "Kraken": {
+      "lever:kraken.com": "2026-08-19",
+      "greenhouse:kraken": "2026-08-19",
+      "lever:kraken": "2026-08-19",
+      "ashby:kraken": "2026-08-19",
+      "smartrecruiters:kraken": "2026-08-19",
+      "workable:kraken": "2026-08-19"
+    },
+    "Cruise": {
+      "greenhouse:getcruise": "2026-08-19",
+      "greenhouse:cruise": "2026-08-19",
+      "lever:cruise": "2026-08-19",
+      "ashby:cruise": "2026-08-19",
+      "smartrecruiters:cruise": "2026-08-19",
+      "workable:cruise": "2026-08-19"
+    }
+  },
+  "last_updated": "2026-08-20T09:11:07.795432"
+}

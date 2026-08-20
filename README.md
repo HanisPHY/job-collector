@@ -115,6 +115,24 @@ python job_collector.py --query "software engineer" --time-filter 60
 python job_collector.py --no-llm
 ```
 
+## Scheduled Runs & Daily Report
+
+Collectors are scheduled through `run_logged.bat`, which captures each run's output to
+`logs/<script>/<timestamp>.log` and records the run in `logs/runs.jsonl`:
+
+```
+run_logged.bat run_ats_collector
+```
+
+`daily_report.py` then turns that into `logs/daily/YYYY-MM-DD.md` — what to apply to
+today (grouped by company, unapplied only), any health alerts, and a per-run summary:
+
+```
+python daily_report.py
+```
+
+See [SCHEDULING.md](SCHEDULING.md) for Task Scheduler setup and troubleshooting.
+
 ## Output Format
 
 The CSV file contains the following columns:

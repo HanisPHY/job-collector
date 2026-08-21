@@ -1,0 +1,11 @@
+# Companies you want pinned to the top of whatever segment they land in.
+#
+# One company name per line; '#' starts a comment. Names are normalised the same way
+# the CSVs are (case, punctuation and a trailing Inc/LLC/Ltd are ignored), so
+# "L3Harris Technologies" and "l3harris technologies" are the same entry.
+#
+# This file only affects ORDER inside a segment - it never moves a row between
+# segments and never rescues a row from the intermediary lane. Use
+# company_overrides.json for that.
+#
+# Deliberately empty by default.

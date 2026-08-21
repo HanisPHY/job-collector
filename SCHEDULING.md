@@ -45,6 +45,70 @@ open for 30 seconds at the end; it just doesn't produce a log file.
 
 ---
 
+## No `conda activate` in scheduled scripts
+
+The five scheduled `.bat` files resolve the interpreter through
+**`resolve_python.bat`** and then call `"%JOB_PYTHON%" -u script.py`. None of them
+calls `conda activate` any more.
+
+**Why.** `conda activate` writes `%TEMP%\__conda_tmp_<pid>.txt`, which is not safe
+against two tasks starting in the same second. On 2026-08-20 `ATS_12` and `DDG_12`
+both fired at 12:00:00 and DDG_12 died before collecting anything:
+
+```
+The process cannot access the file because it is being used by another process.
+The system cannot find the file C:\...\Temp\__conda_tmp_9245.txt
+Error: Failed to activate conda environment 'job-classifier'
+```
+
+Calling the environment's `python.exe` directly needs no temp file, no PATH surgery
+and no subshell, so concurrent tasks cannot collide. Verified with 8 simultaneous
+resolutions.
+
+`resolve_python.bat` also sets `PYTHONUTF8=1` / `PYTHONIOENCODING=utf-8` before
+returning. `run_logged.bat` already sets them, but these scripts are also
+double-clicked, and then the console is cp1252: `dashboard.py` printing its circled
+segment numbers (`①`) dies with `UnicodeEncodeError`.
+
+To point at a different interpreter — a moved env, a test env — set `JOB_PYTHON`
+before calling; an existing value that exists on disk is kept. Otherwise it probes,
+in order:
+
+```
+D:\Apps\Miniconda\envs\job-classifier\python.exe      <- current
+%USERPROFILE%\miniconda3\envs\job-classifier\python.exe
+%USERPROFILE%\anaconda3\envs\job-classifier\python.exe
+C:\ProgramData\miniconda3\envs\job-classifier\python.exe
+```
+
+`setup_environment.bat` still uses conda, correctly — it is what creates the env,
+runs interactively, and never runs concurrently.
+
+---
+
+## ⚠ Two collectors must not run at once
+
+`ats_direct.py --expand` and `ddg_search.py --update-registry` both
+read-modify-write **`ats_registry.json`**, and `Registry.save()` writes a fixed
+`<path>.tmp` then `os.replace()`s it. Concurrent runs do not corrupt the file — they
+**lose updates**: whichever finishes last overwrites the other's newly discovered
+boards, silently and with no error anywhere.
+
+Each run takes about six minutes (ATS `elapsed_s 367.6`; DDG 17:00:02 → 17:05:57),
+so a 12:00/12:00 pairing overlaps for its entire duration. Keep DDG off the ATS
+grid (`03/06/09/12/15/18/21`). `retime_ddg12.ps1` moves `DDG_12` to 13:00, which
+sits between ATS_12 finishing (~12:06) and ATS_15.
+
+Run it **elevated** — see the next section for why:
+
+```powershell
+cd "D:\OneDrive\work\school\project\Job"
+.\retime_ddg12.ps1 -WhatIf     # preview
+.\retime_ddg12.ps1             # do it
+```
+
+---
+
 ## Windows Task Scheduler
 
 ### Existing tasks need repointing
@@ -92,10 +156,53 @@ daily at 08:00. Creating it needed no elevation. To recreate it from scratch:
 
 ```powershell
 $dir = "D:\OneDrive\work\school\project\Job"
-$action  = New-ScheduledTaskAction -Execute "$dir\run_logged.bat" -Argument "run_daily_report"
-$trigger = New-ScheduledTaskTrigger -Daily -At 8am
-Register-ScheduledTask -TaskName "Job - Daily Report" -Action $action -Trigger $trigger
+$action   = New-ScheduledTaskAction -Execute "$dir\run_logged.bat" -Argument "run_daily_report"
+$trigger  = New-ScheduledTaskTrigger -Daily -At 8am
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
+Register-ScheduledTask -TaskName "Job - Daily Report" -Action $action -Trigger $trigger `
+                       -Settings $settings
 ```
+
+It also runs `dashboard.py` after `daily_report.py` — one task produces both the
+markdown report and the HTML dashboard.
+
+**`StartWhenAvailable` matters here.** It was `False` until 2026-08-21, which means a
+laptop asleep at 08:00 lost that day's report entirely: Task Scheduler skips the
+occurrence rather than catching up, and nothing anywhere says so. With it on, the run
+happens as soon as the machine is available again. Changing it needed no elevation
+(the task was registered by the current user):
+
+```powershell
+$t = Get-ScheduledTask -TaskName 'Job - Daily Report'
+$t.Settings.StartWhenAvailable = $true
+Set-ScheduledTask -TaskName 'Job - Daily Report' -Settings $t.Settings
+```
+
+The collector tasks are still `StartWhenAvailable = False`, deliberately — they run
+every 1-3 hours, so a missed occurrence is picked up by the next one, and catching up
+several at once on wake would just stampede the same APIs.
+
+### The company-enrichment task
+
+`run_daily_report.bat` now runs `dashboard.py` after `daily_report.py` (as its own
+statement, so a failing report cannot skip the dashboard). The dashboard segments
+jobs using `company_profiles.json`, which `enrich_companies.py` tops up — schedule it
+at **07:30**, half an hour ahead of the 08:00 report. No elevation needed:
+
+```powershell
+cd "D:\OneDrive\work\school\project\Job"
+.\register_enrich_task.ps1        # run_logged.bat run_enrich_companies, daily 07:30
+```
+
+Only companies missing from the cache are sent to the API, so a normal morning is a
+few dozen names at roughly **$0.02**, and the whole run is capped at **300 s** of wall
+clock — whatever does not fit stays unclassified and is retried the next day (the
+dashboard says how many at the top). Monthly manual catch-up, deliberately *not*
+scheduled: `python -u enrich_companies.py --deep` (gpt-4o, about $0.17; it recovers
+intermediary labels that gpt-4o-mini misses).
+
+Output: `logs/dashboard/<day>.html` plus `logs/dashboard/latest.html`, and the read
+watermark in `logs/last_report.json`.
 
 ### Creating a task from scratch (GUI)
 

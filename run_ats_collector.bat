@@ -11,15 +11,14 @@ echo so a full run takes several minutes. Progress prints as it goes.
 echo.
 
 
-call conda activate job-classifier
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Failed to activate conda environment 'job-classifier'
-    exit /b %ERRORLEVEL%
-)
+REM Resolve the interpreter without `conda activate` - see resolve_python.bat
+REM for why (concurrent tasks race on conda's %TEMP% file).
+call "%~dp0resolve_python.bat"
+if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
 REM Weekly maintenance flags (cheap to run every time; cleanup re-validates
 REM boards ~1 req/company, expand is 2 GitHub fetches + probes for new boards)
-python -u ats_direct.py --cleanup --expand --output ats_jobs.csv
+"%JOB_PYTHON%" -u ats_direct.py --cleanup --expand --output ats_jobs.csv
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%

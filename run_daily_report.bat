@@ -8,16 +8,24 @@ REM See SCHEDULING.md.
 
 cd /d "%~dp0"
 
-call conda activate job-classifier
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Failed to activate conda environment 'job-classifier'
-    exit /b %ERRORLEVEL%
-)
+REM Resolve the interpreter without `conda activate` - see resolve_python.bat
+REM for why (concurrent tasks race on conda's %TEMP% file).
+call "%~dp0resolve_python.bat"
+if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
-python -u daily_report.py
+"%JOB_PYTHON%" -u daily_report.py
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%
+)
+
+REM The HTML dashboard runs unconditionally, NOT chained behind the markdown report:
+REM they read the same CSVs but nothing else is shared, and a failure in one must not
+REM take the other down. Keep this as its own statement, never `&&`.
+"%JOB_PYTHON%" -u dashboard.py
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Dashboard error. Exit code: %ERRORLEVEL%
 )
 
 REM Hold the window open when double-clicked from Explorer.

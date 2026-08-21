@@ -1591,6 +1591,13 @@
       "slug": "voltus",
       "source": "ddg",
       "added": "2026-08-20"
+    },
+    {
+      "name": "Heliux",
+      "platform": "ashby",
+      "slug": "heliux",
+      "source": "ddg",
+      "added": "2026-08-20"
     }
   ],
   "failed_probes": {
@@ -1743,5 +1750,5 @@
       "workable:cruise": "2026-08-19"
     }
   },
-  "last_updated": "2026-08-20T09:11:07.795432"
+  "last_updated": "2026-08-20T21:10:07.408780"
 }

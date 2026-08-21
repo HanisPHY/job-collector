@@ -11,13 +11,12 @@ echo [%TIME%] Starting DDG collector...
 echo.
 
 
-call conda activate job-classifier
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Failed to activate conda environment 'job-classifier'
-    exit /b %ERRORLEVEL%
-)
+REM Resolve the interpreter without `conda activate` - see resolve_python.bat
+REM for why (concurrent tasks race on conda's %TEMP% file).
+call "%~dp0resolve_python.bat"
+if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
-python -u ddg_search.py --queries 5 --update-registry --output ddg_jobs.csv
+"%JOB_PYTHON%" -u ddg_search.py --queries 5 --update-registry --output ddg_jobs.csv
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%

@@ -1,0 +1,4762 @@
+{
+ "11x": {
+  "name": "11x",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "1password": {
+  "name": "1Password",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "well-known security software company"
+ },
+ "3:15": {
+  "name": "3:15",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "4a consulting": {
+  "name": "4A Consulting, LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "aaa global": {
+  "name": "AAA Global",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "aaa-the auto club": {
+  "name": "AAA-The Auto Club Group",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known auto club organization"
+ },
+ "abb": {
+  "name": "ABB",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "global technology company"
+ },
+ "abile": {
+  "name": "Abile Group, LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "abridge": {
+  "name": "Abridge",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "abundant san francisco": {
+  "name": "Abundant San Francisco",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "aca": {
+  "name": "ACA Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "accelyst": {
+  "name": "Accelyst, LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "accenture federal services": {
+  "name": "Accenture Federal Services",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "part of Accenture, large consulting firm"
+ },
+ "accylerate": {
+  "name": "Accylerate",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ace it careers": {
+  "name": "Ace IT Careers",
+  "kind": "training",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "focus on IT training and placement"
+ },
+ "acrisure": {
+  "name": "Acrisure",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "insurance brokerage and services"
+ },
+ "adamarie": {
+  "name": "AdaMarie",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "addsource": {
+  "name": "AddSource",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "aditi consulting": {
+  "name": "Aditi Consulting",
+  "kind": "outsourcing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "IT services and consulting firm"
+ },
+ "adobe": {
+  "name": "Adobe",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known software company"
+ },
+ "adyen": {
+  "name": "Adyen",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "global payment company"
+ },
+ "ae2s (advanced engineering and environmental services llc)": {
+  "name": "AE2S (Advanced Engineering and Environmental Services, LLC)",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "engineering and environmental services"
+ },
+ "afterquery experts": {
+  "name": "AfterQuery Experts",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "agate software": {
+  "name": "Agate Software",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "agentzap ai": {
+  "name": "AgentZap AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "agile defense": {
+  "name": "Agile Defense",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "provides IT services to government"
+ },
+ "agileengine": {
+  "name": "AgileEngine",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "software development company"
+ },
+ "agility partners": {
+  "name": "Agility Partners",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "focus on IT staffing solutions"
+ },
+ "ai logiqs": {
+  "name": "Ai LogiQs",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "akkodis": {
+  "name": "Akkodis",
+  "kind": "outsourcing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "global technology services firm"
+ },
+ "akron children's": {
+  "name": "Akron Children's",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "children's hospital and healthcare provider"
+ },
+ "alabama power energyplus": {
+  "name": "Alabama Power EnergyPlus",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "energy provider in Alabama"
+ },
+ "alarmcom": {
+  "name": "Alarm.com",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "home automation and security services"
+ },
+ "albert bow": {
+  "name": "Albert Bow",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "albi": {
+  "name": "Albi",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "alexander chapman": {
+  "name": "Alexander Chapman",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "allen control systems": {
+  "name": "Allen Control Systems",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "allison transmission": {
+  "name": "Allison Transmission",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "manufacturer of vehicle transmissions"
+ },
+ "altamira technologies": {
+  "name": "Altamira Technologies Corporation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "provides technology solutions"
+ },
+ "alumni founders": {
+  "name": "Alumni Founders",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "amazon": {
+  "name": "Amazon",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 1.0,
+  "why": "household name"
+ },
+ "amazon lab126": {
+  "name": "Amazon Lab126",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.9,
+  "why": "part of Amazon"
+ },
+ "amd": {
+  "name": "AMD",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 1.0,
+  "why": "household name"
+ },
+ "american systems": {
+  "name": "AMERICAN SYSTEMS",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known defense contractor"
+ },
+ "americon corporation for public well being": {
+  "name": "Americon Corporation for Public Well Being",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ametek": {
+  "name": "AMETEK",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "well-known manufacturing company"
+ },
+ "ampersand biomedicines": {
+  "name": "Ampersand Biomedicines",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "amplify": {
+  "name": "Amplify",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "amtex systems": {
+  "name": "Amtex Systems Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "anduril": {
+  "name": "Anduril",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known defense tech company"
+ },
+ "anduril industries": {
+  "name": "Anduril Industries",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known defense tech company"
+ },
+ "anser": {
+  "name": "ANSER",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known research and engineering firm"
+ },
+ "anthropic": {
+  "name": "Anthropic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "AI research company"
+ },
+ "apache": {
+  "name": "Apache Corporation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known energy company"
+ },
+ "apex bridge talent": {
+  "name": "Apex Bridge Talent Group",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "apex engineering": {
+  "name": "Apex Engineering Group, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "apollo": {
+  "name": "Apollo",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "appian": {
+  "name": "Appian",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known software company"
+ },
+ "applied intuition": {
+  "name": "Applied Intuition",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known software company"
+ },
+ "aquent": {
+  "name": "Aquent",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known staffing agency"
+ },
+ "arcfield": {
+  "name": "Arcfield",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known defense contractor"
+ },
+ "arcus search": {
+  "name": "Arcus Search",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "areté": {
+  "name": "Areté",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known consulting firm"
+ },
+ "arkana laboratories": {
+  "name": "Arkana Laboratories",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "arkhya tech": {
+  "name": "Arkhya Tech. Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "arrowhead pharmaceuticals": {
+  "name": "Arrowhead Pharmaceuticals",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known biotech company"
+ },
+ "arsiem": {
+  "name": "ARSIEM",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known consulting firm"
+ },
+ "asana": {
+  "name": "Asana",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known software company"
+ },
+ "aspen technology": {
+  "name": "Aspen Technology",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known software company"
+ },
+ "aspiron search": {
+  "name": "Aspiron Search",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "assyst": {
+  "name": "ASSYST",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known IT services company"
+ },
+ "astrana health": {
+  "name": "Astrana Health",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "astranis space technologies": {
+  "name": "Astranis Space Technologies",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known space tech company"
+ },
+ "astreya": {
+  "name": "Astreya",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known IT services company"
+ },
+ "astroforge": {
+  "name": "AstroForge",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "atc": {
+  "name": "ATC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "atlas copco": {
+  "name": "Atlas Copco",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known manufacturing company"
+ },
+ "atticus": {
+  "name": "Atticus",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "auger": {
+  "name": "Auger",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "avp vigilant technology": {
+  "name": "AVP VIGILANT TECHNOLOGY PVT LTD",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "avèro advisors": {
+  "name": "Avèro Advisors",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "axiscades": {
+  "name": "AXISCADES",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "b4corp": {
+  "name": "B4Corp",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "bae systems": {
+  "name": "BAE Systems, Inc.",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "defense prime"
+ },
+ "bandwidth": {
+  "name": "Bandwidth Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "well-known tech company"
+ },
+ "bank of america": {
+  "name": "Bank of America",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major bank"
+ },
+ "base-2 solutions": {
+  "name": "Base-2 Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "baseten": {
+  "name": "Baseten",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "baxter international": {
+  "name": "Baxter International Inc.",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "healthcare giant"
+ },
+ "baylor genetics": {
+  "name": "Baylor Genetics",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "beaconfire": {
+  "name": "BeaconFire Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "beckman coulter life sciences": {
+  "name": "Beckman Coulter Life Sciences",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "well-known in life sciences"
+ },
+ "belvedere trading": {
+  "name": "Belvedere Trading",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "trading firm"
+ },
+ "benchstack ai": {
+  "name": "Benchstack Ai",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "benmore technologies | ai transformation and software development services": {
+  "name": "Benmore Technologies | AI Transformation and Software Development Services",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "berg search": {
+  "name": "Berg Search",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "bigbearai": {
+  "name": "BigBear.ai",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "AI company"
+ },
+ "biomérieux": {
+  "name": "bioMérieux",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "healthcare diagnostics"
+ },
+ "biospace": {
+  "name": "BioSpace",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "job board for biotech"
+ },
+ "blackrock": {
+  "name": "BlackRock",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "investment management giant"
+ },
+ "blue cross blue shield of massachusetts": {
+  "name": "Blue Cross Blue Shield of Massachusetts",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "health insurance provider"
+ },
+ "blue origin": {
+  "name": "Blue Origin",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "space exploration company"
+ },
+ "boeing": {
+  "name": "Boeing",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "aerospace giant"
+ },
+ "bof careers": {
+  "name": "BoF Careers",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "booz allen hamilton": {
+  "name": "Booz Allen Hamilton",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "management consultancy"
+ },
+ "bosch": {
+  "name": "Bosch",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "multinational engineering"
+ },
+ "bose": {
+  "name": "Bose Corporation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "audio equipment manufacturer"
+ },
+ "boyd gaming": {
+  "name": "Boyd Gaming",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "gaming and hospitality"
+ },
+ "brex": {
+  "name": "Brex",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "financial technology"
+ },
+ "bridgestone americas": {
+  "name": "Bridgestone Americas",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "tire manufacturing"
+ },
+ "broadcom": {
+  "name": "Broadcom",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "semiconductor company"
+ },
+ "bytedance": {
+  "name": "ByteDance",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "tech company, TikTok owner"
+ },
+ "caci international": {
+  "name": "CACI International Inc",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "defense and IT services"
+ },
+ "callaway golf": {
+  "name": "Callaway Golf",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "golf equipment manufacturer"
+ },
+ "camping world": {
+  "name": "Camping World",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "RV retailer"
+ },
+ "canonical": {
+  "name": "Canonical",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "open-source software company"
+ },
+ "cape": {
+  "name": "Cape",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "capgemini": {
+  "name": "Capgemini",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "consulting and IT services"
+ },
+ "capgemini engineering": {
+  "name": "Capgemini Engineering",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "engineering services"
+ },
+ "captiveaire - region 114 western pa": {
+  "name": "Captiveaire - Region 114 Western PA",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cargill": {
+  "name": "Cargill",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large agribusiness company"
+ },
+ "caterpillar": {
+  "name": "Caterpillar Inc.",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known heavy equipment manufacturer"
+ },
+ "cathexis": {
+  "name": "CATHEXIS",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "centene": {
+  "name": "Centene Corporation",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large healthcare company"
+ },
+ "centraprise": {
+  "name": "Centraprise",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ces": {
+  "name": "CES",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "characterai": {
+  "name": "Character.AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "charles river associates": {
+  "name": "Charles River Associates",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "consulting firm"
+ },
+ "charles schwab": {
+  "name": "Charles Schwab",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major financial services company"
+ },
+ "charter global": {
+  "name": "Charter Global",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.7,
+  "why": "recruiting agency"
+ },
+ "cheil usa": {
+  "name": "Cheil USA",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "advertising agency"
+ },
+ "chewy": {
+  "name": "Chewy",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "pet e-commerce company"
+ },
+ "chime": {
+  "name": "Chime",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "fintech company"
+ },
+ "circana": {
+  "name": "Circana",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cirrus logic": {
+  "name": "Cirrus Logic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "semiconductor company"
+ },
+ "cisco": {
+  "name": "Cisco",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "leading networking technology company"
+ },
+ "citi": {
+  "name": "Citi",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "global financial services corporation"
+ },
+ "city of houston": {
+  "name": "City of Houston",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "government entity"
+ },
+ "cj": {
+  "name": "CJ",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "clickhouse": {
+  "name": "ClickHouse",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cliff services": {
+  "name": "Cliff Services Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cloudflare": {
+  "name": "Cloudflare",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "web infrastructure company"
+ },
+ "cogent infotech": {
+  "name": "COGENT Infotech",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "IT staffing agency"
+ },
+ "cognizant": {
+  "name": "Cognizant",
+  "kind": "outsourcing",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "global IT services company"
+ },
+ "coinbase": {
+  "name": "Coinbase",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "cryptocurrency exchange"
+ },
+ "collins aerospace": {
+  "name": "Collins Aerospace",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "aerospace and defense company"
+ },
+ "color health": {
+  "name": "Color Health",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "healthcare technology company"
+ },
+ "commonspirit health": {
+  "name": "CommonSpirit Health",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large healthcare provider"
+ },
+ "composio": {
+  "name": "Composio",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "concept reply us": {
+  "name": "Concept Reply US",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "confido": {
+  "name": "Confido",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "conversion": {
+  "name": "Conversion",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "core4ce": {
+  "name": "Core4ce",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cps": {
+  "name": "CPS, Inc.",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "crb": {
+  "name": "Crb",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "crum & forster": {
+  "name": "Crum & Forster",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "insurance company"
+ },
+ "crusoe": {
+  "name": "Crusoe",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ctdi": {
+  "name": "CTDI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "cylake": {
+  "name": "Cylake",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "daikin comfort": {
+  "name": "Daikin Comfort",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "damoov": {
+  "name": "Damoov",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "darwin recruitment": {
+  "name": "Darwin Recruitment",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "recruitment agency"
+ },
+ "data capital incorporation": {
+  "name": "Data Capital Incorporation",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "databank": {
+  "name": "DataBank",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "datadog": {
+  "name": "Datadog",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known tech company"
+ },
+ "datalab usa": {
+  "name": "DataLab USA",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "daxwell": {
+  "name": "Daxwell",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "dealeron": {
+  "name": "DealerOn",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "dell technologies": {
+  "name": "Dell Technologies",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "delmar nord": {
+  "name": "Delmar Nord",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "deloitte": {
+  "name": "Deloitte",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Big-4 consulting firm"
+ },
+ "delphi-us llc - peacemakers in the talent war": {
+  "name": "Delphi-US, LLC - Peacemakers in the Talent War",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "delta computer consulting": {
+  "name": "Delta Computer Consulting",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "deluxe": {
+  "name": "Deluxe",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "dematic": {
+  "name": "Dematic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in automation"
+ },
+ "dignity health": {
+  "name": "Dignity Health",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large healthcare provider"
+ },
+ "discord": {
+  "name": "Discord",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "popular communication platform"
+ },
+ "doordash": {
+  "name": "DoorDash",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known delivery service"
+ },
+ "doppel": {
+  "name": "Doppel",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "draper": {
+  "name": "Draper",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in venture capital"
+ },
+ "drata": {
+  "name": "Drata",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in compliance automation"
+ },
+ "drw": {
+  "name": "DRW",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known trading firm"
+ },
+ "dv trading": {
+  "name": "DV Trading",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known trading firm"
+ },
+ "dynamic manufacturing": {
+  "name": "Dynamic Manufacturing, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ebay": {
+  "name": "eBay",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in e-commerce"
+ },
+ "ecs": {
+  "name": "ECS",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "edward jones": {
+  "name": "Edward Jones",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known financial services"
+ },
+ "edz systems": {
+  "name": "EDZ Systems",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ellipsis labs": {
+  "name": "Ellipsis Labs",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "embention usa": {
+  "name": "Embention USA",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "emory healthcare": {
+  "name": "Emory Healthcare",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large healthcare provider"
+ },
+ "enigma": {
+  "name": "Enigma",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "envision technology solutions": {
+  "name": "Envision Technology Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "epia neuro": {
+  "name": "Epia Neuro",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "epic": {
+  "name": "Epic",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known healthcare software"
+ },
+ "epic placements": {
+  "name": "Epic Placements",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruitment agency"
+ },
+ "ergo next insurance": {
+  "name": "ERGO NEXT Insurance",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ericsson": {
+  "name": "Ericsson",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in telecom"
+ },
+ "escola técnica estadual josé nivaldo pereira ramos": {
+  "name": "Escola Técnica Estadual José Nivaldo Pereira Ramos",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "esri": {
+  "name": "Esri",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known GIS software company"
+ },
+ "eventual": {
+  "name": "Eventual",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "everpure": {
+  "name": "Everpure",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "evolve steel": {
+  "name": "Evolve Steel",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "evonik": {
+  "name": "Evonik",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known chemical company"
+ },
+ "exadel": {
+  "name": "Exadel",
+  "kind": "outsourcing",
+  "tier": 1,
+  "conf": 0.7,
+  "why": "IT services company"
+ },
+ "excelra": {
+  "name": "Excelra",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "expedition technology": {
+  "name": "Expedition Technology",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "defense technology firm"
+ },
+ "experis": {
+  "name": "Experis",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known staffing agency"
+ },
+ "ey": {
+  "name": "EY",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 1.0,
+  "why": "Big Four accounting firm"
+ },
+ "fairwinds technologies": {
+  "name": "Fairwinds Technologies",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fantom": {
+  "name": "Fantom Corporation",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "farm bureau financial services": {
+  "name": "Farm Bureau Financial Services",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "insurance and financial services"
+ },
+ "faros": {
+  "name": "Faros",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fedstack": {
+  "name": "Fedstack",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fetchjobsco": {
+  "name": "FetchJobs.co",
+  "kind": "aggregator",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "job aggregation platform"
+ },
+ "ff": {
+  "name": "FF Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "finstock": {
+  "name": "Finstock, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fintal partners": {
+  "name": "Fintal Partners",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "finthrive": {
+  "name": "FinThrive",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "healthcare financial solutions"
+ },
+ "fionics": {
+  "name": "Fionics",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fiserv": {
+  "name": "Fiserv",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "financial services technology"
+ },
+ "five rings": {
+  "name": "Five Rings",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "quantitative trading firm"
+ },
+ "flexgen": {
+  "name": "FlexGen",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "energy technology company"
+ },
+ "flextrade": {
+  "name": "FlexTrade",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "financial trading technology"
+ },
+ "flock": {
+  "name": "Flock",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "florida international university": {
+  "name": "Florida International University",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "public university"
+ },
+ "flowengineering": {
+  "name": "Flowengineering",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fluence": {
+  "name": "Fluence",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "energy technology company"
+ },
+ "fluor": {
+  "name": "Fluor Corporation",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "engineering and construction firm"
+ },
+ "focused energy": {
+  "name": "Focused Energy",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fonzi ai": {
+  "name": "Fonzi AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "forcepull": {
+  "name": "Forcepull",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ford motor": {
+  "name": "Ford Motor Company",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 1.0,
+  "why": "automotive manufacturer"
+ },
+ "fortune 500": {
+  "name": "Fortune 500",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "foundation": {
+  "name": "Foundation",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "founderscareers": {
+  "name": "Founders.Careers",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "four seas infotech": {
+  "name": "Four Seas Infotech",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "freddie mac": {
+  "name": "Freddie Mac",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "government-sponsored enterprise"
+ },
+ "freeform": {
+  "name": "Freeform",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fubo": {
+  "name": "Fubo",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "funhouse gaming": {
+  "name": "Funhouse Gaming",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "fuser": {
+  "name": "Fuser",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "gallo": {
+  "name": "GALLO",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "gaming laboratories international": {
+  "name": "Gaming Laboratories International, LLC",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known testing lab"
+ },
+ "garmin": {
+  "name": "Garmin",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "gartner": {
+  "name": "Gartner",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in consulting"
+ },
+ "gaurav dot one": {
+  "name": "Gaurav Dot One",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ge healthcare": {
+  "name": "GE HealthCare",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in healthcare"
+ },
+ "ge vernova": {
+  "name": "GE Vernova",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "gen": {
+  "name": "Gen",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "general atomics": {
+  "name": "General Atomics",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known defense contractor"
+ },
+ "general dynamics information technology": {
+  "name": "General Dynamics Information Technology",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large defense contractor"
+ },
+ "general dynamics mission systems": {
+  "name": "General Dynamics Mission Systems",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large defense contractor"
+ },
+ "general matter": {
+  "name": "General Matter",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "general motors": {
+  "name": "General Motors",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in automotive"
+ },
+ "glimpse": {
+  "name": "Glimpse",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "glint tech solutions": {
+  "name": "Glint Tech Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "globus medical": {
+  "name": "Globus Medical",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in medical devices"
+ },
+ "glorium technologies": {
+  "name": "Glorium Technologies",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "goldman sachs": {
+  "name": "Goldman Sachs",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in finance"
+ },
+ "google": {
+  "name": "Google",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "google deepmind": {
+  "name": "Google DeepMind",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "known AI research lab"
+ },
+ "gradial": {
+  "name": "Gradial",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "grow in greenville nc": {
+  "name": "Grow in Greenville, NC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "guess?": {
+  "name": "Guess?, LLC.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known fashion brand"
+ },
+ "guidehouse": {
+  "name": "Guidehouse",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known consulting firm"
+ },
+ "h": {
+  "name": "H Company",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hadrian": {
+  "name": "Hadrian",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "halvik": {
+  "name": "Halvik",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "han staffing": {
+  "name": "HAN Staffing",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recognized staffing agency"
+ },
+ "handshake": {
+  "name": "Handshake",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hanvok": {
+  "name": "Hanvok Group LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "happyrobot": {
+  "name": "HappyRobot",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "harbinger": {
+  "name": "Harbinger",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "harbor capital advisors": {
+  "name": "Harbor Capital Advisors, Inc.",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recognized investment firm"
+ },
+ "harris computer": {
+  "name": "Harris Computer",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in software solutions"
+ },
+ "hatch": {
+  "name": "Hatch",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "haveron james": {
+  "name": "Haveron James",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "haystack": {
+  "name": "Haystack",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hcltech": {
+  "name": "HCLTech",
+  "kind": "outsourcing",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "large IT services firm"
+ },
+ "hearst digital marketing services": {
+  "name": "Hearst Digital Marketing Services",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Media and marketing services company"
+ },
+ "hermès": {
+  "name": "Hermès",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Luxury goods manufacturer"
+ },
+ "heven aerotech": {
+  "name": "Heven AeroTech",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hii": {
+  "name": "HII",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "Defense and shipbuilding company"
+ },
+ "hire feed": {
+  "name": "Hire Feed",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hired": {
+  "name": "Hired",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Job marketplace platform"
+ },
+ "hirematic talent solutions": {
+  "name": "Hirematic Talent Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hitachi energy": {
+  "name": "Hitachi Energy",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Energy solutions provider"
+ },
+ "hmh": {
+  "name": "HMH",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "Educational publishing company"
+ },
+ "honeywell aerospace": {
+  "name": "Honeywell Aerospace",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Aerospace and defense technology"
+ },
+ "hrk technologies": {
+  "name": "HRK Technologies Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hrl laboratories": {
+  "name": "HRL Laboratories, LLC",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "Research and development lab"
+ },
+ "htc global services": {
+  "name": "HTC Global Services",
+  "kind": "outsourcing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "IT services and consulting"
+ },
+ "humana": {
+  "name": "Humana",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Health insurance company"
+ },
+ "huntington national bank": {
+  "name": "Huntington National Bank",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Regional bank"
+ },
+ "hyra": {
+  "name": "Hyra",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "hyve solutions": {
+  "name": "Hyve Solutions",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "IT infrastructure solutions"
+ },
+ "icu medical": {
+  "name": "ICU Medical",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Medical device manufacturer"
+ },
+ "idea entity": {
+  "name": "Idea Entity",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ignite": {
+  "name": "IGNITE",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "igt": {
+  "name": "IGT",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Gaming technology company"
+ },
+ "ima financial": {
+  "name": "IMA Financial Group, Inc.",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Financial services firm"
+ },
+ "imc": {
+  "name": "IMC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "impact": {
+  "name": "Impact",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "independent software": {
+  "name": "Independent Software, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "infineon technologies": {
+  "name": "Infineon Technologies",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Semiconductor manufacturer"
+ },
+ "infinite computer solutions": {
+  "name": "Infinite Computer Solutions",
+  "kind": "outsourcing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "IT services provider"
+ },
+ "infosoft": {
+  "name": "Infosoft, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "infosys": {
+  "name": "Infosys",
+  "kind": "outsourcing",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Global IT services company"
+ },
+ "initi8 recruitment": {
+  "name": "Initi8 Recruitment",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Recruitment agency"
+ },
+ "innovative defense technologies (idt)": {
+  "name": "Innovative Defense Technologies (IDT)",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Defense technology company"
+ },
+ "innovative reasoning": {
+  "name": "Innovative Reasoning, LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "innovative refrigeration systems": {
+  "name": "Innovative Refrigeration Systems, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "insight global": {
+  "name": "Insight Global",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Staffing agency"
+ },
+ "integrated medical systems": {
+  "name": "Integrated Medical Systems, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "intel": {
+  "name": "Intel",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Semiconductor giant"
+ },
+ "intriq": {
+  "name": "Intriq",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "intuit": {
+  "name": "Intuit",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Financial software company"
+ },
+ "invertops": {
+  "name": "Invertops",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ionq": {
+  "name": "IonQ",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Quantum computing company"
+ },
+ "jack": {
+  "name": "Jack",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "jack & jill": {
+  "name": "Jack & Jill",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "job marketplace"
+ },
+ "janus international": {
+  "name": "Janus International",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known manufacturer"
+ },
+ "jobgether": {
+  "name": "Jobgether",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "job marketplace"
+ },
+ "jobot": {
+  "name": "Jobot",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "jobrightai": {
+  "name": "Jobright.ai",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "job marketplace"
+ },
+ "jobverseio": {
+  "name": "Jobverse.io",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "joby aviation": {
+  "name": "Joby Aviation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known aviation company"
+ },
+ "john deere": {
+  "name": "John Deere",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "johns hopkins applied physics laboratory": {
+  "name": "Johns Hopkins Applied Physics Laboratory",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "national laboratory"
+ },
+ "johnson controls": {
+  "name": "Johnson Controls",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "household name"
+ },
+ "jpmorganchase": {
+  "name": "JPMorganChase",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "bulge-bracket bank"
+ },
+ "jsr tech consulting": {
+  "name": "JSR Tech Consulting",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "julius": {
+  "name": "Julius",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "karma automotive": {
+  "name": "Karma Automotive",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known automotive company"
+ },
+ "kayak": {
+  "name": "KAYAK",
+  "kind": "aggregator",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "household name"
+ },
+ "key & card ag - einfach genial digital": {
+  "name": "Key & Card AG - Einfach. Genial. Digital.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "keysight technologies": {
+  "name": "Keysight Technologies",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known tech company"
+ },
+ "kforce": {
+  "name": "Kforce Inc",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "kikoff": {
+  "name": "Kikoff",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "kla": {
+  "name": "KLA",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known semiconductor company"
+ },
+ "koah labs": {
+  "name": "Koah Labs",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "koahlabs": {
+  "name": "Koahlabs",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "kobie": {
+  "name": "Kobie",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "kpg99": {
+  "name": "KPG99 INC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "kratos defense and security solutions": {
+  "name": "Kratos Defense and Security Solutions",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known defense company"
+ },
+ "l3harris technologies": {
+  "name": "L3Harris Technologies",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "ladders": {
+  "name": "Ladders",
+  "kind": "aggregator",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "job marketplace"
+ },
+ "lam research": {
+  "name": "Lam Research",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known semiconductor company"
+ },
+ "lawfully": {
+  "name": "Lawfully",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "lazard": {
+  "name": "Lazard",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known financial advisory"
+ },
+ "leidos": {
+  "name": "Leidos",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "life time": {
+  "name": "Life Time Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known fitness company"
+ },
+ "lifetime benefit solutions": {
+  "name": "Lifetime Benefit Solutions, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "lightfield": {
+  "name": "Lightfield",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "litera": {
+  "name": "Litera",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known legal tech company"
+ },
+ "lockheed martin": {
+  "name": "Lockheed Martin",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "loram maintenance of way": {
+  "name": "Loram Maintenance of Way, Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known rail maintenance company"
+ },
+ "lucid scientific": {
+  "name": "Lucid Scientific",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "lynden door": {
+  "name": "Lynden Door Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.1,
+  "why": "no knowledge"
+ },
+ "mach industries": {
+  "name": "Mach Industries",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "magnit global": {
+  "name": "Magnit Global",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known staffing agency"
+ },
+ "maincode": {
+  "name": "Maincode",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "mantech": {
+  "name": "MANTECH",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "known defense contractor"
+ },
+ "masimo": {
+  "name": "Masimo",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "medical technology company"
+ },
+ "mathys+potestio / the creative party®": {
+  "name": "Mathys+Potestio / The Creative Party®",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "matlen silver": {
+  "name": "Matlen Silver",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recognized staffing firm"
+ },
+ "matrix usa": {
+  "name": "Matrix USA",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "mbn solutions": {
+  "name": "MBN Solutions",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recognized staffing agency"
+ },
+ "mckesson": {
+  "name": "McKesson",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major healthcare company"
+ },
+ "medela": {
+  "name": "Medela",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "medical device company"
+ },
+ "meta": {
+  "name": "Meta",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known tech company"
+ },
+ "metlife": {
+  "name": "MetLife",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major insurance company"
+ },
+ "michels": {
+  "name": "Michels Corporation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "construction and utility company"
+ },
+ "micron technology": {
+  "name": "Micron Technology",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "semiconductor giant"
+ },
+ "microsoft": {
+  "name": "Microsoft",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name tech company"
+ },
+ "midea america": {
+  "name": "Midea America",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known appliance manufacturer"
+ },
+ "milliman intelliscript": {
+  "name": "Milliman IntelliScript",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "healthcare analytics company"
+ },
+ "milwaukee tool": {
+  "name": "Milwaukee Tool",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "recognized tool manufacturer"
+ },
+ "mindsource": {
+  "name": "MindSource",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recognized staffing firm"
+ },
+ "mintegral": {
+  "name": "Mintegral",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "mintz": {
+  "name": "Mintz",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "law firm"
+ },
+ "mission technologies a division of hii": {
+  "name": "Mission Technologies, a division of HII",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "defense contractor"
+ },
+ "mitek": {
+  "name": "MiTek",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "construction technology company"
+ },
+ "modern technology solutions inc (mtsi)": {
+  "name": "Modern Technology Solutions, Inc. (MTSI)",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "defense contractor"
+ },
+ "modmed": {
+  "name": "ModMed",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "healthcare technology company"
+ },
+ "morgan stanley": {
+  "name": "Morgan Stanley",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "bulge-bracket bank"
+ },
+ "mortenson": {
+  "name": "Mortenson",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "construction company"
+ },
+ "motive": {
+  "name": "Motive",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "msa - the safety": {
+  "name": "MSA - The Safety Company",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "safety equipment manufacturer"
+ },
+ "muon": {
+  "name": "Muon",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "muon space": {
+  "name": "Muon Space",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "mx holdings": {
+  "name": "MX Holdings",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "my custom ai": {
+  "name": "My Custom AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "n1": {
+  "name": "N1",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "n2p systems": {
+  "name": "N2P Systems",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "netapp": {
+  "name": "NetApp",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known tech company"
+ },
+ "netic": {
+  "name": "Netic",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "netjets": {
+  "name": "NetJets",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "private aviation company"
+ },
+ "netradyne": {
+  "name": "Netradyne",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "technology company"
+ },
+ "new relic": {
+  "name": "New Relic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Known software analytics company."
+ },
+ "new york cancer & blood specialists": {
+  "name": "New York Cancer & Blood Specialists",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Healthcare provider in New York."
+ },
+ "newport news shipbuilding a division of hii": {
+  "name": "Newport News Shipbuilding, A Division of HII",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major defense contractor."
+ },
+ "nexcade": {
+  "name": "Nexcade",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "niagara bottling": {
+  "name": "Niagara Bottling",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Large beverage manufacturer."
+ },
+ "ninth wave": {
+  "name": "Ninth Wave",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "nizh": {
+  "name": "Nizh",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "nj department of environmental protection": {
+  "name": "NJ Department of Environmental Protection",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "State government agency."
+ },
+ "nmsu conference services": {
+  "name": "NMSU Conference Services",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Part of New Mexico State University."
+ },
+ "nooks": {
+  "name": "Nooks",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "nord resume": {
+  "name": "Nord Resume",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "north": {
+  "name": "North",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "northwestern university": {
+  "name": "Northwestern University",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Well-known university."
+ },
+ "northwoodspace": {
+  "name": "northwoodspace",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "norton healthcare": {
+  "name": "Norton Healthcare",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Healthcare provider in Kentucky."
+ },
+ "notion": {
+  "name": "Notion",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Popular productivity software."
+ },
+ "npaworldwide": {
+  "name": "NPAworldwide",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Recruiting network."
+ },
+ "nscale": {
+  "name": "Nscale",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ntt data north america": {
+  "name": "NTT DATA North America",
+  "kind": "outsourcing",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Global IT services firm."
+ },
+ "nuro": {
+  "name": "Nuro",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Autonomous delivery vehicle company."
+ },
+ "nvidia": {
+  "name": "NVIDIA",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Leading GPU manufacturer."
+ },
+ "nxp semiconductors": {
+  "name": "NXP Semiconductors",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Major semiconductor company."
+ },
+ "nyu langone health": {
+  "name": "NYU Langone Health",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Well-known healthcare provider."
+ },
+ "oak ridge national laboratory": {
+  "name": "Oak Ridge National Laboratory",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "National lab in the US."
+ },
+ "observable space": {
+  "name": "Observable Space",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ocho": {
+  "name": "Ocho",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "odyssey information services": {
+  "name": "Odyssey Information Services",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "IT staffing firm."
+ },
+ "ohio cat": {
+  "name": "Ohio Cat",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Heavy equipment dealer."
+ },
+ "oklo": {
+  "name": "Oklo Inc",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Nuclear technology startup."
+ },
+ "omw consulting": {
+  "name": "OMW Consulting",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "onvida health": {
+  "name": "Onvida Health",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "onyx chambers": {
+  "name": "Onyx Chambers",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "openai": {
+  "name": "OpenAI",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Leading AI research organization."
+ },
+ "openlane": {
+  "name": "OPENLANE",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "optitrack": {
+  "name": "OptiTrack",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Motion capture technology company."
+ },
+ "orb": {
+  "name": "Orb",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "orbis": {
+  "name": "Orbis Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "orion innovation": {
+  "name": "Orion Innovation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Technology consulting firm."
+ },
+ "otter": {
+  "name": "Otter",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "overland ai": {
+  "name": "Overland AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "oxbridge health": {
+  "name": "Oxbridge Health",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "paccar": {
+  "name": "PACCAR",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known manufacturer"
+ },
+ "palantir": {
+  "name": "Palantir",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "palantir technologies": {
+  "name": "Palantir Technologies",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "palnar": {
+  "name": "PALNAR",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "panasonic energy corporation of north america": {
+  "name": "Panasonic Energy Corporation of North America",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.8,
+  "why": "part of a large corporation"
+ },
+ "pansophic learning": {
+  "name": "Pansophic Learning",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "pariveda": {
+  "name": "Pariveda",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known consulting firm"
+ },
+ "parsons": {
+  "name": "Parsons Corporation",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known defense contractor"
+ },
+ "paylocity": {
+  "name": "Paylocity",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known payroll software company"
+ },
+ "pcb piezotronics": {
+  "name": "PCB Piezotronics, Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in measurement technology"
+ },
+ "pd instore": {
+  "name": "PD Instore",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "pedestal health": {
+  "name": "Pedestal Health",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "pentangle tech services | p5": {
+  "name": "Pentangle Tech Services | P5 Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "per scholas": {
+  "name": "Per Scholas",
+  "kind": "training",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known training organization"
+ },
+ "pgtek": {
+  "name": "PGTEK",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "pia automation": {
+  "name": "PIA Automation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in automation industry"
+ },
+ "pinterest": {
+  "name": "Pinterest",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in social media"
+ },
+ "pipe17": {
+  "name": "Pipe17",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "piston automotive": {
+  "name": "Piston Automotive",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in automotive industry"
+ },
+ "plaid": {
+  "name": "Plaid",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in fintech"
+ },
+ "plante moran": {
+  "name": "Plante Moran",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known consulting firm"
+ },
+ "pnc": {
+  "name": "PNC",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "large bank"
+ },
+ "pop-up talent": {
+  "name": "Pop-Up Talent",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "known staffing agency"
+ },
+ "portal stg news": {
+  "name": "Portal STG News",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "power home remodeling": {
+  "name": "Power Home Remodeling",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in home improvement"
+ },
+ "precision technologies": {
+  "name": "Precision Technologies",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "prodege": {
+  "name": "Prodege, LLC",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in marketing"
+ },
+ "programmersio": {
+  "name": "Programmers.io",
+  "kind": "outsourcing",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "known for staffing services"
+ },
+ "prosidian consulting": {
+  "name": "Prosidian Consulting",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "known consulting firm"
+ },
+ "prudent technologies and consulting": {
+  "name": "Prudent Technologies and Consulting, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ptma financial solutions": {
+  "name": "PTMA Financial Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "pubmatic": {
+  "name": "PubMatic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known in advertising technology"
+ },
+ "pylon": {
+  "name": "Pylon",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "q1 technologies": {
+  "name": "Q1 Technologies, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "q2": {
+  "name": "Q2",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in fintech"
+ },
+ "qcells north america": {
+  "name": "Qcells North America",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "known in renewable energy"
+ },
+ "qualcomm": {
+  "name": "Qualcomm",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "quik hire staffing": {
+  "name": "Quik Hire Staffing",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "known staffing agency"
+ },
+ "quora": {
+  "name": "Quora",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name in tech"
+ },
+ "radiant": {
+  "name": "Radiant",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "radley james": {
+  "name": "Radley James",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.7,
+  "why": "recruiting agency"
+ },
+ "ramp": {
+  "name": "Ramp",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "ramsey solutions": {
+  "name": "Ramsey Solutions",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "well-known company"
+ },
+ "randstad digital americas": {
+  "name": "Randstad Digital Americas",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "recruiting agency"
+ },
+ "raytheon": {
+  "name": "Raytheon",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "defense prime"
+ },
+ "red cat holdings": {
+  "name": "Red Cat Holdings",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "red river commodities": {
+  "name": "Red River Commodities Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "redballoon": {
+  "name": "RedBalloon",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "reflect orbital": {
+  "name": "Reflect Orbital",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "reinsurance group of america incorporated": {
+  "name": "Reinsurance Group of America, Incorporated",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "relativity space": {
+  "name": "Relativity Space",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "well-known company"
+ },
+ "relay": {
+  "name": "Relay",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "remotehunter": {
+  "name": "RemoteHunter",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "reqpedia": {
+  "name": "Reqpedia",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "retell ai": {
+  "name": "Retell AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "revature": {
+  "name": "Revature",
+  "kind": "training",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "trains and places candidates"
+ },
+ "rhombus power": {
+  "name": "Rhombus Power Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "robert half": {
+  "name": "Robert Half",
+  "kind": "staffing",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "recruiting agency"
+ },
+ "roblox": {
+  "name": "Roblox",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "rocket lab": {
+  "name": "Rocket Lab",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "rose international": {
+  "name": "Rose International",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "recruiting agency"
+ },
+ "royal health": {
+  "name": "Royal Health Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "runsybil": {
+  "name": "RunSybil",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "russell tobin": {
+  "name": "Russell Tobin",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting agency"
+ },
+ "rwjbarnabas health": {
+  "name": "RWJBarnabas Health",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "saalex": {
+  "name": "Saalex",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "sage care": {
+  "name": "Sage Care",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "saic": {
+  "name": "SAIC",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "defense prime"
+ },
+ "salesforce": {
+  "name": "Salesforce",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "samsara": {
+  "name": "Samsara",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "san diego state university": {
+  "name": "San Diego State University",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known university"
+ },
+ "sandstone": {
+  "name": "Sandstone",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "sanford health": {
+  "name": "Sanford Health",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "saragossa": {
+  "name": "Saragossa",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "sas": {
+  "name": "SAS",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "household name"
+ },
+ "sbt global": {
+  "name": "SBT Global",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "scale ai": {
+  "name": "Scale AI",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "well-known company"
+ },
+ "scout global": {
+  "name": "Scout Global",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "sd & associates": {
+  "name": "SD & Associates",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "seacorp": {
+  "name": "SEACORP",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Defense contractor, known in sector."
+ },
+ "secunetics": {
+  "name": "SECUNETICS",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "securiport": {
+  "name": "Securiport",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Known for security solutions."
+ },
+ "sentara health": {
+  "name": "Sentara Health",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major healthcare provider."
+ },
+ "serco": {
+  "name": "Serco",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Global service company."
+ },
+ "servicenow": {
+  "name": "ServiceNow",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Well-known IT service management."
+ },
+ "shi international": {
+  "name": "SHI International Corp.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Large IT solutions provider."
+ },
+ "siemens energy": {
+  "name": "Siemens Energy",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major player in energy sector."
+ },
+ "sift": {
+  "name": "Sift",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Known for fraud prevention."
+ },
+ "sigma ingeniería en vanguardia": {
+  "name": "Sigma Ingeniería en Vanguardia",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "simplisafe": {
+  "name": "SimpliSafe",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Home security company."
+ },
+ "slalom": {
+  "name": "Slalom",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "Consulting firm, well-known."
+ },
+ "slb": {
+  "name": "SLB",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major oilfield services company."
+ },
+ "smarsh": {
+  "name": "Smarsh",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "Known for compliance solutions."
+ },
+ "smartsheet": {
+  "name": "Smartsheet",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "Collaboration software company."
+ },
+ "smith+nephew": {
+  "name": "Smith+Nephew",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Global medical technology company."
+ },
+ "smx services & consulting": {
+  "name": "SMX Services & Consulting, Inc.",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Known for consulting services."
+ },
+ "snowflake": {
+  "name": "Snowflake",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Popular cloud data platform."
+ },
+ "socode recruitment": {
+  "name": "SoCode Recruitment",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Recruitment agency."
+ },
+ "softheon": {
+  "name": "Softheon",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Health tech solutions."
+ },
+ "software guidance & assistance inc (sga inc)": {
+  "name": "Software Guidance & Assistance, Inc. (SGA, Inc.)",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "Recruitment agency."
+ },
+ "soilair selection": {
+  "name": "Soilair Selection",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "solution design": {
+  "name": "Solution Design Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "solverix global": {
+  "name": "Solverix Global Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "spacex": {
+  "name": "SpaceX",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Famous aerospace manufacturer."
+ },
+ "spectrum control": {
+  "name": "Spectrum Control",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Known for electronic components."
+ },
+ "spire": {
+  "name": "Spire",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.6,
+  "why": "Data analytics company."
+ },
+ "squint": {
+  "name": "Squint",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "src": {
+  "name": "SRC",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Known for defense solutions."
+ },
+ "standard calibrations": {
+  "name": "Standard Calibrations, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "stark tech": {
+  "name": "Stark Tech",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "state street": {
+  "name": "State Street",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major financial services firm."
+ },
+ "stealth startup": {
+  "name": "Stealth Startup",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "stellantis": {
+  "name": "Stellantis",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Global automotive manufacturer."
+ },
+ "stellar alpina": {
+  "name": "Stellar Alpina",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "stormont vail health": {
+  "name": "Stormont Vail Health",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Regional healthcare provider."
+ },
+ "str": {
+  "name": "STR",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Known for defense and tech."
+ },
+ "stratascorp technologies": {
+  "name": "StratasCorp Technologies",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "strategic business systems (sbs)": {
+  "name": "Strategic Business Systems (SBS)",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.5,
+  "why": "Known for IT solutions."
+ },
+ "stripe": {
+  "name": "Stripe",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "Major payment processing company."
+ },
+ "stryker": {
+  "name": "Stryker",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known medical technology company"
+ },
+ "stuller": {
+  "name": "Stuller, Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "recognized jewelry manufacturer"
+ },
+ "sunbelt controls": {
+  "name": "Sunbelt Controls",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known for building automation solutions"
+ },
+ "sundayy": {
+  "name": "Sundayy",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "superhuman": {
+  "name": "Superhuman",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "supermicro": {
+  "name": "Supermicro",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known server and storage solutions"
+ },
+ "surge software": {
+  "name": "Surge Software",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "synechron": {
+  "name": "Synechron",
+  "kind": "outsourcing",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "global consulting and technology services"
+ },
+ "synergy business consulting": {
+  "name": "Synergy Business Consulting, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tact": {
+  "name": "Tact",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tata consultancy services": {
+  "name": "Tata Consultancy Services",
+  "kind": "outsourcing",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major global IT services firm"
+ },
+ "tata technologies": {
+  "name": "Tata Technologies",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "engineering services and solutions"
+ },
+ "tavas technologies": {
+  "name": "Tavas Technologies Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "taxbit": {
+  "name": "Taxbit",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known for tax automation software"
+ },
+ "tcom": {
+  "name": "TCOM, L.P.",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "known for telecommunications solutions"
+ },
+ "tebra": {
+  "name": "Tebra",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tech consulting": {
+  "name": "Tech Consulting",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "technogen": {
+  "name": "Technogen, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "techtree": {
+  "name": "TechTree",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "teksystems": {
+  "name": "TEKsystems",
+  "kind": "staffing",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "leading IT staffing agency"
+ },
+ "tekvalue it solutions": {
+  "name": "TekValue IT Solutions",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tempest vane partners": {
+  "name": "Tempest Vane Partners",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tenexai": {
+  "name": "TENEX.AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tessera labs": {
+  "name": "Tessera Labs",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tetramem - accelerate the world": {
+  "name": "TetraMem - Accelerate The World",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "texas sports academy main": {
+  "name": "Texas Sports Academy Main",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "texas-new mexico power (tnmp)": {
+  "name": "Texas-New Mexico Power (TNMP)",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "regional electric utility company"
+ },
+ "textron gse": {
+  "name": "Textron GSE",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known for ground support equipment"
+ },
+ "tforce logistics": {
+  "name": "TForce Logistics",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "logistics and transportation services"
+ },
+ "the developer link": {
+  "name": "The Developer Link",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "the flyover": {
+  "name": "The Flyover",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "the fountain": {
+  "name": "The Fountain Group",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "recruiting and staffing agency"
+ },
+ "the judge": {
+  "name": "The Judge Group",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "staffing and consulting services"
+ },
+ "the new york times": {
+  "name": "The New York Times",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major media organization"
+ },
+ "the reynolds and reynolds": {
+  "name": "The Reynolds and Reynolds Company",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known for automotive software solutions"
+ },
+ "the swift": {
+  "name": "The Swift Group, LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "the university of texas medical branch": {
+  "name": "The University of Texas Medical Branch",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major academic medical center"
+ },
+ "theron partners": {
+  "name": "Theron Partners Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "thomas to": {
+  "name": "Thomas To",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "thomson reuters": {
+  "name": "Thomson Reuters",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "global information and news company"
+ },
+ "thoughtstorm": {
+  "name": "ThoughtStorm",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "threatlocker": {
+  "name": "ThreatLocker",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "thunder::tech": {
+  "name": "thunder::tech",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "torc robotics": {
+  "name": "Torc Robotics",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known robotics company"
+ },
+ "torch technologies": {
+  "name": "Torch Technologies, Inc.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known defense contractor"
+ },
+ "town of freetown": {
+  "name": "Town Of Freetown",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "local government entity"
+ },
+ "toyota north america": {
+  "name": "Toyota North America",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major automotive manufacturer"
+ },
+ "toyota tsusho america": {
+  "name": "Toyota Tsusho America",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "subsidiary of Toyota Group"
+ },
+ "tp-link": {
+  "name": "TP-Link",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known networking hardware company"
+ },
+ "tqa": {
+  "name": "TQA",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "traba": {
+  "name": "Traba",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "transcend softech": {
+  "name": "Transcend Softech LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "treohm analytics": {
+  "name": "Treohm Analytics",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "tri pointe homes": {
+  "name": "Tri Pointe Homes",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known homebuilder"
+ },
+ "trihydro": {
+  "name": "Trihydro Corporation",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "engineering and environmental services"
+ },
+ "true anomaly": {
+  "name": "True Anomaly",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "emerging space technology company"
+ },
+ "true north consultants": {
+  "name": "True North Consultants",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "truist": {
+  "name": "Truist",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major bank"
+ },
+ "turing": {
+  "name": "Turing",
+  "kind": "staffing",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "tech talent marketplace"
+ },
+ "twitch": {
+  "name": "Twitch",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "popular streaming platform"
+ },
+ "tyler technologies": {
+  "name": "Tyler Technologies",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "government software solutions"
+ },
+ "us bank": {
+  "name": "U.S. Bank",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major bank"
+ },
+ "uf information technology (ufit)": {
+  "name": "UF Information Technology (UFIT)",
+  "kind": "employer",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "university IT department"
+ },
+ "uniswap labs": {
+  "name": "Uniswap Labs",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known DeFi platform"
+ },
+ "university of michigan": {
+  "name": "University of Michigan",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major research university"
+ },
+ "university of minnesota": {
+  "name": "University of Minnesota",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major research university"
+ },
+ "university of south florida": {
+  "name": "University of South Florida",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "public university"
+ },
+ "university of southern california": {
+  "name": "University of Southern California",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major research university"
+ },
+ "us tech solutions": {
+  "name": "US Tech Solutions",
+  "kind": "staffing",
+  "tier": 1,
+  "conf": 0.6,
+  "why": "IT staffing agency"
+ },
+ "vallum associates": {
+  "name": "Vallum Associates",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "vanderlande": {
+  "name": "Vanderlande",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "logistics automation company"
+ },
+ "vanguard": {
+  "name": "Vanguard",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major investment management firm"
+ },
+ "vantor": {
+  "name": "Vantor",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "vcu health": {
+  "name": "VCU Health",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "healthcare provider"
+ },
+ "veedma": {
+  "name": "Veedma",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "venture up": {
+  "name": "Venture Up",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "vercel": {
+  "name": "Vercel",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known web development platform"
+ },
+ "viant technology": {
+  "name": "Viant Technology",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "advertising technology company"
+ },
+ "victor": {
+  "name": "Victor",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "virgin galactic": {
+  "name": "Virgin Galactic",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "space tourism company"
+ },
+ "visalytics": {
+  "name": "Visalytics",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "visionary innovative technology solutions": {
+  "name": "Visionary Innovative Technology Solutions LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "vista": {
+  "name": "Vista Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "volo health": {
+  "name": "VOLO Health",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "volvo": {
+  "name": "Volvo Group",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known automotive manufacturer"
+ },
+ "vultr": {
+  "name": "Vultr",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "w3global": {
+  "name": "W3Global",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "warp": {
+  "name": "Warp",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "warriors solutions": {
+  "name": "Warriors Solutions Group",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "washington university in st louis": {
+  "name": "Washington University in St. Louis",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known university"
+ },
+ "waymark": {
+  "name": "Waymark",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "waystar": {
+  "name": "Waystar",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "wd": {
+  "name": "WD",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.8,
+  "why": "known storage solutions company"
+ },
+ "wells fargo": {
+  "name": "Wells Fargo",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "major banking institution"
+ },
+ "werideai": {
+  "name": "WeRide.ai",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "westerndigital": {
+  "name": "Westerndigital",
+  "kind": "employer",
+  "tier": 3,
+  "conf": 0.9,
+  "why": "well-known storage solutions company"
+ },
+ "whoop": {
+  "name": "WHOOP",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "wilcore technologies": {
+  "name": "Wilcore Technologies, Inc.",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "willsmarg technologies": {
+  "name": "Willsmarg Technologies LLC",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "winstead pc": {
+  "name": "Winstead PC",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known law firm"
+ },
+ "wonderschool": {
+  "name": "Wonderschool",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "worldquant": {
+  "name": "WorldQuant",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known quantitative investment firm"
+ },
+ "wsp in the us": {
+  "name": "WSP in the U.S.",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known engineering consultancy"
+ },
+ "x the moonshot factory": {
+  "name": "X, The Moonshot Factory",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known innovation lab"
+ },
+ "xaira therapeutics": {
+  "name": "Xaira Therapeutics",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "xchange software": {
+  "name": "XChange Software Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "xendit": {
+  "name": "Xendit",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "xtreme solutions": {
+  "name": "Xtreme Solutions Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "yahara software": {
+  "name": "Yahara Software",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "yara ai": {
+  "name": "Yara AI",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zelis": {
+  "name": "Zelis",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zetheta algorithms private": {
+  "name": "Zetheta Algorithms Private Limited",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zettabyte space": {
+  "name": "Zettabyte Space",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zion church": {
+  "name": "Zion Church",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zipline": {
+  "name": "Zipline",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known logistics company"
+ },
+ "zodiac solutions": {
+  "name": "Zodiac Solutions, Inc",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "zoox": {
+  "name": "Zoox",
+  "kind": "employer",
+  "tier": 2,
+  "conf": 0.7,
+  "why": "known autonomous vehicle company"
+ },
+ "ztek consulting": {
+  "name": "Ztek Consulting",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "フジアルテ株式会社": {
+  "name": "フジアルテ株式会社",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ },
+ "凯斯纽荷兰(中国)管理有限公司": {
+  "name": "凯斯纽荷兰(中国)管理有限公司",
+  "kind": "unknown",
+  "tier": 0,
+  "conf": 0.2,
+  "why": "no knowledge"
+ }
+}

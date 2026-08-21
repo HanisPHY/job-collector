@@ -8,12 +8,10 @@ REM Intended schedule: every 60 minutes (see SCHEDULING.md)
 
 cd /d "%~dp0"
 
-call conda activate job-classifier
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Failed to activate conda environment 'job-classifier'
-    echo Make sure conda is installed and the environment exists
-    exit /b %ERRORLEVEL%
-)
+REM Resolve the interpreter without `conda activate` - see resolve_python.bat
+REM for why (concurrent tasks race on conda's %TEMP% file).
+call "%~dp0resolve_python.bat"
+if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
 REM Time filter is 120 minutes while the scheduler runs hourly, so a delayed
 REM or skipped run does not create a gap in coverage.
@@ -32,7 +30,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    "%JOB_PYTHON%" -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 REM Tier 2: catches big-tech new grad roles whose titles carry no
@@ -47,7 +45,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    "%JOB_PYTHON%" -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 REM Tier 3: supplementary phrasings
@@ -59,7 +57,7 @@ for %%Q in (
     echo ============================================================
     echo Query: %%~Q
     echo ============================================================
-    python -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
+    "%JOB_PYTHON%" -u main.py --query "%%~Q" --limit %LIMIT% --time-filter %TIMEFILTER% --output %OUTPUT% --exclude-senior
 )
 
 echo.

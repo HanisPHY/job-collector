@@ -26,6 +26,10 @@ class LLMCostTracker:
         "gpt-4o": {
             "input": 0.0025,    # $2.50 per 1M tokens
             "output": 0.01      # $10 per 1M tokens
+        },
+        "gpt-4o-mini": {
+            "input": 0.00015,   # $0.15 per 1M tokens
+            "output": 0.0006    # $0.60 per 1M tokens
         }
     }
     

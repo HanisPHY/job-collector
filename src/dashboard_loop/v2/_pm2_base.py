@@ -58,7 +58,7 @@ def open_expected(cap2):
 
 
 def load():
-    rows = CL.load_rows(str(paths.ROOT))
+    rows = CL.load_rows(str(paths.DATA_DIR))
     return rows, CL.load_profiles(), CL.load_overrides(), CL.load_priority()
 
 

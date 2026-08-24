@@ -1,9 +1,9 @@
 @echo off
-REM Batch script to run job_collector.py with conda environment
-REM This script can be used with Windows Task Scheduler
+REM DEPRECATED batch script for the old "software engineer intern" search.
+REM Superseded by tasks\run_logged.bat run_newgrad_collector - see SCHEDULING.md.
 
-REM Change to the script directory
-cd /d "%~dp0"
+REM Change to the project root - the scripts live under scripts/ since the reorg.
+cd /d "%~dp0.."
 
 REM Activate conda environment and run the script
 call conda activate job-classifier
@@ -14,11 +14,11 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-python main.py --query "software engineer intern" --limit 50 --time-filter 20
+python scripts\main.py --query "software engineer intern" --limit 50 --time-filter 20
 REM To disable LLM classification (faster, less accurate), add --no-llm flag above
 
 REM Optional: Log the output to a file
-REM call conda activate job-classifier && python job_collector.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
+REM call conda activate job-classifier && python scripts\main.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
 
 REM Note: Remove 'pause' if running from Task Scheduler (it will hang)
 REM Keep window open if there's an error (optional, remove if you want it to close automatically)

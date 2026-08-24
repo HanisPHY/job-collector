@@ -479,7 +479,10 @@ class F14PerRow(unittest.TestCase):
 
     def test_F14_kayak_own_board_rows_are_A(self):
         rows = [r for r in self._rows_of("KAYAK") if r["_source"] == "ats_direct"]
-        self.assertEqual(len(rows), 2, "expected KAYAK's 2 ats_direct rows")
+        # _ROWS is the live data/ CSVs, so the count grows whenever the ATS lane
+        # picks up another KAYAK posting. Guard that the case still has data;
+        # the assertion under test is the segment check below, not the count.
+        self.assertTrue(rows, "expected at least one KAYAK ats_direct row")
         for r in rows:
             with self.subTest(title=r["job_title"]):
                 R = resolver(r["_day"])
@@ -791,13 +794,18 @@ class F1F2Enrichment(unittest.TestCase):
             shutil.rmtree(d, ignore_errors=True)
 
     def test_no_module_shadows_the_stdlib(self):
-        """A file called queue.py in the script directory breaks the
-        openai -> httpcore -> trio import chain. Two people have burned time on it."""
+        """A file called queue.py on sys.path breaks the openai -> httpcore ->
+        trio import chain. Two people have burned time on it.
+
+        The reorg put two directories on sys.path: scripts/, which Python makes
+        sys.path[0] for every entry point, and src/, which the editable install
+        adds. The repo root itself is on neither, so checking it proves nothing."""
         import queue as stdlib_queue
         self.assertTrue(hasattr(stdlib_queue, "SimpleQueue"))
-        for name in ("queue.py", "json.py", "types.py", "csv.py", "html.py", "logging.py"):
-            self.assertFalse(os.path.exists(os.path.join(paths.ROOT, name)),
-                             "%s in the repo root shadows the stdlib" % name)
+        for d in ("scripts", "src"):
+            for name in ("queue.py", "json.py", "types.py", "csv.py", "html.py", "logging.py"):
+                self.assertFalse(os.path.exists(os.path.join(paths.ROOT, d, name)),
+                                 "%s/%s shadows the stdlib" % (d, name))
 
 
 # ---------------------------------------------------------------- v2 helpers

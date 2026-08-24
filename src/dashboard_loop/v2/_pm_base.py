@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 
 import paths
 
+ROOT = paths.ROOT
+
 sys.path.insert(0, str(paths.ROOT / "scripts"))
 
 import company_lane as CL      # noqa: E402

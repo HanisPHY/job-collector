@@ -13,7 +13,7 @@ REM wall clock; whatever does not fit stays stage 0 and is retried tomorrow.
 REM
 REM Monthly manual catch-up (gpt-4o, ~$0.17, recovers intermediary labels that
 REM gpt-4o-mini misses) - NOT part of this scheduled run:
-REM     python -u enrich_companies.py --deep
+REM     python -u scripts\enrich_companies.py --deep
 
 cd /d "%~dp0.."
 

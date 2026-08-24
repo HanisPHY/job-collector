@@ -102,7 +102,7 @@ sits between ATS_12 finishing (~12:06) and ATS_15.
 Run it **elevated** — see the next section for why:
 
 ```powershell
-cd "D:\OneDrive\work\school\project\Job"
+cd "D:\Dev\job-collector\tasks"
 .\retime_ddg12.ps1 -WhatIf     # preview
 .\retime_ddg12.ps1             # do it
 ```
@@ -136,7 +136,7 @@ elevation; only modifying these existing ones does.)
 Open PowerShell with **Run as administrator**, then:
 
 ```powershell
-cd "D:\OneDrive\work\school\project\Job"
+cd "D:\Dev\job-collector\tasks"
 .\repoint_scheduled_tasks.ps1 -WhatIf     # preview, changes nothing
 .\repoint_scheduled_tasks.ps1             # do it
 ```
@@ -155,7 +155,7 @@ Already registered as **Job - Daily Report**, running `run_logged.bat run_daily_
 daily at 08:00. Creating it needed no elevation. To recreate it from scratch:
 
 ```powershell
-$dir = "D:\OneDrive\work\school\project\Job"
+$dir = "D:\Dev\job-collector\tasks"
 $action   = New-ScheduledTaskAction -Execute "$dir\run_logged.bat" -Argument "run_daily_report"
 $trigger  = New-ScheduledTaskTrigger -Daily -At 8am
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
@@ -190,7 +190,7 @@ jobs using `company_profiles.json`, which `enrich_companies.py` tops up — sche
 at **07:30**, half an hour ahead of the 08:00 report. No elevation needed:
 
 ```powershell
-cd "D:\OneDrive\work\school\project\Job"
+cd "D:\Dev\job-collector\tasks"
 .\register_enrich_task.ps1        # run_logged.bat run_enrich_companies, daily 07:30
 ```
 
@@ -198,7 +198,7 @@ Only companies missing from the cache are sent to the API, so a normal morning i
 few dozen names at roughly **$0.02**, and the whole run is capped at **300 s** of wall
 clock — whatever does not fit stays unclassified and is retried the next day (the
 dashboard says how many at the top). Monthly manual catch-up, deliberately *not*
-scheduled: `python -u enrich_companies.py --deep` (gpt-4o, about $0.17; it recovers
+scheduled: `python -u scripts\enrich_companies.py --deep` (gpt-4o, about $0.17; it recovers
 intermediary labels that gpt-4o-mini misses).
 
 Output: a self-contained bundle in `logs/dashboard/` — `latest.html` (the only HTML
@@ -207,7 +207,7 @@ file; that is the one to double-click), `dashboard.css`, `dashboard.js`,
 retention window — plus the read watermark in `logs/last_report.json`. There is no
 per-day HTML page any more: a pinned page would keep pointing at data blocks that get
 rewritten every morning, so it would silently re-judge rows. For a frozen snapshot run
-`python -u dashboard.py --date YYYY-MM-DD --out <dir>`, which writes the whole bundle
+`python -u scripts\dashboard.py --date YYYY-MM-DD --out <dir>`, which writes the whole bundle
 recomputed under that anchor into a directory of its own.
 
 ### Creating a task from scratch (GUI)
@@ -216,9 +216,9 @@ recomputed under that anchor into a directory of its own.
 2. Name it, click Next
 3. Trigger: **Daily**, start today, recur every 1 day -> Next
 4. Action: **Start a program**
-   - Program/script: `D:\OneDrive\work\school\project\Job\run_logged.bat`
+   - Program/script: `D:\Dev\job-collector\tasks\run_logged.bat`
    - **Add arguments**: the collector name, e.g. `run_newgrad_collector`
-   - **Start in**: `D:\OneDrive\work\school\project\Job`
+   - **Start in**: `D:\Dev\job-collector\tasks`
 5. Check "Open the Properties dialog..." -> Finish
 6. **Triggers** tab -> Edit -> check "Repeat task every" -> e.g. `1 hour`, duration `Indefinitely`
 7. **Settings** tab -> check "Run task as soon as possible after a scheduled start is missed"
@@ -226,7 +226,7 @@ recomputed under that anchor into a directory of its own.
 ### Checking on them
 
 ```powershell
-Get-ScheduledTask | Where-Object { ($_.Actions | Where-Object { $_.Execute -like "*project*Job*" }) } |
+Get-ScheduledTask | Where-Object { ($_.Actions | Where-Object { $_.Execute -like "*run_logged.bat*" }) } |
   ForEach-Object { $i = $_ | Get-ScheduledTaskInfo
     [PSCustomObject]@{ Task=$_.TaskName; LastRun=$i.LastRunTime; Result=$i.LastTaskResult } } |
   Format-Table -AutoSize
@@ -267,27 +267,28 @@ logs/
 The `.log` files are never parsed — they exist so you can read the raw output when the
 report points you at one.
 
-### ⚠ OneDrive
+### ⚠ OneDrive (historical, no longer applicable)
 
-`logs/` sits inside the OneDrive-synced tree. The new-grad collector alone produces
-roughly 1-3 MB of log per day, and OneDrive briefly locks files while uploading, which
-can collide with the atomic `os.replace()` calls the collectors use. Either exclude
-`logs/` from sync in the OneDrive settings, or move it entirely:
+The project used to live under `D:\OneDrive\work\school\project\Job`, and `logs/` sat
+inside that OneDrive-synced tree. The new-grad collector alone produces roughly 1-3 MB
+of log per day, and OneDrive briefly locks files while uploading, which could collide
+with the atomic `os.replace()` calls the collectors use. The project has since moved to
+`D:\Dev\job-collector`, which is outside any OneDrive-synced folder, so this no longer
+applies. `JOB_LOG_ROOT` (honoured by `run_log.py` and `daily_report.py`) is kept as an
+escape hatch in case `logs/` ever needs to live somewhere other than the repo again:
 
 ```
 setx JOB_LOG_ROOT "%LOCALAPPDATA%\JobCollector\logs"
 ```
-
-`run_log.py` and `daily_report.py` both honour `JOB_LOG_ROOT`.
 
 ---
 
 ## The daily report
 
 ```
-python daily_report.py                    # today
-python daily_report.py --date 2026-08-19  # a specific day
-python daily_report.py --no-prune         # keep .log files older than 30 days
+python scripts\daily_report.py                    # today
+python scripts\daily_report.py --date 2026-08-19  # a specific day
+python scripts\daily_report.py --no-prune         # keep .log files older than 30 days
 ```
 
 Writes `logs/daily/YYYY-MM-DD.md` and prints a summary. Three sections:
@@ -311,7 +312,7 @@ the per-run figure in section 3, and raises an alert above
 or the model changes.
 
 `LLMCostTracker.MODEL_PRICING` in
-[job_collector/tracking/cost_tracker.py](job_collector/tracking/cost_tracker.py) holds the
+[src/job_collector/tracking/cost_tracker.py](src/job_collector/tracking/cost_tracker.py) holds the
 per-1K-token rates. **If you switch to a model that is not in that table, the cost comes
 back as `None`** and the report labels those runs "unpriced" rather than billing them at
 `gpt-3.5-turbo` rates — a wrong number presented as fact is worse than a missing one. Add

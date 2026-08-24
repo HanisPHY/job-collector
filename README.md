@@ -81,38 +81,38 @@ export OPENAI_API_KEY="your_openai_api_key"
 ### Basic Usage
 
 ```bash
-python job_collector.py --query "software engineer" --limit 50
+python scripts\main.py --query "software engineer" --limit 50
 ```
 
 ### Command Line Options
 
 - `--query`: Job search query (default: "software engineer")
 - `--limit`: Maximum number of jobs to collect (default: 50)
-- `--output`: Output CSV file path (default: "job_classifications.csv")
+- `--output`: Output CSV file path (default: `data/job_classifications.csv`)
 - `--time-filter`: Filter jobs by posting time in minutes (e.g., `180` for 3 hours, `1440` for 24 hours). If not specified, all jobs are included.
-- `--use-api`: Attempt to use LinkedIn API (requires API key)
+- `--exclude-senior`: Drop senior/staff/principal/lead/manager titles (recommended for new-grad searches)
 - `--no-llm`: Disable LLM-based company classification
 
 ### Examples
 
 ```bash
 # Collect 100 data scientist jobs
-python job_collector.py --query "data scientist" --limit 100
+python scripts\main.py --query "data scientist" --limit 100
 
 # Use custom output file
-python job_collector.py --output "my_jobs.csv"
+python scripts\main.py --output "my_jobs.csv"
 
 # Filter jobs posted in the last 24 hours (1440 minutes)
-python job_collector.py --query "software engineer" --time-filter 1440
+python scripts\main.py --query "software engineer" --time-filter 1440
 
 # Filter jobs posted in the last 3 hours (180 minutes)
-python job_collector.py --query "data scientist" --time-filter 180 --limit 30
+python scripts\main.py --query "data scientist" --time-filter 180 --limit 30
 
 # Filter jobs posted in the last 1 hour (60 minutes)
-python job_collector.py --query "software engineer" --time-filter 60
+python scripts\main.py --query "software engineer" --time-filter 60
 
 # Disable LLM classification (faster, less accurate)
-python job_collector.py --no-llm
+python scripts\main.py --no-llm
 ```
 
 ## Scheduled Runs & Daily Report
@@ -128,7 +128,7 @@ run_logged.bat run_ats_collector
 today (grouped by company, unapplied only), any health alerts, and a per-run summary:
 
 ```
-python daily_report.py
+python scripts\daily_report.py
 ```
 
 See [SCHEDULING.md](SCHEDULING.md) for Task Scheduler setup and troubleshooting.
@@ -172,11 +172,11 @@ The system uses a **dynamic company database** that loads from multiple sources:
 
 1. **Built-in Big Tech List**: Includes major tech companies (Google, Microsoft, Apple, Amazon, Meta, etc.)
 2. **GitHub Tech Companies**: Automatically fetches from public GitHub repository
-3. **Fortune 500 Companies**: Loads from local `fortune_500_companies.csv` file (if available)
-4. **Unicorn Companies**: Loads from local `unicorn_companies.csv` file (if available)
+3. **Fortune 500 Companies**: Loads from local `data/fortune_500_companies.csv` file (if available)
+4. **Unicorn Companies**: Loads from local `data/unicorn_companies.csv` file (if available)
 5. **SEC EDGAR API**: Can optionally fetch publicly traded companies (commented out by default due to size)
 
-The database is cached locally in `company_database_cache.json` and refreshes every 30 days automatically.
+The database is cached locally in `state/company_database_cache.json` and refreshes every 30 days automatically.
 
 #### Adding Company Lists
 
@@ -184,12 +184,12 @@ To enhance the database, you can download and add CSV files:
 
 **Fortune 500 Companies:**
 - Download from: https://www.gigasheet.com/sample-data/fortune-500-companies
-- Save as `fortune_500_companies.csv` in the project directory
+- Save as `data/fortune_500_companies.csv`
 - CSV should have a column named `company`, `name`, `Company`, or `Name`
 
 **Unicorn Companies:**
 - Download from: https://www.kaggle.com/datasets/ritwikb3/unicorn-companies
-- Save as `unicorn_companies.csv` in the project directory
+- Save as `data/unicorn_companies.csv`
 - CSV should have a column named `company`, `name`, `Company`, or `Name`
 
 The system will automatically load these files on the next run.
@@ -256,11 +256,29 @@ If LLM classification fails:
 
 ```
 .
-├── job_collector.py      # Main script
-├── requirements.txt      # Pip dependencies
-├── environment.yml       # Conda environment
-├── README.md            # This file
-└── job_classifications.csv  # Output file (generated)
+├── src/                 # Importable packages (editable install via `pip install -e .`)
+│   ├── paths.py         #   single source of truth for ROOT/DATA/CONFIG/STATE dirs
+│   ├── job_collector/   #   core collection/classification/tracking package
+│   ├── ats_direct/      #   ATS (Greenhouse/Lever/Ashby/...) collector package
+│   ├── ddg_search/      #   DuckDuckGo X-ray discovery package
+│   └── dashboard_loop/  #   dashboard v2 design and eval probes
+├── scripts/             # Entry points: main.py, ats_direct.py, ddg_search.py,
+│                        #   enrich_companies.py, daily_report.py, dashboard.py
+├── tasks/               # Task Scheduler wrappers: run_logged.bat, run_*.bat,
+│                        #   repoint_scheduled_tasks.ps1, retime_ddg12.ps1
+├── data/                # Collected CSVs (ats_jobs, ddg_jobs, newgrad_classifications)
+├── config/              # Hand-maintained (company_overrides.json, priority_companies.txt)
+├── state/               # Generated caches (company_profiles.json, ats_registry.json)
+├── web/                 # Static dashboard assets (dashboard.css, dashboard.js)
+├── deprecated/          # Old entry points, kept for reference only
+├── tests/               # Unit tests
+├── docs/                # Requirements and design docs
+├── logs/                # Run logs, daily reports, dashboard bundle (gitignored)
+├── pyproject.toml       # Package metadata (enables `pip install -e .`)
+├── requirements.txt     # Pip dependencies
+├── environment.yml      # Conda environment
+├── setup_environment.bat  # One-shot env bootstrap
+└── README.md            # This file
 ```
 
 ### Extending the System

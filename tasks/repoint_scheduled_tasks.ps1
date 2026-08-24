@@ -106,7 +106,7 @@ Write-Host ''
 
 # Verification: every project task, what it now runs, and when it runs next.
 Get-ScheduledTask |
-    Where-Object { $_.Actions | Where-Object { $_.Execute -like '*project*Job*' } } |
+    Where-Object { $_.Actions | Where-Object { $_.Execute -eq $wrapper } } |
     ForEach-Object {
         $info = $_ | Get-ScheduledTaskInfo
         [PSCustomObject]@{
@@ -120,7 +120,8 @@ Get-ScheduledTask |
     } | Sort-Object Task | Format-Table -AutoSize
 
 Write-Host 'Expected: every task above runs run_logged.bat with a collector argument,'
-Write-Host 'except "Job collector" (disabled, deprecated). NextRun should be unchanged.'
+Write-Host 'and NextRun is unchanged. The disabled, deprecated "Job collector" task does'
+Write-Host 'not use this wrapper, so it is filtered out and will not appear above.'
 Write-Host ''
 Write-Host 'To roll back, from an elevated prompt:'
 Write-Host '    $backup = "logs\_task_backup"'

@@ -47,7 +47,7 @@ def main():
         print("      %-40s :%-4d %s" % (rel, i, line[:78]))
     print("    (dashboard_loop/ has %d more, all of them design history)"
           % (len(hits) - len(outside)))
-    src = io.open(os.path.join(ROOT, "dashboard.py"), encoding="utf-8").read().splitlines()
+    src = io.open(os.path.join(ROOT, "scripts", "dashboard.py"), encoding="utf-8").read().splitlines()
     print("\n    dashboard.py line 9 verbatim: %r" % src[8])
     sch = io.open(os.path.join(ROOT, "SCHEDULING.md"), encoding="utf-8").read().splitlines()
     print("    SCHEDULING.md line 204 verbatim: %r" % sch[203][:110])

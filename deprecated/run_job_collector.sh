@@ -1,9 +1,9 @@
 #!/bin/bash
-# Shell script to run job_collector.py with conda environment
-# This script can be used with cron on Linux/Mac/WSL
+# DEPRECATED shell script for the old "software engineer" search.
+# Superseded by tasks/run_logged.bat run_newgrad_collector - see SCHEDULING.md.
 
-# Change to the script directory
-cd "$(dirname "$0")"
+# Change to the project root - the scripts live under scripts/ since the reorg.
+cd "$(dirname "$0")/.."
 
 # Initialize conda (adjust path if needed)
 # For Anaconda:
@@ -27,8 +27,8 @@ fi
 
 # Activate conda environment and run the script
 conda activate job-classifier
-python job_collector.py --query "software engineer" --limit 50 --time-filter 30
+python scripts/main.py --query "software engineer" --limit 50 --time-filter 30
 
 # Optional: Log the output to a file (uncomment to enable)
-# python job_collector.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
+# python scripts/main.py --query "software engineer" --limit 50 --time-filter 30 >> job_collector.log 2>&1
 

@@ -28,6 +28,18 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### Install the project package (required)
+
+Whichever option you used above, from the project root (with the `job-classifier`
+environment active), install the project itself in editable mode:
+
+```bash
+pip install -e .
+```
+
+This is required before running any entry point. Without it, every script fails with
+`ModuleNotFoundError: No module named 'paths'`.
+
 ## 2. Install ChromeDriver
 
 The web scraping feature requires ChromeDriver.
@@ -57,52 +69,54 @@ conda install -c conda-forge chromedriver
 ### Basic Usage
 
 ```bash
-python job_collector.py --query "software engineer" --limit 20
+python scripts\main.py --query "software engineer" --limit 20
 ```
 
 ### Filter by Time (Last 24 Hours)
 
 ```bash
-python job_collector.py --query "software engineer" --time-filter 1440 --limit 50
+python scripts\main.py --query "software engineer" --time-filter 1440 --limit 50
 ```
 
 ### Filter by Time (Last 3 Hours)
 
 ```bash
-python job_collector.py --query "data scientist" --time-filter 180 --limit 30
+python scripts\main.py --query "data scientist" --time-filter 180 --limit 30
 ```
 
 ### Filter by Time (Any Duration in Minutes)
 
 ```bash
 # Last 1 hour (60 minutes)
-python job_collector.py --query "software engineer" --time-filter 60
+python scripts\main.py --query "software engineer" --time-filter 60
 
 # Last 12 hours (720 minutes)
-python job_collector.py --query "data scientist" --time-filter 720
+python scripts\main.py --query "data scientist" --time-filter 720
 ```
 
 ### With Custom Output
 
 ```bash
-python job_collector.py --query "data scientist" --limit 50 --output "my_jobs.csv"
+python scripts\main.py --query "data scientist" --limit 50 --output "my_jobs.csv"
 ```
 
 ### Without LLM (Faster)
 
 ```bash
-python job_collector.py --query "product manager" --no-llm
+python scripts\main.py --query "product manager" --no-llm
 ```
 
 ## 4. Test the System
 
-Before scraping real data, test the classification logic:
+Before scraping real data, run the test suite. It exercises the classification
+logic, the daily report and the dashboard bundle without touching the network:
 
 ```bash
-python test_sample.py
+python -m unittest discover -s tests
 ```
 
-This will create `test_output.csv` with sample data.
+Expect `OK (skipped=3)` — the three skips need a live LLM key (`JOB_TEST_LLM=1`)
+or a fixture that was retired, and are skipped by design.
 
 ## 5. Optional: Configure API Keys
 
@@ -177,7 +191,8 @@ The CSV contains:
 
 ## Next Steps
 
-- Read `README.md` for detailed documentation
-- Check `example_usage.py` for programmatic usage examples
-- Customize classification rules in `job_collector.py`
+- Read `README.md` for detailed documentation, and `SCHEDULING.md` for the
+  scheduled collectors, the daily report and the dashboard
+- Customize classification rules in `src/job_collector/` (the pipeline package
+  `scripts/main.py` drives)
 

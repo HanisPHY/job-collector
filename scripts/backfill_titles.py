@@ -29,6 +29,7 @@ from datetime import datetime
 
 import paths
 
+sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
 from job_collector.classifiers.title_relevance import (
     OpenAIChatClient,
     TitleAdjudicator,

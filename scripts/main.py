@@ -14,8 +14,12 @@ except ImportError:
     # dotenv not available, continue without it
     pass
 
+import sys
+
 import paths
 import run_log
+
+sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
 from job_collector import JobClassificationPipeline
 
 

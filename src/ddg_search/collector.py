@@ -15,7 +15,7 @@ import csv
 import json
 from datetime import datetime
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import paths
 from job_collector.utils import generate_job_id
 from job_collector.database.company_db import CompanyDatabase

@@ -26,8 +26,12 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
+import os
+
 import paths
 import run_log
+
+sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
 from ddg_search.collector import collect
 
 

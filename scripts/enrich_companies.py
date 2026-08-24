@@ -45,6 +45,8 @@ sys.path.insert(0, HERE)
 import paths
 import company_lane as CL          # noqa: E402
 import run_log                     # noqa: E402
+
+sys.path = [p for p in sys.path if p != HERE]
 from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
 
 SCRIPT = "run_enrich_companies"

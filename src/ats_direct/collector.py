@@ -12,6 +12,8 @@ import time
 from datetime import datetime
 from typing import List
 
+import paths
+
 # reuse the existing package's classifiers and ID logic (read-only imports)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from job_collector.classifiers.sponsorship import SponsorshipClassifier
@@ -80,8 +82,8 @@ def _atomic_write(rows: List[dict], output_file: str):
     os.replace(tmp, output_file)
 
 
-def collect(registry_path: str = "ats_registry.json",
-            output_file: str = "ats_jobs.csv",
+def collect(registry_path: str = str(paths.STATE_DIR / "ats_registry.json"),
+            output_file: str = str(paths.DATA_DIR / "ats_jobs.csv"),
             strict: bool = True,
             us_only: bool = True,
             max_companies: int = None,

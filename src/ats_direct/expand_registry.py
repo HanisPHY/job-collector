@@ -29,6 +29,8 @@ else:
     from .providers import PROVIDERS
     from .rate_limiter import make_default_limiter
 
+import paths
+
 SOURCES = [
     ("speedyapply/2027-SWE-College-Jobs",
      "https://raw.githubusercontent.com/speedyapply/2027-SWE-College-Jobs/main/NEW_GRAD_USA.md"),
@@ -68,8 +70,8 @@ def _row_company_name(line: str) -> str:
     return name[:60]
 
 
-def expand(registry_path: str = "ats_registry.json", verbose: bool = True,
-           validate: bool = True) -> dict:
+def expand(registry_path: str = str(paths.STATE_DIR / "ats_registry.json"),
+           verbose: bool = True, validate: bool = True) -> dict:
     registry = Registry(registry_path)
     limiter = make_default_limiter()
     stats = {"sources_ok": 0, "urls_seen": 0, "unique_boards": 0,

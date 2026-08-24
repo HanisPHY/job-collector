@@ -15,9 +15,11 @@ import json
 from datetime import datetime, timedelta
 from typing import List, Optional
 
+import paths
+
 from .providers import PROVIDERS, PROBE_ORDER
 
-REGISTRY_FILE = "ats_registry.json"
+REGISTRY_FILE = str(paths.STATE_DIR / "ats_registry.json")
 
 # Probe negatives are cached to avoid re-hammering the same misses, but only
 # for a while: boards appear/disappear, and a transient outage must not

@@ -14,11 +14,13 @@ try:
 except ImportError:
     REQUESTS_AVAILABLE = False
 
+import paths
+
 
 class CompanyDatabase:
     """Dynamic company database that loads from multiple sources."""
-    
-    CACHE_FILE = "company_database_cache.json"
+
+    CACHE_FILE = str(paths.STATE_DIR / "company_database_cache.json")
     CACHE_EXPIRY_DAYS = 30  # Refresh cache every 30 days
     
     # Well-known Big Tech companies (fallback if database fails to load)
@@ -117,7 +119,7 @@ class CompanyDatabase:
     def _load_fortune_500(self) -> Set[str]:
         """Load Fortune 500 companies from local CSV or download."""
         companies = set()
-        fortune_file = "fortune_500_companies.csv"
+        fortune_file = str(paths.DATA_DIR / "fortune_500_companies.csv")
         
         # Try to load from local file first
         if os.path.exists(fortune_file):
@@ -140,7 +142,7 @@ class CompanyDatabase:
     def _load_unicorn_companies(self) -> Set[str]:
         """Load unicorn companies from local CSV."""
         companies = set()
-        unicorn_file = "unicorn_companies.csv"
+        unicorn_file = str(paths.DATA_DIR / "unicorn_companies.csv")
         
         # Try to load from local file
         if os.path.exists(unicorn_file):

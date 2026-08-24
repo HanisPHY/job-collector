@@ -20,14 +20,9 @@ Two properties this module exists to guarantee:
 import json
 import os
 import re
-import sys
 import tempfile
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
-
-from ats_direct.ng_filter import DROP, GRAY, title_verdict   # noqa: E402
+from ats_direct.ng_filter import DROP, GRAY, title_verdict
 
 
 def normalise(title):

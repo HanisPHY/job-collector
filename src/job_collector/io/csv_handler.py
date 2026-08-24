@@ -11,15 +11,17 @@ try:
 except ImportError:
     pd = None
 
+import paths
+
 from ..models import JobPosting
 from ..utils import generate_job_id
 
 
 class CSVHandler:
     """Handles reading and writing job postings to/from CSV files."""
-    
+
     @staticmethod
-    def load_existing_jobs(output_file: str = "job_classifications.csv") -> Tuple[Dict[str, JobPosting], Set[str]]:
+    def load_existing_jobs(output_file: str = str(paths.DATA_DIR / "job_classifications.csv")) -> Tuple[Dict[str, JobPosting], Set[str]]:
         """
         Load existing jobs from CSV file.
         
@@ -87,7 +89,7 @@ class CSVHandler:
         return existing_jobs_dict, existing_ids
     
     @staticmethod
-    def save_to_csv(jobs: List[JobPosting], output_file: str = "job_classifications.csv") -> Dict[str, int]:
+    def save_to_csv(jobs: List[JobPosting], output_file: str = str(paths.DATA_DIR / "job_classifications.csv")) -> Dict[str, int]:
         """
         Save jobs to CSV file. If file exists, only append new jobs (deduplicated by unique_id).
 

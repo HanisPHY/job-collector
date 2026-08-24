@@ -15,6 +15,8 @@ except ImportError:
     except ImportError:
         JOBSPY_AVAILABLE = False
 
+import paths
+
 from ..models import JobPosting
 from ..utils import format_datetime_with_hour, get_current_datetime_formatted, generate_job_id
 
@@ -66,7 +68,7 @@ class LinkedInCollector:
                 print(f"JobSpy found {len(jobs_df)} jobs")
                 
                 # save jobs_df to csv
-                jobs_df.to_csv('jobs_df.csv', index=False)
+                jobs_df.to_csv(str(paths.DATA_DIR / 'jobs_df.csv'), index=False)
                 
                 # Convert DataFrame rows to JobPosting objects
                 for _, row in jobs_df.iterrows():

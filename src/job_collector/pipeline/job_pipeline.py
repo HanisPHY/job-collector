@@ -6,7 +6,7 @@ import os
 import time
 from typing import List, Optional
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import paths
 
 from ..collectors.linkedin import LinkedInCollector
 from ..classifiers.sponsorship import SponsorshipClassifier
@@ -54,10 +54,10 @@ class JobClassificationPipeline:
             adjudicator=TitleAdjudicator(
                 client=OpenAIChatClient(api_key=openai_key,
                                         cost_tracker=self.cost_tracker),
-                cache_path=os.path.join(ROOT, 'title_verdicts.json'),
+                cache_path=str(paths.STATE_DIR / 'title_verdicts.json'),
                 cost_tracker=self.cost_tracker,
             ),
-            drop_log_path=os.path.join(ROOT, 'logs', 'dropped_titles.jsonl'),
+            drop_log_path=str(paths.ROOT / 'logs' / 'dropped_titles.jsonl'),
         )
         # Filled in by process() on every exit path, including the early ones.
         # main.py folds this into the run summary in logs/runs.jsonl so that
@@ -66,7 +66,7 @@ class JobClassificationPipeline:
                                'needed_classification': 0, 'reason': None,
                                'title_filtered': 0}
     
-    def process(self, search_query: str = "software engineer", limit: int = 50, time_filter_minutes: Optional[int] = None, output_file: str = "job_classifications.csv") -> List[JobPosting]:
+    def process(self, search_query: str = "software engineer", limit: int = 50, time_filter_minutes: Optional[int] = None, output_file: str = str(paths.DATA_DIR / "job_classifications.csv")) -> List[JobPosting]:
         """
         Collect and classify jobs.
         
@@ -285,7 +285,7 @@ class JobClassificationPipeline:
         
         return all_jobs
     
-    def save_to_csv(self, jobs: List[JobPosting], output_file: str = "job_classifications.csv"):
+    def save_to_csv(self, jobs: List[JobPosting], output_file: str = str(paths.DATA_DIR / "job_classifications.csv")):
         """
         Save jobs to CSV file.
 

@@ -530,7 +530,7 @@ import dashboard as DB         # noqa: E402
 "D:\Apps\Miniconda\envs\job-classifier\python.exe" -c "import ast; [ast.parse(open(f, encoding='utf-8').read(), f) for f in ['src/dashboard_loop/v2/_evalA_base.py','src/dashboard_loop/v2/_pm2_base.py','src/dashboard_loop/v2/_pm_base.py']]; print('syntax ok')"
 ```
 
-Expected: `syntax ok`. (A full import check needs `scripts/dashboard.py` to exist first, which happens in Task 7 — this step only confirms the edits are syntactically valid.)
+Expected: `syntax ok`. (A full import check needs `scripts/dashboard.py` to exist first, which happens in Task 8 — this step only confirms the edits are syntactically valid.)
 
 - [ ] **Step 5: Commit**
 

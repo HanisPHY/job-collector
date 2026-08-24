@@ -26,13 +26,14 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
+import paths
 import run_log
 from ddg_search.collector import collect
 
 
 def main():
     parser = argparse.ArgumentParser(description="Discover NG SDE jobs via DuckDuckGo X-ray search")
-    parser.add_argument("--output", default="ddg_jobs.csv")
+    parser.add_argument("--output", default=str(paths.DATA_DIR / "ddg_jobs.csv"))
     parser.add_argument("--queries", type=int, default=5,
                         help="Queries this run (cap 10; each takes ~25s)")
     parser.add_argument("--loose", action="store_true",

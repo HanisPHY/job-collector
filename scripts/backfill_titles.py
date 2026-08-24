@@ -27,17 +27,15 @@ import shutil
 import sys
 from datetime import datetime
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+import paths
 
-from job_collector.classifiers.title_relevance import (   # noqa: E402
+from job_collector.classifiers.title_relevance import (
     OpenAIChatClient,
     TitleAdjudicator,
     TitleFilter,
 )
 
-DEFAULT_CSV = os.path.join(ROOT, "newgrad_classifications.csv")
+DEFAULT_CSV = str(paths.DATA_DIR / "newgrad_classifications.csv")
 
 
 class _Row:
@@ -119,9 +117,9 @@ def main():
 
     title_filter = TitleFilter(
         adjudicator=TitleAdjudicator(client=client,
-                                     cache_path=os.path.join(ROOT, "title_verdicts.json"),
+                                     cache_path=str(paths.STATE_DIR / "title_verdicts.json"),
                                      cost_tracker=tracker),
-        drop_log_path=os.path.join(ROOT, "logs", "dropped_titles.jsonl"),
+        drop_log_path=str(paths.ROOT / "logs" / "dropped_titles.jsonl"),
     )
 
     result = backfill_csv(args.csv, title_filter, apply=args.apply)

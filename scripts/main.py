@@ -14,6 +14,7 @@ except ImportError:
     # dotenv not available, continue without it
     pass
 
+import paths
 import run_log
 from job_collector import JobClassificationPipeline
 
@@ -27,8 +28,8 @@ def main():
                        help='Job search query (default: software engineer)')
     parser.add_argument('--limit', type=int, default=50,
                        help='Maximum number of jobs to collect (default: 50)')
-    parser.add_argument('--output', type=str, default='job_classifications.csv',
-                       help='Output CSV file (default: job_classifications.csv)')
+    parser.add_argument('--output', type=str, default=str(paths.DATA_DIR / 'job_classifications.csv'),
+                       help='Output CSV file (default: data/job_classifications.csv)')
     parser.add_argument('--no-llm', action='store_true',
                        help='Disable LLM-based company classification')
     parser.add_argument('--time-filter', type=int, default=None, metavar='MINUTES',

@@ -29,9 +29,9 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
+import paths
 import run_log
 
-HERE = os.path.dirname(os.path.abspath(__file__))
 LOG_ROOT = run_log.LOG_ROOT
 RUNS_FILE = run_log.RUNS_FILE
 DAILY_DIR = os.path.join(LOG_ROOT, "daily")
@@ -123,7 +123,7 @@ def load_jobs(day):
     """
     rows_by_source, unparseable = OrderedDict(), {}
     for filename, label in SOURCES.items():
-        path = os.path.join(HERE, filename)
+        path = os.path.join(paths.DATA_DIR, filename)
         rows, bad = [], 0
         if os.path.exists(path):
             with open(path, "r", newline="", encoding="utf-8-sig") as f:

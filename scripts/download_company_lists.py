@@ -4,6 +4,8 @@ import csv
 import os
 import sys
 
+import paths
+
 # Fix Windows console encoding
 if sys.platform == 'win32':
     import io
@@ -54,7 +56,7 @@ def download_fortune_500():
                         
                         if companies:
                             # Save to file
-                            with open('fortune_500_companies.csv', 'w', newline='', encoding='utf-8') as f:
+                            with open(str(paths.DATA_DIR / 'fortune_500_companies.csv'), 'w', newline='', encoding='utf-8') as f:
                                 writer = csv.writer(f)
                                 writer.writerow(['company'])  # Header
                                 for company in companies:
@@ -86,7 +88,7 @@ def download_fortune_500():
         'Adobe', 'Salesforce', 'PayPal', 'Nvidia', 'Broadcom'
     ]
     
-    with open('fortune_500_companies.csv', 'w', newline='', encoding='utf-8') as f:
+    with open(str(paths.DATA_DIR / 'fortune_500_companies.csv'), 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['company'])
         for company in known_companies:
@@ -138,7 +140,7 @@ def download_unicorn_companies():
                         
                         if companies:
                             # Save to file
-                            with open('unicorn_companies.csv', 'w', newline='', encoding='utf-8') as f:
+                            with open(str(paths.DATA_DIR / 'unicorn_companies.csv'), 'w', newline='', encoding='utf-8') as f:
                                 writer = csv.writer(f)
                                 writer.writerow(['company'])
                                 for company in companies:
@@ -177,7 +179,7 @@ def download_unicorn_companies():
             seen.add(company_lower)
             unique_unicorns.append(company)
     
-    with open('unicorn_companies.csv', 'w', newline='', encoding='utf-8') as f:
+    with open(str(paths.DATA_DIR / 'unicorn_companies.csv'), 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['company'])
         for company in unique_unicorns:

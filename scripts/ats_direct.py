@@ -23,6 +23,7 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
+import paths
 import run_log
 from ats_direct.registry import Registry
 from ats_direct.collector import collect
@@ -50,8 +51,8 @@ def seed_and_probe(registry_path: str, probe: bool):
 
 def main():
     parser = argparse.ArgumentParser(description="Collect NG SDE jobs directly from ATS APIs")
-    parser.add_argument("--registry", default="ats_registry.json")
-    parser.add_argument("--output", default="ats_jobs.csv")
+    parser.add_argument("--registry", default=str(paths.STATE_DIR / "ats_registry.json"))
+    parser.add_argument("--output", default=str(paths.DATA_DIR / "ats_jobs.csv"))
     parser.add_argument("--probe", action="store_true",
                         help="Auto-detect platforms for seed companies (one-time)")
     parser.add_argument("--cleanup", action="store_true",

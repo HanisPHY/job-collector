@@ -42,6 +42,7 @@ from concurrent.futures import ThreadPoolExecutor
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import paths
 import company_lane as CL          # noqa: E402
 import run_log                     # noqa: E402
 from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
@@ -251,7 +252,7 @@ def coerce(x, asked_name):
 
 
 def collect_targets(profiles, refresh_all):
-    rows = CL.load_rows(HERE)
+    rows = CL.load_rows(paths.DATA_DIR)
     names = {}
     for r in rows:
         n = (r.get("company_name") or "").strip()
@@ -267,7 +268,7 @@ def collect_targets(profiles, refresh_all):
 def open_client():
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
-        env = os.path.join(HERE, ".env")
+        env = os.path.join(paths.ROOT, ".env")
         if os.path.exists(env):
             for line in open(env, encoding="utf-8-sig"):
                 if line.strip().startswith("OPENAI_API_KEY="):

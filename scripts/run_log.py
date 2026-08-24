@@ -15,11 +15,11 @@ import os
 import json
 from datetime import datetime
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+import paths
 
-# logs/ sits inside the OneDrive-synced project tree by default. Set
+# logs/ sits inside the synced project tree by default. Set
 # JOB_LOG_ROOT to move it elsewhere (e.g. %LOCALAPPDATA%\JobCollector\logs).
-LOG_ROOT = os.environ.get("JOB_LOG_ROOT") or os.path.join(_HERE, "logs")
+LOG_ROOT = os.environ.get("JOB_LOG_ROOT") or os.path.join(paths.ROOT, "logs")
 RUNS_FILE = os.path.join(LOG_ROOT, "runs.jsonl")
 
 

@@ -31,11 +31,11 @@ import tempfile
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+import paths
 
-PROFILE_PATH = os.environ.get("JOB_PROFILE_PATH") or os.path.join(HERE, "company_profiles.json")
-OVERRIDE_PATH = os.path.join(HERE, "company_overrides.json")
-PRIORITY_PATH = os.path.join(HERE, "priority_companies.txt")
+PROFILE_PATH = os.environ.get("JOB_PROFILE_PATH") or str(paths.STATE_DIR / "company_profiles.json")
+OVERRIDE_PATH = str(paths.CONFIG_DIR / "company_overrides.json")
+PRIORITY_PATH = str(paths.CONFIG_DIR / "priority_companies.txt")
 
 # (file, source label). The label matters: everything that is not "newgrad" came off a
 # company's own ATS board and is therefore, by construction, a real employer.
@@ -92,7 +92,7 @@ def tnorm(title):
     return re.sub(r"\W+", " ", (title or "").lower()).strip()
 
 
-def load_rows(root=HERE):
+def load_rows(root=paths.DATA_DIR):
     """All three CSVs, deduped across sources by unique_id (ddg and ats do overlap)."""
     seen, rows = set(), []
     for fn, label in SOURCES:

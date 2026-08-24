@@ -48,13 +48,14 @@ from datetime import date, datetime
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import paths
 import company_lane as CL          # noqa: E402
 import view                        # noqa: E402
 
-LOG_ROOT = os.environ.get("JOB_LOG_ROOT") or os.path.join(HERE, "logs")
+LOG_ROOT = os.environ.get("JOB_LOG_ROOT") or os.path.join(paths.ROOT, "logs")
 OUT_DIR = os.path.join(LOG_ROOT, "dashboard")
 STATE_PATH = os.path.join(LOG_ROOT, "last_report.json")
-WEB_DIR = os.path.join(HERE, "web")
+WEB_DIR = os.path.join(paths.ROOT, "web")
 
 CAP = view.CAP                     # rows per company per segment, over the WINDOW
 OPEN_CAP = view.SEG_OPEN_CAP       # name kept: tests/test_lane.py imports it
@@ -584,7 +585,7 @@ def main(argv=None):
     day = args.date or date.today().strftime("%Y-%m-%d")
     datetime.strptime(day, "%Y-%m-%d")
 
-    rows = CL.load_rows(HERE)
+    rows = CL.load_rows(paths.DATA_DIR)
     profiles = CL.load_profiles()
     overrides = CL.load_overrides()
     priority = CL.load_priority()

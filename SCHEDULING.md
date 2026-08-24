@@ -201,8 +201,14 @@ dashboard says how many at the top). Monthly manual catch-up, deliberately *not*
 scheduled: `python -u enrich_companies.py --deep` (gpt-4o, about $0.17; it recovers
 intermediary labels that gpt-4o-mini misses).
 
-Output: `logs/dashboard/<day>.html` plus `logs/dashboard/latest.html`, and the read
-watermark in `logs/last_report.json`.
+Output: a self-contained bundle in `logs/dashboard/` — `latest.html` (the only HTML
+file; that is the one to double-click), `dashboard.css`, `dashboard.js`,
+`data-index.js` and one `data-<day>.js` block per natural day inside the 30-day
+retention window — plus the read watermark in `logs/last_report.json`. There is no
+per-day HTML page any more: a pinned page would keep pointing at data blocks that get
+rewritten every morning, so it would silently re-judge rows. For a frozen snapshot run
+`python -u dashboard.py --date YYYY-MM-DD --out <dir>`, which writes the whole bundle
+recomputed under that anchor into a directory of its own.
 
 ### Creating a task from scratch (GUI)
 

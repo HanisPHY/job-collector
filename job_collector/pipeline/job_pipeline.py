@@ -2,13 +2,21 @@
 Main pipeline for collecting and classifying jobs.
 """
 
+import os
 import time
 from typing import List, Optional
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ..collectors.linkedin import LinkedInCollector
 from ..classifiers.sponsorship import SponsorshipClassifier
 from ..classifiers.company_type import CompanyTypeClassifier
 from ..classifiers.seniority import SeniorityFilter
+from ..classifiers.title_relevance import (
+    OpenAIChatClient,
+    TitleAdjudicator,
+    TitleFilter,
+)
 from ..tracking.cost_tracker import LLMCostTracker
 from ..io.csv_handler import CSVHandler
 from ..models import JobPosting
@@ -37,11 +45,26 @@ class JobClassificationPipeline:
         self.cost_tracker = LLMCostTracker() if use_llm else None
         self.company_classifier = CompanyTypeClassifier(use_llm, openai_key, self.cost_tracker)
         self.csv_handler = CSVHandler()
+        # LinkedIn ranks by relevance and never excludes on the keywords, so a
+        # "software engineer new grad" query still returns Junior Motion Designer
+        # and Analyst, Real Estate Accounting - 41% of what this lane recorded was
+        # not a software job. ATS and DDG have always gated on ng_filter; this is
+        # the third lane catching up.
+        self.title_filter = TitleFilter(
+            adjudicator=TitleAdjudicator(
+                client=OpenAIChatClient(api_key=openai_key,
+                                        cost_tracker=self.cost_tracker),
+                cache_path=os.path.join(ROOT, 'title_verdicts.json'),
+                cost_tracker=self.cost_tracker,
+            ),
+            drop_log_path=os.path.join(ROOT, 'logs', 'dropped_titles.jsonl'),
+        )
         # Filled in by process() on every exit path, including the early ones.
         # main.py folds this into the run summary in logs/runs.jsonl so that
         # "collected nothing" is distinguishable from "never ran".
         self.last_run_stats = {'collected': 0, 'already_existing': 0,
-                               'needed_classification': 0, 'reason': None}
+                               'needed_classification': 0, 'reason': None,
+                               'title_filtered': 0}
     
     def process(self, search_query: str = "software engineer", limit: int = 50, time_filter_minutes: Optional[int] = None, output_file: str = "job_classifications.csv") -> List[JobPosting]:
         """
@@ -109,6 +132,28 @@ class JobClassificationPipeline:
                 self.last_run_stats['reason'] = 'all_filtered_senior'
                 print("All collected jobs were filtered out as too senior.")
                 return []
+
+        # Positive software-engineering gate. Runs before dedup and before any LLM
+        # company classification, so a dropped row costs nothing downstream. The
+        # drop is hard - the row never reaches the CSV - so every drop is appended
+        # to logs/dropped_titles.jsonl with its reason.
+        jobs, title_dropped = self.title_filter.filter_jobs(jobs)
+        self.last_run_stats['title_filtered'] = len(title_dropped)
+        if title_dropped:
+            print(f"\nTitle filter: excluded {len(title_dropped)} non-software jobs")
+            for job in title_dropped[:10]:
+                try:
+                    print(f"  - {job.job_title}")
+                except UnicodeEncodeError:
+                    print(f"  - {job.job_title.encode('ascii', 'ignore').decode('ascii')}")
+            if len(title_dropped) > 10:
+                print(f"  ... and {len(title_dropped) - 10} more")
+            print()
+
+        if not jobs:
+            self.last_run_stats['reason'] = 'all_filtered_non_software'
+            print("All collected jobs were filtered out as non-software roles.")
+            return []
 
         # Ensure all jobs have unique_id before checking for duplicates
         for job in jobs:

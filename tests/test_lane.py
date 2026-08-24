@@ -14,9 +14,11 @@ F1/F2 need a full live enrichment pass. They are skipped by default - P0 starts 
 the paid-for gpt-4o cache - and can be run with  JOB_TEST_LLM=1  in the environment.
 """
 
+import contextlib
 import io
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -30,6 +32,7 @@ sys.path.insert(0, ROOT)
 
 import company_lane as CL           # noqa: E402
 import dashboard as DASH            # noqa: E402
+import view as VIEW                 # noqa: E402
 from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
 
 HARVEST_DAY = "2026-08-19"          # ats_direct first-day full harvest
@@ -42,6 +45,8 @@ _PRIORITY = CL.load_priority()
 
 SEED_CACHE = os.path.join(ROOT, "dashboard_loop", "company_profiles.round2.json")
 
+ANCHOR_DAY = max(r["_day"] for r in _ROWS)   # what a real run generates for
+
 
 def resolver(day, profiles=None, overrides=None, rows=None):
     return CL.LaneResolver(rows if rows is not None else _ROWS,
@@ -51,19 +56,65 @@ def resolver(day, profiles=None, overrides=None, rows=None):
                            priority=_PRIORITY)
 
 
-def segment_counts(day, profiles=None, overrides=None, rows=None):
-    """-> (raw, cap2, day_row_count). cap2 = at most 2 rows per company per segment."""
-    R = resolver(day, profiles, overrides, rows)
-    today = CL.day_rows(rows if rows is not None else _ROWS, day)
-    raw, groups = {}, {}
-    for s in CL.SEGMENT_ORDER:
-        raw[s], groups[s] = 0, {}
-    for r in today:
-        s = R.segment(r)
-        raw[s] += 1
-        groups[s].setdefault(CL.norm(r["company_name"]), []).append(r)
-    cap2 = {s: sum(min(2, len(v)) for v in groups[s].values()) for s in CL.SEGMENT_ORDER}
-    return raw, cap2, len(today)
+_STATE = DASH.read_state()
+_PAYLOAD_CACHE = {}
+
+
+def payload(day, profiles=None, overrides=None, rows=None, retain=VIEW.RETAIN_DAYS):
+    """The bytes the browser gets. Everything below asserts against THIS rather
+    than against the CSVs, so a serialisation that loses rows is inside the
+    assertion instead of behind it."""
+    plain = (profiles is None and overrides is None and rows is None
+             and retain == VIEW.RETAIN_DAYS)
+    if plain and day in _PAYLOAD_CACHE:
+        return _PAYLOAD_CACHE[day]
+    p = VIEW.build_payload(day,
+                           _ROWS if rows is None else rows,
+                           _PROFILES if profiles is None else profiles,
+                           _OVERRIDES if overrides is None else overrides,
+                           _PRIORITY, _STATE, retain=retain)
+    if plain:
+        _PAYLOAD_CACHE[day] = p
+    return p
+
+
+def window_counts(day, n, view="all", profiles=None, overrides=None, rows=None):
+    """-> (raw, cap2, dedup_total) for the N-day window ending on `day`.
+
+    The window replaces the single natural day everywhere (R2). Only the SCOPE is
+    wider: cap2 still bounds one company inside one segment, raw still counts every
+    surviving row, and their sum still has to be the deduped total (I1)."""
+    wv = VIEW.window_view(payload(day, profiles, overrides, rows), n, view)
+    segs = CL.SEGMENT_ORDER
+    return ({s: wv["raw"][i] for i, s in enumerate(segs)},
+            {s: wv["cap2"][i] for i, s in enumerate(segs)},
+            wv["dedup"])
+
+
+def segment_counts(day, **kw):
+    """The old name, kept so F6/F7/F19 read the same. One natural day is just the
+    N=1 window now - and it goes through the SAME dedup rule as every other N,
+    which is the point of A3: the tests no longer depend on two rules agreeing."""
+    return window_counts(day, 1, **kw)
+
+
+def coord_rows(day, rows=None):
+    """The rows of one natural day in payload column order, so a [day, row]
+    coordinate can be turned back into the CSV row it came from."""
+    rs = _ROWS if rows is None else rows
+    return [r for r in rs if r["_day"] == day]
+
+
+def window_head(day, n, seg, view="all", profiles=None, overrides=None, rows=None):
+    """One segment's cap-2 head, as [(company display name, job title), ...] in
+    render order. The old segment_head(day, seg) is window_head(day, 1, seg)."""
+    p = payload(day, profiles, overrides, rows)
+    idx = p["index"]
+    out = []
+    for d, i in VIEW.segment_head(p, n, seg, view):
+        cols = p["days"][idx["days"][d]]
+        out.append((idx["co"][cols["c"][i]][0], cols["t"][i]))
+    return out
 
 
 # 60 employers that are beyond argument: every one of them is a company you would be
@@ -124,60 +175,99 @@ class F19Regex(unittest.TestCase):
         self.assertEqual(sum(raw.values()), total)
         self.assertGreater(raw["1b"], 0, "non-entry rows must land in segment 3, not vanish")
 
+    def test_F19_is_a_criterion_not_a_filter_on_every_window(self):
+        """The same on all five windows: widening the scope must not turn the
+        relevance regex into a filter."""
+        for n in VIEW.N_CHOICES:
+            raw, _cap2, total = window_counts(STEADY_DAY, n)
+            with self.subTest(n=n):
+                self.assertEqual(sum(raw.values()), total)
+                self.assertGreater(raw["1b"], 0)
+
 
 def segment_head(day, seg):
-    """The cap-2 view of one segment, built with dashboard's own grouping so the
-    test cannot drift from what actually renders. -> [(company, row), ...]"""
-    import dashboard as DB
-    R = resolver(day)
-    rows = [r for r in CL.day_rows(_ROWS, day) if R.segment(r) == seg]
-    head, _over = DB.split_cap(DB.group_segment(R, rows))
-    return head
+    """The old single-day name. Same thing at N=1."""
+    return window_head(day, 1, seg)
 
 
-def expanded_rows(day):
-    """Rows a reader actually sees on load: the open segments, each truncated by
-    dashboard.OPEN_CAP, the rest sitting in a nested <details>."""
-    import dashboard as DB
-    _r, cap2, _t = segment_counts(day)
-    return sum(min(cap2[s], DB.OPEN_CAP.get(s, cap2[s])) for s in ("1a_t3", "B1"))
+def expanded_rows(day, n=VIEW.N_DEFAULT, v="all"):
+    """Rows a reader actually sees expanded on load: view.open_plan's total. The
+    rest is inside a nested <details> - folded, never dropped."""
+    return VIEW.window_view(payload(day), n, v)["open"]
 
 
 class F10F11Segments(unittest.TestCase):
     """cap=2 bounds one company, not the day, so segment sizes track collector
     volume: 8/20 grew to 2068 newgrad rows and segment 1 went 28 -> 61. Asserting a
     band on the segment TOTAL just re-fails every heavy day. What has to stay bounded
-    is what is expanded on load, and dashboard.OPEN_CAP is what bounds it."""
+    is what is expanded on load, and view.open_plan is what bounds it.
+
+    Scope only: every assertion below now runs on all five windows instead of one
+    natural day, and not one invariant was loosened to make that possible."""
 
     def test_F10_segment1_is_all_entry_level_whatever_its_size(self):
         for day in (HARVEST_DAY, STEADY_DAY):
-            _r, cap2, _t = segment_counts(day)
-            with self.subTest(day=day):
-                self.assertGreater(cap2["1a_t3"], 0, "segment 1 must not be empty")
-                for _c, r in segment_head(day, "1a_t3"):
-                    self.assertTrue(CL.is_entry(r["job_title"]),
-                                    "%r is not an entry-level title" % r["job_title"])
+            for n in VIEW.N_CHOICES:
+                _r, cap2, _t = window_counts(day, n)
+                with self.subTest(day=day, n=n):
+                    self.assertGreater(cap2["1a_t3"], 0, "segment 1 must not be empty")
+                    for _name, title in window_head(day, n, "1a_t3"):
+                        self.assertTrue(CL.is_entry(title),
+                                        "%r is not an entry-level title" % title)
 
-    def test_F11_default_visible_is_bounded_on_any_volume(self):
+    def test_F11a_open_equals_the_closed_form(self):
+        """An EQUALITY against view.open_expected, not a hand-written band: there is
+        no boundary left to write down wrongly."""
         for day in (HARVEST_DAY, STEADY_DAY):
-            vis = expanded_rows(day)
-            with self.subTest(day=day):
-                self.assertGreaterEqual(vis, 1, "nothing expanded on %s" % day)
-                self.assertLessEqual(vis, 50,
-                                     "first screen %d rows on %s - past what a person "
-                                     "reads over coffee" % (vis, day))
+            for n in VIEW.N_CHOICES:
+                _r, cap2, _t = window_counts(day, n)
+                with self.subTest(day=day, n=n):
+                    self.assertEqual(VIEW.open_plan(cap2)[1], VIEW.open_expected(cap2))
+                    self.assertEqual(expanded_rows(day, n), VIEW.open_expected(cap2))
+
+    def test_F11a_open_equals_the_closed_form_on_random_shapes(self):
+        """The corpus only ever produces a handful of cap2 shapes. 2000 random ones
+        plus the adversarial shapes that broke the OLD published bound."""
+        rnd = random.Random(20260821)
+        shapes = [{s: rnd.choice([0, 0, 1, 5, 11, 12, 13, 29, 30, 31, 34, 35, 36,
+                                  rnd.randint(0, 400)])
+                   for s in CL.SEGMENT_ORDER} for _ in range(2000)]
+        shapes += [{"1a_t3": 0, "B1": 1000, "1a_t2": 0},
+                   {"1a_t3": 0, "B1": 0, "1a_t2": 0},
+                   {"1a_t3": 0, "B1": 0, "1a_t2": 1000},
+                   {"1a_t3": 1000, "B1": 1000, "1a_t2": 1000},
+                   {"1a_t3": 17, "B1": 0, "1a_t2": 4}, {"B1": 12}, {}]
+        for c in shapes:
+            plan, total = VIEW.open_plan(c)
+            self.assertEqual(total, VIEW.open_expected(c), "cap2=%r" % c)
+            self.assertEqual(total, sum(plan.values()), "cap2=%r" % c)
+
+    def test_F11b_open_is_bounded_both_ways(self):
+        """The upper bound is structural; the lower bound is a function of what the
+        three openable segments can actually contribute once each is capped. Both
+        sides are derived from SEG_OPEN_CAP - the literal 47 appears nowhere."""
+        ceil = sum(VIEW.SEG_OPEN_CAP[s] for s in VIEW.ALWAYS_OPEN)
+        for day in (HARVEST_DAY, STEADY_DAY):
+            for n in VIEW.N_CHOICES:
+                for v in VIEW.VIEWS:
+                    wv = VIEW.window_view(payload(day), n, v)
+                    cap2 = {s: wv["cap2"][i] for i, s in enumerate(CL.SEGMENT_ORDER)}
+                    with self.subTest(day=day, n=n, view=v):
+                        self.assertLessEqual(wv["open"], ceil)
+                        self.assertGreaterEqual(
+                            wv["open"], min(VIEW.FLOOR, VIEW.openable(cap2)))
 
     def test_F11_truncated_rows_are_folded_not_dropped(self):
         """The count cap is a truncation on the sort, never a filter: whatever it
         pushes down still renders inside the segment."""
-        import dashboard as DB
-        _r, cap2, _t = segment_counts(STEADY_DAY)
-        for s, cap in DB.OPEN_CAP.items():
-            folded = max(0, cap2[s] - cap)
-            with self.subTest(segment=s):
-                self.assertEqual(len(segment_head(STEADY_DAY, s)), cap2[s],
-                                 "segment %s lost rows: folded %d must stay in the "
-                                 "cap2 view" % (s, folded))
+        for n in VIEW.N_CHOICES:
+            _r, cap2, _t = window_counts(STEADY_DAY, n)
+            for s in VIEW.SEG_OPEN_CAP:
+                folded = max(0, cap2[s] - VIEW.SEG_OPEN_CAP[s])
+                with self.subTest(segment=s, n=n):
+                    self.assertEqual(len(window_head(STEADY_DAY, n, s)), cap2[s],
+                                     "segment %s lost rows: folded %d must stay in "
+                                     "the cap2 view" % (s, folded))
 
 
 class F12Invariant(unittest.TestCase):
@@ -185,12 +275,31 @@ class F12Invariant(unittest.TestCase):
     spec's own literal 931 == 931 went stale within two hours."""
 
     def test_F12_zero_loss(self):
+        """3 views x 5 windows x 2 anchors, on the payload: the segments must sum to
+        the deduped total AND to the trend bars. Two numbers that used to be
+        different (2073 vs 2035) are one number now - only one dedup rule is left."""
         for day in (HARVEST_DAY, STEADY_DAY):
-            with self.subTest(day=day):
-                raw, _c, total = segment_counts(day)
-                self.assertEqual(sum(raw.values()), total)
+            for n in VIEW.N_CHOICES:
+                for v in VIEW.VIEWS:
+                    wv = VIEW.window_view(payload(day), n, v)
+                    with self.subTest(day=day, n=n, view=v):
+                        self.assertEqual(sum(wv["raw"]), wv["dedup"])
+                        self.assertEqual(sum(wv["bars"]), wv["dedup"])
 
     def test_F12_every_row_gets_exactly_one_segment(self):
+        """On the payload column the browser reads, not only on the resolver: a
+        segment index that went out of range in serialisation is a silent
+        mis-filing that nothing else would catch."""
+        p = payload(STEADY_DAY)
+        n_seg = len(CL.SEGMENT_ORDER)
+        seen = 0
+        for _d, cols in p["days"].items():
+            self.assertEqual(len(cols["g"]), cols["n"])
+            for g in cols["g"]:
+                self.assertIsInstance(g, int)
+                self.assertTrue(0 <= g < n_seg, "segment index %r out of range" % g)
+                seen += 1
+        self.assertGreater(seen, 0)
         R = resolver(STEADY_DAY)
         for r in CL.day_rows(_ROWS, STEADY_DAY):
             self.assertIn(R.segment(r), CL.SEGMENT_ORDER)
@@ -425,24 +534,64 @@ class F3F15F16F17Wiring(unittest.TestCase):
         self.assertNotIn("import daily_report", src)
 
     def test_F17_daily_report_output_is_byte_identical(self):
-        """Zero lines changed on daily_report.py's analysis/render path."""
+        """Zero lines changed on daily_report.py's analysis/render path.
+
+        The baseline is tests/fixtures/, NOT logs/daily/. Two reasons:
+
+        1. logs/daily/*.md is the historical record. This test used to regenerate
+           the archive in place and restore it from a copy in `finally`, so a
+           killed test run left the record overwritten.
+        2. The archive is a snapshot of what the data said on the day it ran. The
+           2026-08-22 title-filter backfill removed 31 non-software rows from
+           2026-08-19, so the archive (287) and the current data (256) legitimately
+           disagree - and the archive must keep saying 287, because that is what
+           was collected that day.
+
+        JOB_LOG_ROOT sends daily_report.py's output to a temp tree, so nothing under
+        logs/ is touched. 2026-08-19 has no records in runs.jsonl (it already had
+        none when the archive was written), so an empty log root reproduces the
+        report exactly and the fixture needs no runs.jsonl of its own.
+
+        Regenerate the fixture ONLY when the row set for the day legitimately
+        changes (another backfill):
+            JOB_LOG_ROOT=<tmp> python -u daily_report.py --date 2026-08-19 --no-prune
+            cp <tmp>/daily/2026-08-19.md tests/fixtures/daily_report-2026-08-19.md
+        """
+        fixture = os.path.join(ROOT, "tests", "fixtures",
+                               "daily_report-%s.md" % HARVEST_DAY)
+        if not os.path.exists(fixture):
+            self.skipTest("no fixture for %s" % HARVEST_DAY)
+        expected = io.open(fixture, "rb").read()
+
+        tmp_log_root = tempfile.mkdtemp(prefix="f17-logroot-")
+        self.addCleanup(shutil.rmtree, tmp_log_root, True)
+        env = dict(os.environ, PYTHONIOENCODING="utf-8", JOB_LOG_ROOT=tmp_log_root)
+        p = subprocess.run([sys.executable, "-u", "daily_report.py",
+                            "--date", HARVEST_DAY, "--no-prune"],
+                           cwd=ROOT, env=env, stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+        self.assertEqual(p.returncode, 0, p.stdout.decode("utf-8", "replace"))
+
+        produced = os.path.join(tmp_log_root, "daily", "%s.md" % HARVEST_DAY)
+        self.assertTrue(os.path.exists(produced),
+                        "daily_report.py ignored JOB_LOG_ROOT: %s"
+                        % p.stdout.decode("utf-8", "replace"))
+        self.assertEqual(expected, io.open(produced, "rb").read(),
+                         "daily_report.py output changed")
+
+    def test_F17_leaves_the_archived_report_alone(self):
+        """The guard above must never write into logs/daily/. Regression test for the
+        old in-place-regenerate-and-restore approach, which lost the archive whenever
+        a test run was killed between the two steps."""
         archived = os.path.join(ROOT, "logs", "daily", "%s.md" % HARVEST_DAY)
         if not os.path.exists(archived):
             self.skipTest("no archived report for %s" % HARVEST_DAY)
         before = io.open(archived, "rb").read()
-        backup = archived + ".f17bak"
-        shutil.copy2(archived, backup)
-        try:
-            env = dict(os.environ, PYTHONIOENCODING="utf-8")
-            p = subprocess.run([sys.executable, "-u", "daily_report.py",
-                                "--date", HARVEST_DAY, "--no-prune"],
-                               cwd=ROOT, env=env, stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT)
-            self.assertEqual(p.returncode, 0, p.stdout.decode("utf-8", "replace"))
-            after = io.open(archived, "rb").read()
-            self.assertEqual(before, after, "daily_report.py output changed")
-        finally:
-            shutil.move(backup, archived)
+
+        self.test_F17_daily_report_output_is_byte_identical()
+
+        self.assertEqual(before, io.open(archived, "rb").read(),
+                         "the historical record was modified by a test")
 
 
 class F9Degraded(unittest.TestCase):
@@ -451,8 +600,9 @@ class F9Degraded(unittest.TestCase):
         page must still build, and it must say so at the top."""
         keys = sorted(_PROFILES)
         half = {k: _PROFILES[k] for k in keys[:len(keys) // 2]}
-        page, state, stats = DASH.build(STEADY_DAY, _ROWS, half, _OVERRIDES,
-                                        _PRIORITY, {})
+        files, state, stats = DASH.build_bundle(STEADY_DAY, _ROWS, half, _OVERRIDES,
+                                                _PRIORITY, {})
+        page = files["latest.html"]
         self.assertGreater(stats["unenriched"], 0)
         self.assertIn("家未分层", page)
         self.assertIn("%d 家未分层" % stats["unenriched"], page)
@@ -460,22 +610,121 @@ class F9Degraded(unittest.TestCase):
         self.assertTrue(page.startswith("<!doctype html>"))
 
     def test_F9_dashboard_renders_with_no_profile_table_at_all(self):
-        page, _s, stats = DASH.build(STEADY_DAY, _ROWS, {}, {}, set(), {})
+        files, _s, stats = DASH.build_bundle(STEADY_DAY, _ROWS, {}, {}, set(), {})
         self.assertEqual(stats["raw"]["C"], 0)
-        self.assertIn("家未分层", page)
+        self.assertIn("家未分层", files["latest.html"])
+
+    def test_F9_degraded_payload_functions_never_raise(self):
+        """view.build_payload / view.window_view are TOTAL, like profile(): the
+        unattended 08:00 job must not be able to die inside them."""
+        for profiles in ({}, None, {"x": None}):
+            pl = VIEW.build_payload(STEADY_DAY, _ROWS, profiles, {}, set(), {})
+            for n in VIEW.N_CHOICES:
+                for v in VIEW.VIEWS:
+                    self.assertEqual(sum(VIEW.window_view(pl, n, v)["raw"]),
+                                     VIEW.window_view(pl, n, v)["dedup"])
+        empty = VIEW.build_payload(STEADY_DAY, [], {}, {}, set(), {})
+        self.assertEqual(VIEW.window_view(empty, 3)["dedup"], 0)
+        self.assertEqual(VIEW.window_view({}, 3)["dedup"], 0)
+        self.assertEqual(VIEW.open_expected({}), 0)
+        self.assertEqual(VIEW.carry_seq({}, 3), ([], []))
+
+    def test_F9_the_banner_promise_is_self_guarding(self):
+        """The banner tells the reader the unclassified companies will be picked up
+        by tomorrow morning's 07:30 enrich_companies.py run. That promise is only
+        true for a company seen for the FIRST time on the anchor day: one that has
+        been sitting in the window for three days has already been through two
+        enrichment runs and did not come back, so "wait for tomorrow" would be the
+        wrong thing to tell somebody.
+
+        Measured 2026-08-21: 98 companies counted, 0 of them first seen earlier.
+        What is asserted is the IMPLICATION, not the 0 - the day a company starts
+        lingering this goes red and the wording gets conditioned, instead of the
+        page quietly making a promise it cannot keep."""
+        p = payload(ANCHOR_DAY)
+        health = p["index"]["health"]
+        window = set(VIEW.days_back(ANCHOR_DAY, VIEW.N_DEFAULT))
+        R = resolver(ANCHOR_DAY)
+        seen = {}
+        for r in _ROWS:
+            if r["_day"] in window:
+                seen.setdefault(CL.norm(r["company_name"]), True)
+        counted = [c for c in seen if R.profile(c).get("stage", 0) < 1]
+        self.assertEqual(len(counted), health["unenriched"],
+                         "the banner counts a different set than this fixture does")
+        first_seen = {}
+        for r in _ROWS:
+            c = CL.norm(r["company_name"])
+            if c not in first_seen or r["_day"] < first_seen[c]:
+                first_seen[c] = r["_day"]
+        lingering = sorted(c for c in counted if first_seen[c] != ANCHOR_DAY)
+        files, _s, _st = DASH.build_bundle(ANCHOR_DAY, _ROWS, _PROFILES, _OVERRIDES,
+                                           _PRIORITY, _STATE)
+        page = files["latest.html"]
+        if lingering:
+            self.assertNotIn(
+                "等明早", page,
+                "%d of the %d companies in the banner were already there before %s "
+                "(e.g. %r) - tomorrow's 07:30 run has already failed to classify "
+                "them, so the banner must stop promising it will"
+                % (len(lingering), len(counted), ANCHOR_DAY, lingering[:5]))
+        elif counted:
+            self.assertIn("等明早", page)
+
+    def test_F9_build_compat_shell_still_returns_the_page(self):
+        """dashboard.build() keeps the exact signature this file has always used."""
+        page, _s, stats = DASH.build(STEADY_DAY, _ROWS, _PROFILES, _OVERRIDES,
+                                     _PRIORITY, {})
+        self.assertTrue(page.startswith("<!doctype html>"))
+        self.assertEqual(sum(stats["raw"].values()), stats["total"])
 
     def test_dashboard_has_no_external_dependency(self):
-        page, _s, _st = DASH.build(STEADY_DAY, _ROWS, _PROFILES, _OVERRIDES,
-                                   _PRIORITY, {})
-        self.assertNotIn("<script", page)
+        """R4 means there IS a <script src> now, so the v1 body ("no <script> tag")
+        would be asserting the wrong thing. The real invariant - offline, double
+        click, no build step - is not relaxed by one inch: assert_offline() below
+        was tried against six concrete attacks and caught all six."""
+        files, _s, _st = DASH.build_bundle(STEADY_DAY, _ROWS, _PROFILES, _OVERRIDES,
+                                           _PRIORITY, {})
+        self.assertTrue(assert_offline(files))
+        page = files["latest.html"]
         self.assertNotIn("cdn.", page)
-        self.assertEqual(re.findall(r'<link[^>]+href', page), [])
-        # the only absolute URLs are the job links themselves, in <a href>
-        for url in re.findall(r'(?:src|href)="(https?://[^"]+)"', page):
-            self.assertRegex(url, r"^https://")
-        self.assertIn("prefers-color-scheme", page)
-        self.assertIn("a:visited", page)
+        self.assertIn("prefers-color-scheme", files["dashboard.css"])
+        self.assertIn("a:visited", files["dashboard.css"])
         self.assertIn("<details", page)
+
+    def test_assert_offline_catches_the_six_ways_in(self):
+        """A guard nobody has tried to break is an empty assertion."""
+        good = {"latest.html": '<!doctype html><html><head>'
+                               '<link rel="stylesheet" href="dashboard.css">'
+                               '<script src="data-2026-08-21.js"></script>'
+                               '<script src="dashboard.js"></script></head>'
+                               '<body><details id="seg-x"></details></body></html>',
+                "dashboard.css": "@media (prefers-color-scheme: dark){} a:visited{color:red}",
+                "dashboard.js": 'var s=document.createElement("script");'
+                                's.src=IDX.chunk[k];document.head.appendChild(s);',
+                "data-index.js": 'window.JOB_INDEX={"v":2};',
+                "data-2026-08-21.js":
+                    '(window.JOB_DAY=window.JOB_DAY||{})["2026-08-21"]='
+                    '{"n":1,"t":["Engineer, WebSockets and fetch("]};'}
+        self.assertTrue(assert_offline(good))
+        attacks = {
+            "cdn script": dict(good, **{"latest.html": good["latest.html"].replace(
+                'src="dashboard.js"', 'src="https://cdn.example.com/x.js"')}),
+            "google fonts": dict(good, **{"latest.html": good["latest.html"].replace(
+                'href="dashboard.css"', 'href="https://fonts.googleapis.com/css"')}),
+            "es module": dict(good, **{"latest.html": good["latest.html"].replace(
+                '<script src="dashboard.js">', '<script type="module" src="dashboard.js">')}),
+            "fetch": dict(good, **{"dashboard.js": good["dashboard.js"] + "fetch('x');"}),
+            "absolute chunk": dict(good, **{"dashboard.js":
+                'var s=document.createElement("script");s.src="https://x/"+d+".js";'}),
+            "parent dir": dict(good, **{"latest.html": good["latest.html"].replace(
+                'href="dashboard.css"', 'href="../shared/dashboard.css"')}),
+            "code smuggled into a data block": dict(good, **{"data-2026-08-21.js":
+                '(window.JOB_DAY=window.JOB_DAY||{})["2026-08-21"]={};fetch("x");'}),
+        }
+        for label, files in attacks.items():
+            with self.subTest(attack=label):
+                self.assertRaises(AssertionError, assert_offline, files)
 
 
 class F1F2Enrichment(unittest.TestCase):
@@ -531,6 +780,547 @@ class F1F2Enrichment(unittest.TestCase):
         for name in ("queue.py", "json.py", "types.py", "csv.py", "html.py", "logging.py"):
             self.assertFalse(os.path.exists(os.path.join(ROOT, name)),
                              "%s in the repo root shadows the stdlib" % name)
+
+
+# ---------------------------------------------------------------- v2 helpers
+def assert_offline(files):
+    """The real "zero external dependency" invariant, now that R4 means the bundle
+    legitimately contains <script src> and <link href>.
+
+    v1 asserted `"<script" not in page`, which happened to imply offline-ness only
+    because v1 had no JS at all. These five clauses assert the property itself, and
+    test_assert_offline_catches_the_six_ways_in tries to get past them.
+    """
+    page = files["latest.html"]
+    # a) ES modules go through CORS and are blocked under file:// (measured)
+    assert 'type="module"' not in page and "type='module'" not in page, "ES module"
+    for name, txt in files.items():
+        if name.endswith(".html"):
+            continue
+        assert not re.search(r"^\s*import\s+[\w{*]", txt, re.M), "%s imports" % name
+        assert not re.search(r"^\s*export\s", txt, re.M), "%s exports" % name
+    # b) every reference in the shell is same-directory and relative
+    for m in re.finditer(r'\b(?:src|href)\s*=\s*"([^"]*)"', page):
+        u = m.group(1)
+        if u.startswith("#"):
+            continue
+        assert "://" not in u, "external reference in the shell: %r" % u
+        assert not u.startswith("/") and ".." not in u, "not same-dir: %r" % u
+    # c) the DATA files must be pure data - one assignment of one JSON literal.
+    #    This is checked first and it is what makes (d) safe to scope: a job title
+    #    reading "React | TypeScript | WebSockets" exists in the real corpus, so a
+    #    substring scan over the data blocks is a false positive waiting to happen
+    #    (it fired on 2026-08-21). Parsing the literal is the stronger statement:
+    #    a JSON string cannot call anything.
+    def pure_json(name, body):
+        try:
+            json.loads(body.rstrip().rstrip(";"))
+        except Exception as e:
+            raise AssertionError("%s is not one pure JSON literal (%s)" % (name, e))
+
+    code = {}
+    for name, txt in files.items():
+        if not name.endswith(".js"):
+            continue
+        if name == "data-index.js":
+            head = "window.JOB_INDEX="
+            assert txt.startswith(head), "data-index.js is not a plain assignment"
+            pure_json(name, txt[len(head):])
+        elif name.startswith("data-"):
+            m = re.match(r'^\(window\.JOB_DAY=window\.JOB_DAY\|\|\{\}\)'
+                         r'\["\d{4}-\d{2}-\d{2}"\]=', txt)
+            assert m, "%s is not a plain assignment" % name
+            pure_json(name, txt[m.end():])
+        else:
+            code[name] = txt
+    # d) no network API anywhere in the JS that is actually code
+    for name, txt in code.items():
+        for bad in ("fetch(", "XMLHttpRequest", "WebSocket", "importScripts",
+                    "EventSource", "navigator.sendBeacon"):
+            assert bad not in txt, "%s uses %s" % (name, bad)
+        # and the dynamically injected chunk name never becomes an absolute URL
+        for m in re.finditer(r"\.src\s*=\s*([^;\n]+)", txt):
+            assert "://" not in m.group(1), "%s injects an absolute URL" % name
+    assert code, "no code JS in the bundle at all"
+    # e) what v1 promised the reader and v2 still owes them
+    assert "prefers-color-scheme" in files.get("dashboard.css", ""), "no dark mode"
+    assert "a:visited" in files.get("dashboard.css", ""), "no visited colour"
+    assert "<details" in page, "no native disclosure"
+    return True
+
+
+def find_chromium():
+    """Chrome only. Edge headless produces 0 bytes on this machine (three flag
+    spellings tried), which is exactly why the double-click check stays a manual
+    acceptance item instead of being folded into this file."""
+    for cand in (r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                 r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"):
+        if os.path.exists(cand):
+            return cand
+    for n in ("chrome", "chromium", "chromium-browser", "google-chrome"):
+        w = shutil.which(n)
+        if w:
+            return w
+    return None
+
+
+def dump_dom(exe, url, budget=30000):
+    prof = tempfile.mkdtemp(prefix="dashprof_")
+    try:
+        r = subprocess.run([exe, "--headless=new", "--disable-gpu", "--no-first-run",
+                            "--user-data-dir=" + prof,
+                            "--virtual-time-budget=%d" % budget, "--dump-dom", url],
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=300)
+        return r.stdout.decode("utf-8", "replace")
+    finally:
+        shutil.rmtree(prof, ignore_errors=True)
+
+
+def bundle_dir(day, into):
+    files, _s, _st = DASH.build_bundle(day, _ROWS, _PROFILES, _OVERRIDES,
+                                       _PRIORITY, _STATE)
+    DASH.write_bundle(into, files)
+    return files
+
+
+class F20F21Payload(unittest.TestCase):
+    """The serialisation itself. Once rendering moved to the browser, "the CSV row
+    made it into the file the browser reads" stopped having anybody watching it."""
+
+    def test_F20_no_row_is_lost_on_the_way_into_the_payload(self):
+        for day in (HARVEST_DAY, STEADY_DAY):
+            p = payload(day)
+            idx = p["index"]
+            total = 0
+            for i, d in enumerate(idx["days"]):
+                expect = len(coord_rows(d))
+                cols = p["days"].get(d)
+                with self.subTest(day=day, block=d):
+                    self.assertEqual(idx["nrows"][i], expect)
+                    if expect:
+                        self.assertIsNotNone(cols, "block %s never written" % d)
+                        self.assertEqual(cols["n"], expect)
+                        self.assertEqual(cols["d"], i)
+                        for k in ("c", "g", "t", "lp", "l", "s", "r", "x"):
+                            self.assertEqual(len(cols[k]), expect,
+                                             "column %s of %s is ragged" % (k, d))
+                        self.assertEqual(idx["chunk"][i], "data-%s.js" % d)
+                    else:
+                        self.assertIsNone(cols)
+                        self.assertEqual(idx["chunk"][i], "")
+                total += expect
+            self.assertEqual(sum(idx["nrows"]), total)
+            self.assertEqual(sum(c["n"] for c in p["days"].values()), total)
+            in_window = [r for r in _ROWS if r["_day"] in set(idx["days"])]
+            self.assertEqual(len(in_window), total,
+                             "the payload and the CSVs disagree about the window")
+
+    def test_F21_the_window_never_shows_the_same_job_twice(self):
+        """And the scope of `x` is `_day <= day`, not global. Computing it globally
+        lets a row recorded tomorrow supersede a row inside today's window, and the
+        window then quietly loses it - the last assertion is what catches that."""
+        for day in (HARVEST_DAY, STEADY_DAY):
+            p = payload(day)
+            idx = p["index"]
+            per_day = {d: coord_rows(d) for d in idx["days"]}
+            for n in VIEW.N_CHOICES:
+                wdays = idx["days"][max(0, len(idx["days"]) - n):]
+                keys = []
+                for d in wdays:
+                    cols = p["days"].get(d)
+                    if not cols:
+                        continue
+                    for i, x in enumerate(cols["x"]):
+                        if x:
+                            continue
+                        r = per_day[d][i]
+                        keys.append((CL.norm(r["company_name"]),
+                                     CL.tnorm(r["job_title"])))
+                distinct = {(CL.norm(r["company_name"]), CL.tnorm(r["job_title"]))
+                            for r in _ROWS if r["_day"] in set(wdays)}
+                with self.subTest(day=day, n=n):
+                    self.assertEqual(len(set(keys)), len(keys),
+                                     "the same job survives twice in the window")
+                    self.assertEqual(len(keys), VIEW.window_view(p, n)["dedup"])
+                    self.assertEqual(len(keys), len(distinct),
+                                     "x was not computed on the `_day <= %s` scope: "
+                                     "%d survivors for %d distinct jobs"
+                                     % (day, len(keys), len(distinct)))
+
+
+class F22F28Check(unittest.TestCase):
+    """`check` is the only truth the browser has. It has to be asserted here or the
+    guard on I1 is worth nothing once rendering lives in JS."""
+
+    def test_F22_check_is_exactly_window_view(self):
+        for day in (HARVEST_DAY, STEADY_DAY):
+            p = payload(day)
+            for f in VIEW.VIEWS:
+                for n in VIEW.N_CHOICES:
+                    with self.subTest(day=day, view=f, n=n):
+                        self.assertEqual(p["index"]["check"][f][str(n)],
+                                         VIEW.window_view(p, n, f))
+
+    def test_F22_check_survives_the_json_round_trip(self):
+        p = payload(STEADY_DAY)
+        txt = VIEW.encode_index(p["index"])
+        self.assertTrue(txt.startswith("window.JOB_INDEX="))
+        back = json.loads(txt[len("window.JOB_INDEX="):].rstrip().rstrip(";"))
+        self.assertEqual(back["check"], p["index"]["check"])
+        self.assertEqual(back["v"], 2)
+        for f in VIEW.VIEWS:
+            for n in VIEW.N_CHOICES:
+                c = back["check"][f][str(n)]
+                for k in ("dedup", "raw", "cap2", "plan", "open", "bars", "head",
+                          "anchors", "hsum", "osum", "w7_days"):
+                    self.assertIn(k, c)
+
+    def test_F28_every_view_and_window_satisfies_I1(self):
+        for day in (HARVEST_DAY, STEADY_DAY):
+            chk = payload(day)["index"]["check"]
+            for n in VIEW.N_CHOICES:
+                base = chk[VIEW.VIEWS[0]][str(n)]
+                for f in VIEW.VIEWS:
+                    c = chk[f][str(n)]
+                    with self.subTest(day=day, view=f, n=n):
+                        self.assertEqual(sum(c["raw"]), c["dedup"])
+                        self.assertEqual(sum(c["bars"]), c["dedup"])
+                        self.assertLessEqual(c["dedup"], base["dedup"],
+                                             "a filtered view cannot show MORE rows "
+                                             "than the unfiltered one")
+                        self.assertEqual(len(c["raw"]), len(CL.SEGMENT_ORDER))
+                        self.assertEqual(len(c["bars"]), len(payload(day)["index"]["days"]))
+
+
+class F23DivisionOfLabour(unittest.TestCase):
+    """The line between "Python decides" and "JS frames" was a convention in v1.
+    This turns it into a mechanism."""
+
+    WORDS = ["tier", "prom", "stage", "kind", "staffing", "outsourcing", "job_board",
+             "new grad", "entry level", "tnorm", "1a_t3", "1a_t2"]
+
+    def _source(self):
+        with io.open(os.path.join(ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
+            src = fh.read()
+        return re.sub(r"/\*.*?\*/", " ", src, flags=re.S)
+
+    def test_F23_no_judgement_vocabulary_in_dashboard_js(self):
+        body = self._source().lower()
+        for w in self.WORDS:
+            with self.subTest(word=w):
+                self.assertNotIn(w, body,
+                                 "web/dashboard.js mentions %r - the judgement layer "
+                                 "is leaking into the browser" % w)
+
+    def test_F23_no_hardcoded_segment_order_array(self):
+        """The other four segment keys (1b / B1 / B2 / C) are too generic to
+        blacklist one by one, so this goes after the SHAPE instead."""
+        body = self._source()
+        m = re.search(r"""[\[\(]\s*(?:"|')1a_t3(?:"|')""", body)
+        self.assertIsNone(m, "the segment order is hardcoded in dashboard.js")
+        self.assertIn("data-gidx", body,
+                      "segments must be located by index, not by name")
+
+    def test_F23_the_shell_is_what_carries_the_segment_ids(self):
+        files, _s, _st = DASH.build_bundle(STEADY_DAY, _ROWS, _PROFILES, _OVERRIDES,
+                                           _PRIORITY, {})
+        page = files["latest.html"]
+        for g, seg in enumerate(CL.SEGMENT_ORDER):
+            with self.subTest(segment=seg):
+                self.assertIn('id="seg-%s" data-gidx="%d"' % (seg, g), page)
+
+
+class F25F26Plumbing(unittest.TestCase):
+    def test_F25_the_two_seven_days_never_get_mixed(self):
+        """One "7 days" is the fixed judgement window (invariant I4); the other is
+        whatever N the reader picked. The header text is built from the first one so
+        the number and the words cannot drift apart."""
+        p = payload(STEADY_DAY)
+        self.assertEqual(p["index"]["w7_days"], CL.WINDOW_DAYS)
+        for f in VIEW.VIEWS:
+            for n in VIEW.N_CHOICES:
+                self.assertEqual(p["index"]["check"][f][str(n)]["w7_days"],
+                                 CL.WINDOW_DAYS)
+        files, _s, _st = DASH.build_bundle(STEADY_DAY, _ROWS, _PROFILES, _OVERRIDES,
+                                           _PRIORITY, {})
+        self.assertIn("近 %d 天" % CL.WINDOW_DAYS, files["latest.html"])
+
+    def test_F26_retention_bounds_the_output_directory(self):
+        d = tempfile.mkdtemp(prefix="dashout_")
+        try:
+            keep = 3
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                for day in (HARVEST_DAY, STEADY_DAY):
+                    self.assertEqual(DASH.main(["--date", day, "--no-watermark",
+                                                "--out", d, "--retain", str(keep)]), 0)
+            names = os.listdir(d)
+            blocks = [f for f in names if re.match(r"^data-\d{4}-\d{2}-\d{2}\.js$", f)]
+            self.assertTrue(blocks)
+            self.assertLessEqual(len(blocks), keep,
+                                 "the output directory grows without bound: %r" % blocks)
+            self.assertEqual([f for f in names
+                              if re.match(r"^\d{4}-\d{2}-\d{2}\.html$", f)], [],
+                             "v2 must not write a per-day HTML page")
+            for must in ("latest.html", "dashboard.css", "dashboard.js", "data-index.js"):
+                self.assertIn(must, names)
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+
+    def test_F26_out_never_deletes_a_file_the_user_put_there(self):
+        """The data-block retention runs everywhere, but the leftover-v1-page
+        cleanup runs only in the DEFAULT output directory. --out is a path the
+        caller chose; removing a file there because its name looks like a date is
+        not reversible, and the "no <day>.html" requirement is about
+        logs/dashboard/ alone."""
+        d = tempfile.mkdtemp(prefix="dashkeep_")
+        try:
+            keepers = ["2020-01-01.html", "notes.html", "2020-01-01.txt"]
+            for k in keepers:
+                with io.open(os.path.join(d, k), "w", encoding="utf-8") as f:
+                    f.write("mine")
+            stale = os.path.join(d, "data-1999-12-31.js")
+            with io.open(stale, "w", encoding="utf-8") as f:
+                f.write("stale")
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                self.assertEqual(DASH.main(["--date", STEADY_DAY, "--no-watermark",
+                                            "--out", d, "--retain", "3"]), 0)
+            names = os.listdir(d)
+            for k in keepers:
+                self.assertIn(k, names, "--out deleted %s, which it did not write" % k)
+            with io.open(os.path.join(d, "2020-01-01.html"), encoding="utf-8") as f:
+                self.assertEqual(f.read(), "mine")
+            self.assertNotIn("data-1999-12-31.js", names,
+                             "the data-block retention must still run under --out")
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+
+
+class F27DedupCanary(unittest.TestCase):
+    """A3: v1 had two dedup rules alive at once (day-scoped first-come for the trend
+    bars, window-scoped keep-NEWEST for everything else) and their agreement was a
+    property of this corpus, not of the code. v2 has one rule. This canary watches
+    the old one so that the day they part company somebody hears about it, instead
+    of two test suites quietly measuring two different things.
+
+    NOTE, and it is the reason this asserts what it asserts: the two rules ALREADY
+    pick different physical rows (measured: 14 + 27 + 4 = 45 groups). What is
+    currently a coincidence is that they never disagree about the SEGMENT, and that
+    is precisely the coincidence F6/F7/F19 rest on. So the canary asserts the same
+    jobs and the same segments, and reports the physical-row drift for a human."""
+
+    def test_F27_the_old_day_rule_still_covers_the_same_jobs(self):
+        drift = {}
+        for d in sorted({r["_day"] for r in _ROWS}):
+            old = CL.day_rows(_ROWS, d)
+            sup = VIEW.superseded_flags([r for r in _ROWS if r["_day"] <= d], d)
+            new = [r for r in _ROWS if r["_day"] == d and sup.get(id(r), 1) == 0]
+            R = resolver(d)
+            k_old = {(CL.norm(r["company_name"]), CL.tnorm(r["job_title"])): R.segment(r)
+                     for r in old}
+            k_new = {(CL.norm(r["company_name"]), CL.tnorm(r["job_title"])): R.segment(r)
+                     for r in new}
+            drift[d] = len({id(r) for r in old} ^ {id(r) for r in new}) // 2
+            with self.subTest(day=d):
+                self.assertEqual(len(old), len(new),
+                                 "the two dedup rules keep a different NUMBER of rows")
+                self.assertEqual(set(k_old), set(k_new),
+                                 "the two dedup rules cover different jobs now")
+                disagree = sorted(k for k in k_old if k_old[k] != k_new[k])
+                self.assertEqual(disagree, [],
+                                 "the two dedup rules now put the same job in "
+                                 "different segments: %r" % disagree[:5])
+        self.assertTrue(drift)
+
+
+class F29Checksum(unittest.TestCase):
+    """A6: the per-segment checksum is the only thing covering the ~99% of folded
+    rows that three sampled anchors miss. If it is not identical on both sides, or
+    not sensitive to order, the sixth reconciliation is decoration."""
+
+    def _sequences(self, day=STEADY_DAY):
+        p = payload(day)
+        out = {}
+        for f in VIEW.VIEWS:
+            for n in VIEW.N_CHOICES:
+                _raw, _bars, heads, overs = VIEW.segment_rows(p, n, f)
+                for g in range(len(CL.SEGMENT_ORDER)):
+                    out["%s|%d|%d|h" % (f, n, g)] = heads[g]
+                    out["%s|%d|%d|o" % (f, n, g)] = overs[g]
+        return out
+
+    def test_F29a_python_and_the_shipped_js_agree_bit_for_bit(self):
+        exe = find_chromium()
+        if not exe:
+            self.skipTest("no Chromium on this machine")
+        with io.open(os.path.join(ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
+            src = fh.read()
+        m_mix = re.search(r"function mix\(h, v\) \{[^}]*\}", src)
+        m_seq = re.search(r"function seqHash\(pairs\) \{.*?\n  \}", src, re.S)
+        self.assertIsNotNone(m_mix, "mix() not found in web/dashboard.js")
+        self.assertIsNotNone(m_seq, "seqHash() not found in web/dashboard.js")
+        seqs = self._sequences()
+        d = tempfile.mkdtemp(prefix="dashsum_")
+        try:
+            with io.open(os.path.join(d, "seq.js"), "w", encoding="utf-8") as fh:
+                fh.write("window.SEQ=" + json.dumps(seqs, separators=(",", ":")) + ";")
+            with io.open(os.path.join(d, "h.html"), "w", encoding="utf-8") as fh:
+                fh.write(
+                '<!doctype html><html><head><meta charset="utf-8"></head><body>'
+                '<pre id="out">PENDING</pre><script src="seq.js"></script><script>'
+                + m_mix.group(0) + "\n" + m_seq.group(0) + "\n"
+                + 'var R={};for(var k in window.SEQ){R[k]=seqHash(window.SEQ[k]);}'
+                  'document.getElementById("out").textContent=JSON.stringify(R);'
+                  "</script></body></html>")
+            dom = dump_dom(exe, "file:///" + os.path.join(d, "h.html").replace("\\", "/"))
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+        if not dom.strip():
+            self.skipTest("headless browser produced no DOM")
+        mm = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
+        self.assertIsNotNone(mm, dom[:400])
+        js = json.loads(mm.group(1))
+        self.assertEqual(len(js), len(seqs))
+        bad = [k for k in seqs if js.get(k) != VIEW.seq_hash(seqs[k])]
+        self.assertEqual(bad, [], "Python and JS checksums disagree on %d cells"
+                         % len(bad))
+
+    def test_F29b_the_checksum_moves_whenever_the_sequence_moves(self):
+        rnd = random.Random(20260821)
+        seqs = [v for v in self._sequences().values() if len(v) >= 2]
+        self.assertTrue(seqs)
+        trials = missed = 0
+        for seq in seqs:
+            base = VIEW.seq_hash(seq)
+            for _ in range(20):
+                a, b = rnd.sample(range(len(seq)), 2)
+                if seq[a] == seq[b]:
+                    continue
+                q = list(seq)
+                q[a], q[b] = q[b], q[a]
+                trials += 1
+                missed += (VIEW.seq_hash(q) == base)
+            for a in range(min(len(seq) - 1, 150)):       # adjacent: the hardest case
+                if seq[a] == seq[a + 1]:
+                    continue
+                q = list(seq)
+                q[a], q[a + 1] = q[a + 1], q[a]
+                trials += 1
+                missed += (VIEW.seq_hash(q) == base)
+            for a in rnd.sample(range(len(seq)), min(8, len(seq))):
+                trials += 2
+                missed += (VIEW.seq_hash(seq[:a] + seq[a + 1:]) == base)
+                missed += (VIEW.seq_hash(seq[:a] + [seq[a]] + seq[a:]) == base)
+        self.assertGreater(trials, 2000, "not enough mutations to mean anything")
+        self.assertEqual(missed, 0,
+                         "%d of %d disturbed sequences kept the same checksum"
+                         % (missed, trials))
+
+    def test_F29c_cross_day_groups_match_the_full_timestamp_oracle(self):
+        """A9. hsum/osum only prove Python and JS agree; they cannot prove either is
+        right, because a wrong ordering key is wrong identically on both sides. This
+        asserts the ordering against an EXTERNAL oracle - the full `_recorded`
+        string - on the groups where the two readings differ: rows spanning days."""
+        day = STEADY_DAY
+        p = payload(day)
+        idx = p["index"]
+        per_day = {d: coord_rows(d) for d in idx["days"]}
+        checked = 0
+        for n in (VIEW.N_CHOICES[-1],):
+            _raw, _bars, heads, overs = VIEW.segment_rows(p, n, "all")
+            for g, seg in enumerate(CL.SEGMENT_ORDER):
+                everything, head_of = {}, {}
+                for coord in list(heads[g]) + list(overs[g]):
+                    r = per_day[idx["days"][coord[0]]][coord[1]]
+                    everything.setdefault(CL.norm(r["company_name"]), []).append((coord, r))
+                for coord in heads[g]:
+                    r = per_day[idx["days"][coord[0]]][coord[1]]
+                    head_of.setdefault(CL.norm(r["company_name"]), []).append(list(coord))
+                for c, items in everything.items():
+                    if len({x[0][0] for x in items}) < 2:
+                        continue                      # single-day group: no ambiguity
+                    oracle = sorted(items,
+                                    key=lambda z: ((z[1].get("_recorded") or ""),
+                                                   (z[1].get("job_title") or ""),
+                                                   z[0][1]),
+                                    reverse=True)
+                    want = [list(x[0]) for x in oracle[:VIEW.CAP]]
+                    with self.subTest(segment=seg, company=c):
+                        self.assertEqual(head_of.get(c), want,
+                                         "cap-2 head of a cross-day group does not "
+                                         "match ordering by the full timestamp")
+                    checked += 1
+        self.assertGreater(checked, 0,
+                           "no company spans two days in this corpus - the assertion "
+                           "would be vacuous")
+
+
+class F24Browser(unittest.TestCase):
+    """L3. The one end-to-end assertion the JS side has: a real browser, a real
+    file:// URL, the real bundle. Its structural limit is that it runs the same
+    reconciliation code the page runs, so a reconciliation written backwards would
+    agree with itself - which is why the deliberate-breakage pass stays a manual
+    acceptance step."""
+
+    def test_F24_headless_browser_reports_all_cells_ok(self):
+        exe = find_chromium()
+        if not exe:
+            self.skipTest("no Chromium on this machine")
+        d = tempfile.mkdtemp(prefix="dashbundle_")
+        try:
+            bundle_dir(STEADY_DAY, d)
+            url = ("file:///" + os.path.join(d, "latest.html").replace("\\", "/")
+                   + "#selfcheck")
+            dom = dump_dom(exe, url)
+            if not dom.strip():
+                self.skipTest("headless browser produced no DOM")
+            m = re.search(r'<pre id="selfcheck"[^>]*>(.*?)</pre>', dom, re.S)
+            self.assertIsNotNone(m, "no #selfcheck output: %s" % dom[:400])
+            txt = m.group(1)
+            data = json.loads(txt[txt.index("{"):])
+            cells = 0
+            for f in VIEW.VIEWS:
+                for n in VIEW.N_CHOICES:
+                    cell = data[f][str(n)]
+                    with self.subTest(view=f, n=n):
+                        self.assertTrue(cell["ok"], "%s/%s failed: %r"
+                                        % (f, n, cell.get("why")))
+                    cells += 1
+            self.assertEqual(cells, len(VIEW.VIEWS) * len(VIEW.N_CHOICES))
+            self.assertIn("SELFCHECK ok", txt)
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+
+    def test_F24_a_broken_check_really_does_light_the_banner(self):
+        """The mirror image, and the only thing that keeps the test above from
+        passing on a page whose reconciliation never fires: corrupt one number in
+        `check` and the red banner must appear."""
+        exe = find_chromium()
+        if not exe:
+            self.skipTest("no Chromium on this machine")
+        d = tempfile.mkdtemp(prefix="dashbroken_")
+        try:
+            bundle_dir(STEADY_DAY, d)
+            path = os.path.join(d, "data-index.js")
+            with io.open(path, encoding="utf-8") as fh:
+                txt = fh.read()
+            head = "window.JOB_INDEX="
+            obj = json.loads(txt[len(head):].rstrip().rstrip(";"))
+            obj["check"][VIEW.VIEWS[0]][str(VIEW.N_DEFAULT)]["cap2"][0] += 1
+            with io.open(path, "w", encoding="utf-8") as fh:
+                fh.write(head + json.dumps(obj, ensure_ascii=False,
+                                           separators=(",", ":")) + ";")
+            dom = dump_dom(exe, "file:///" + os.path.join(d, "latest.html").replace("\\", "/"))
+            if not dom.strip():
+                self.skipTest("headless browser produced no DOM")
+            m = re.search(r'<div id="recon"([^>]*)>(.*?)</div>\s*\n', dom, re.S)
+            self.assertIsNotNone(m)
+            self.assertNotIn("hidden", m.group(1),
+                             "cap2 was corrupted and the reconciliation stayed quiet")
+            self.assertIn("cap2", m.group(2))
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
 
 
 def _manual_signoff():

@@ -1,0 +1,18 @@
+Chrome 151 --headless=new, file://, 2026-08-21 04:38, bundle cloned from logs/dashboard (impl v1)
+baseline | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=2154 | n=3 | 0:84tr/0dup 1:0tr/0dup 2:0tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 1 b=true
+after N=1 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=1327 | n=1 | 0:11tr/0dup 1:5tr/0dup 2:71tr/0dup 3:5tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 3 b=true
+after N=3 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=3 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 7 b=true
+after N=7 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=7 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 14 b=true
+after N=14 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=14 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 30 b=true
+after N=30 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=30 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+pre-click 3 b=true
+after N=3 | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=3 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+after view=new | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=1311 | n=3 | 0:11tr/0dup 1:4tr/0dup 2:59tr/0dup 3:3tr/0dup 4:0tr/0dup 5:0tr/0dup
+after view=wm | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=3263 | n=3 | 0:33tr/0dup 1:44tr/0dup 2:214tr/0dup 3:7tr/0dup 4:0tr/0dup 5:0tr/0dup
+after view=all | marker=ok | banner_hidden=true | busy=false | seg3_open=true | seg3_top=-44 | scrollY=6594 | n=3 | 0:84tr/0dup 1:140tr/0dup 2:517tr/0dup 3:78tr/0dup 4:0tr/0dup 5:0tr/0dup
+DONE

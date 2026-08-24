@@ -424,13 +424,6 @@
       "added": "2026-08-19"
     },
     {
-      "name": "Visa",
-      "platform": "smartrecruiters",
-      "slug": "visa",
-      "source": "github",
-      "added": "2026-08-19"
-    },
-    {
       "name": "Twitch",
       "platform": "greenhouse",
       "slug": "twitch",
@@ -1598,6 +1591,132 @@
       "slug": "heliux",
       "source": "ddg",
       "added": "2026-08-20"
+    },
+    {
+      "name": "Axon",
+      "platform": "greenhouse",
+      "slug": "axon",
+      "source": "github",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Hydrite",
+      "platform": "greenhouse",
+      "slug": "hydritechemicalco",
+      "source": "github",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Zettabyte Space",
+      "platform": "ashby",
+      "slug": "zettabyte-space",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Color Health",
+      "platform": "ashby",
+      "slug": "color-health",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Veeva",
+      "platform": "lever",
+      "slug": "veeva",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Merklescience",
+      "platform": "lever",
+      "slug": "merklescience",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Thinkahead",
+      "platform": "lever",
+      "slug": "thinkahead",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "Everbridge",
+      "platform": "lever",
+      "slug": "everbridge",
+      "source": "ddg",
+      "added": "2026-08-21"
+    },
+    {
+      "name": "FICS",
+      "platform": "workable",
+      "slug": "fics-inc-1",
+      "source": "github",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Greptile",
+      "platform": "ashby",
+      "slug": "greptile",
+      "source": "github",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Sigmacomputing",
+      "platform": "greenhouse",
+      "slug": "sigmacomputing",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Perpay",
+      "platform": "greenhouse",
+      "slug": "perpay",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Newsbreak",
+      "platform": "greenhouse",
+      "slug": "newsbreak",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Fourhands",
+      "platform": "greenhouse",
+      "slug": "fourhands",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Peakgames",
+      "platform": "lever",
+      "slug": "peakgames",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Dreamgames",
+      "platform": "lever",
+      "slug": "dreamgames",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Chartahealth",
+      "platform": "ashby",
+      "slug": "chartahealth",
+      "source": "ddg",
+      "added": "2026-08-22"
+    },
+    {
+      "name": "Hipp",
+      "platform": "ashby",
+      "slug": "hipp",
+      "source": "ddg",
+      "added": "2026-08-22"
     }
   ],
   "failed_probes": {
@@ -1748,7 +1867,14 @@
       "ashby:cruise": "2026-08-19",
       "smartrecruiters:cruise": "2026-08-19",
       "workable:cruise": "2026-08-19"
+    },
+    "Visa": {
+      "greenhouse:visa": "2026-08-21",
+      "lever:visa": "2026-08-21",
+      "ashby:visa": "2026-08-21",
+      "smartrecruiters:visa": "2026-08-21",
+      "workable:visa": "2026-08-21"
     }
   },
-  "last_updated": "2026-08-20T21:10:07.408780"
+  "last_updated": "2026-08-23T21:05:00.021142"
 }

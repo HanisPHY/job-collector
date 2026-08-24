@@ -1,0 +1,94 @@
+{
+  "verdict": "pass",
+  "issues": [
+    {
+      "id": "B2-1",
+      "severity": "nice_to_have",
+      "where": "design_v2.md §4 (F23 新增段列，'也不含 1a_t3 / 1a_t2')",
+      "description": "v2 用 `data-gidx` 定位彻底关闭了 B2（JS 完全不需要知道任何段 key 字符串），这是正确、更省的修法。但作为『安全网』的 F23 黑名单只补了 `1a_t3` / `1a_t2` 两个字符串，六个段 key 里的另外四个（`1b`、`B1`、`B2`、`C`）没有被加进黑名单——大概率是因为它们本身太通用（`C`、`1b`、`B1`、`B2` 这类短字符串容易在正常代码里合法出现，加进黑名单会大量误报），所以这不是疏忽，是有意的权衡。但结果是：如果工程师没有遵照 `data-gidx` 方案，反而在 dashboard.js 里手写了一份 `[\"1a_t3\",\"1a_t2\",\"1b\",\"B1\",\"B2\",\"C\"]` 这样的段序数组，F23 只能抓到其中两个字符串命中，抓不到整份数组本身的存在。",
+      "evidence": "逐字核对 design_v2.md 第 643 行 F23 的描述：『去注释后的 web/dashboard.js 不含 tier、prom、stage、kind、staffing、outsourcing、job_board、new grad、entry level、tnorm（大小写不敏感），也不含 1a_t3 / 1a_t2』——确认黑名单里没有 `1b`/`B1`/`B2`/`C`。文本核验，非运行时实测（dashboard.js 尚未写出），故为 nice_to_have。",
+      "suggested_fix": "如果想要更完整的安全网，可以不针对单个字符串，而是断言『去注释后的 dashboard.js 里不出现形如 `[\"1a_t3\"` 或 `'1a_t3'` 这种字符串字面量数组』的正则，专门针对『整份段序数组被硬编码』这个具体形状，而不是逐个字符串杀。不是阻塞项——`data-gidx` 已经让这个失败模式在正确实现下根本不会发生。"
+    },
+    {
+      "id": "B2-2",
+      "severity": "nice_to_have",
+      "where": "design_v2.md §5 验收第 12 条 vs dashboard.py 现有文件第 9 行",
+      "description": "验收第 12 条只点名『SCHEDULING.md 第 204 行…已更新』，但 `dashboard.py` 自己的模块 docstring 第 9 行（`Output: logs/dashboard/<day>.html  and  logs/dashboard/latest.html`）同样描述了『会写 `<day>.html`』这个旧约定，v2 之后这句话也会变成假的，但验收清单没有点名它。由于 `dashboard.py` 本身要被大改（`build_bundle`/`render_shell` 等），这行注释大概率会顺带被碰到，但『没有被列进验收』意味着它有可能被 review 漏掉而不会被任何检查发现（不像 SCHEDULING.md 那条至少被列成了必须验证的一步）。",
+      "evidence": "跑了 `grep -rn \"logs/dashboard\" --include=\"*.py\" --include=\"*.bat\" --include=\"*.md\" .`（未改任何文件），输出确认只有三处引用旧约定：`dashboard.py:9`、`docs/req/req2-dashboard-v2.md:295`（需求原文，预期不变）、`SCHEDULING.md:204`（design_v2 §0.1/§5 已点名要改）。另外 `grep -n \"day.html|<day>|\\.html\" SCHEDULING.md run_daily_report.bat` 与 `grep -n \"day.html|OUT_DIR|\\.html\" tests/test_lane.py` 确认 `run_daily_report.bat` 和现有测试都不依赖具体文件名（不构成额外风险），但也确认 `dashboard.py:9` 确实是一处遗漏点名的地方。",
+      "suggested_fix": "验收第 12 条改成『`SCHEDULING.md` 第 204 行与 `dashboard.py` 模块 docstring 里关于输出文件的描述都已更新，`grep -rn \"day.html\\|<day>.html\" --include=\"*.py\" --include=\"*.md\" .` 只应该匹配到 `docs/req/` 下的历史需求文档』。"
+    },
+    {
+      "id": "B9-residual",
+      "severity": "nice_to_have",
+      "where": "design_v2.md §3.6（三视图开关）/ §3.8（chrome 预渲染，R21 决定 hero/趋势/堆叠条/图例/面板②′③ 不随视图变）",
+      "description": "R21 的决定（面板②′/③与趋势图跟着视图变会让『中介占比』这类数字失去可比性）是合理的，但用真实数据量化后，这个『不随视图变』的代价比预想的更显眼：hero 卡片与堆叠条/图例展示的是 view=all 的段计数，用户切到『新增』视图后，六个分段各自的行表和 summary 计数会正确地缩水，但页面顶部那个大号 hero 数字与堆叠条/图例仍然停在 all 视图的数字上——差距不是零头。设计说『开关旁边写明这一点』，但没有量化过这个落差有多大；量化后发现足够大，一句说明文字未必够醒目。",
+      "evidence": "跑了一段临时脚本（复用 `dashboard_loop/v2/_pm2_base.py` 的 `superseded`/`win_rows`/`CL.LaneResolver`，未改任何仓库文件），用真实数据在 anchor=今天、N=3 下同时算 view=all 与 view=new 的逐段 raw 计数：`①(1a_t3) all=99 new=7`、`②(1a_t2) all=151 new=3`、`③(1b) all=638 new=39`、`④(B1) all=90 new=1`、`⑤(B2) all=703 new=66`、`⑥(C) all=374 new=28`——即用户切到『新增』视图后，hero/堆叠条/图例展示的段①数字（99）与该段实际展开后看到的行数（7）相差 14 倍，其余段也都在 8-13 倍量级。",
+      "suggested_fix": "不改变『面板/图表不随视图变』这个决定本身（理由仍然成立），但建议把说明从『开关旁边一行小字』加强成『hero 数字本身旁边有个持续可见的限定词，例如把 hero 卡片标题从「今日必看（段①）」改成「今日必看（段①，全部窗口）」』，而不是只在开关控件附近写一次，因为用户视线焦点更可能落在 hero 大号数字本身而不是开关旁边的小字。"
+    }
+  ],
+  "v1_followup": [
+    {
+      "id": "B1",
+      "status": "closed",
+      "note": "接受为『首屏三选一视图开关（全部/新增/上一期未处理），派生自水位线，零持久化状态』，默认 N 仍为 3（用 [T2] 的绝对新增行数论证，不是偷懒）。我用自己独立写的代码（复用 PM2 的 superseded/win_rows/open_plan，但去重逻辑、分组、cap2、first_screen selection 全部重新实现），按 PM2 自己的『模拟每天 08:00 水位线』方法论独立重跑：view=all 下 N=3 首屏日复一日重复 39%/40%，切到 view=new 后降到 3%/2%——与设计 [T2]/[T3] 声称的 39-42% → 2.3-2.6% 基本吻合。默认视图（all）下重复仍然存在，但这是显式披露的权衡（受『不做已投/已忽略』约束），且一键可解决，判定为已关闭。"
+    },
+    {
+      "id": "B2",
+      "status": "closed",
+      "note": "采用方案 (b)：骨架六个 `<details data-gidx=\"0\"..\"5\">`，JS 用 `[data-gidx]` 定位，不发送、也不需要任何段 key 字符串，段顺序保持 `CL.SEGMENT_ORDER` 单一事实来源——从根上消除了我担心的『JS 里长出硬编码副本』这条路径。F23 黑名单额外加了 `1a_t3`/`1a_t2` 两个字符串作安全网；这个安全网本身不完整（见本轮新问题 B2-1，nice_to_have），但主机制已经让这个问题结构性不存在，判定为已关闭。"
+    },
+    {
+      "id": "B3",
+      "status": "closed",
+      "note": "新增 `check[f][N].anchors[gidx]` = 每段 cap2 head 的首/中/末三个坐标，成本 973 B（6 段 × 3 坐标 × 5 档 N），JS 五件对账的第 5 条专门比对这个。折叠段内部『选对了哪几行、顺序对不对』从『完全没有保护』变成『每段至少 3 个可验证锚点』，是一个合理的成本/覆盖权衡（穷举每一行不现实）。残留风险（大段中间未被抽样到的行仍可能错而不被发现，例如⑤段 cap2 head 实测 all 视图下 703 行、只测 3 个点）是这种抽样方法固有的、已被验证过其存在的局限，不是本轮引入的新问题，判定为已关闭。"
+    },
+    {
+      "id": "B4",
+      "status": "closed",
+      "note": "『●新』通过 B1 的三视图机制升级为一个正式视图（`new`），拥有自己的 `check[\"new\"][N]`（含 head/anchors），纳入 L1/L2/L3 三层对账；§5 人工验收清单新增一条『核对●新：新增视图里每行都带●新；全部视图里带●新的行数等于新增视图的行数』。我独立验证了 3 视图 × 5 档 N 的 Σraw==dedup 恒等式对当前真实语料全部成立（见本轮 reproduced），判定为已关闭。"
+    },
+    {
+      "id": "B5",
+      "status": "closed",
+      "note": "`check` 结构改成 `check[f][N]`（f ∈ all/new/wm），新增 F28 断言三视图 × 5 档 N 的 Σraw==dedup，`#selfcheck` 跑满 15 组。我独立写脚本（`_evalB2_trendbar.py`）在真实语料 + 真实水位线上验证了这 15 个 (view,N) 格全部 raw==dedup，且 view=all 的 dedup 确实 >= 另外两个视图，与 F28 描述一致，判定为已关闭。"
+    },
+    {
+      "id": "B6",
+      "status": "closed",
+      "note": "§3.9 明确写了 fallback：找不到视口内 `<details>` 锚点就退回记录 `document.scrollingElement.scrollTop` 的绝对值；并且明确『对账在滚动恢复之前跑，任何滚动异常都不可能连累红条』，整个恢复过程包在 try/catch 里。这同时解决了我原来担心的两个子问题（没有 fallback、以及一个未处理的异常可能连累红条机制），判定为已关闭。§5 验收第 5 条也加了对应的人工检查步骤。"
+    },
+    {
+      "id": "B7",
+      "status": "closed",
+      "note": "机制改成委托 click 处理器直接调用幂等的 `openSegment(id)`，不 `preventDefault()`（hash 仍照常更新），`hashchange` 监听只保留给地址栏/前进后退。这从根上不再依赖『hashchange 是否触发』，click 事件在浏览器里每次点击都必然触发，结构上修复了我在 round 1 用无头 Chrome 实测确认的问题（`_evalB_hashclick.py`：同一 hash 再点一次 `events` 计数不变）。尚无可运行的 dashboard.js 来做端到端复测（设计阶段），但机制本身的逻辑是自洽的，判定为已关闭；§5 验收第 5 条也把『手动折叠后再点同一个 → 仍然展开』列为必须人工验证的步骤。"
+    },
+    {
+      "id": "B8",
+      "status": "closed",
+      "note": "§3.9 明确要求 rAF 分片带世代号 `gen`，每次 dirty 时自增，每帧回调第一行检查 `myGen !== gen` 就丢弃剩余分片。§5 验收第 6 条也加了对应人工步骤（30 天视图下连续快速切 N 三次，检查无重复/无乱序）。判定为已关闭。"
+    },
+    {
+      "id": "B9",
+      "status": "closed",
+      "note": "原来的疑问『panels[N] 算了但没说怎么用』现在有了明确答案：所有非行表区块（趋势/堆叠条/图例/面板②′③/hero）由 Python 预渲染成每档 N 一份的 HTML 字符串（`chrome[n]`），JS 只做 `innerHTML` 替换；并且 R21 明确记录了『它们不随三视图开关变』这个决定和理由。原来的『到底有没有用、该怎么用』这个歧义已解决。本轮我用真实数据量化了这个决定的代价有多大（见新问题 B9-residual，nice_to_have）——这不是对 B9 关闭的推翻，是在『已经关闭』的基础上补充的一个可以做得更醒目的建议。"
+    },
+    {
+      "id": "B10",
+      "status": "closed",
+      "note": "§5 验收第 2 条现在写明判定标准：退出码 0、stdout/stderr 不含 `Traceback`、`latest.html`/`data-index.js`/`data-<今天>.js` 的 mtime 是本次运行产生的。判定为已关闭。"
+    },
+    {
+      "id": "B11",
+      "status": "closed",
+      "note": "原样采纳为 §5 验收第 10 条『故意破坏回归（必做）』，给出了三个具体的破坏动作（改错 cap2 数字、反转几个 x 位、打乱 head 坐标顺序）和明确的通过标准（三次都必须出现红条并指出是哪一条对账失败）。这正是我原来建议的『唯一能验证对账代码本身没写反』的办法，判定为已关闭。"
+    }
+  ],
+  "reproduced": [
+    "趋势柱 N 无关 + Σ柱高==dedup（A3 的核心恒等式）：用自己写的脚本 `_evalB2_trendbar.py`（未改任何仓库文件），对三个真实 anchor（2026-08-19、2026-08-20、都不是今天；以及 2026-08-21=今天）各自独立计算 `bar(d)`（keep-NEWEST，作用域 `_day<=anchor`）与 5 档 N 的窗口去重行数，全部 15 组 `dedup == sum(bar over window)` 精确成立（如 anchor=2026-08-19：5 档 N 全部 dedup=230=sum(bar)=230；anchor=2026-08-20：N=1 时 1674=1674，N>=3 时 1895=1895）。这是设计文档自己的 `_pm2_01_fixes.py` 只在 anchor=today 上验证过的结论，本轮补上了『anchor 不是今天』这个 orchestrator 明确要求的场景，结果与设计声称的一致。",
+    "三视图 Σraw==dedup（F28）：同一脚本另外对 anchor=今天、真实水位线（cutoff=2026-08-21 00:24, prev_cutoff=2026-08-20 12:24）算了 view∈{all,new,wm} × 5 档 N 共 15 格，全部 raw==dedup 成立，且 all 视图的 dedup（191/2055…）均 >= new（144）与 wm（739 或 47）——与设计 F28『view=all 的 dedup >= 另两个』的描述一致。",
+    "B1 关闭效果的独立复现：用 `_evalB2_freshness.py` 以及一段临时脚本，按 PM2 自己的『模拟每天 08:00 水位线』方法论（而不是直接信任 PM2 脚本打印的数字）重新独立实现 first-screen 选取逻辑，得到 view=all 下 N=3 首屏日重复 39%/40%，view=new 下降到 3%/2%——与设计 [T2]/[T3] 的 39-42% → 2.3-2.6% 基本吻合，独立确认。",
+    "『没有历史 <day>.html』的依赖排查：`grep` 了 `SCHEDULING.md`、`run_daily_report.bat`、`tests/test_lane.py` 以及全仓库 `logs/dashboard` 相关引用（未改任何文件）。确认：`run_daily_report.bat` 不引用具体文件名（不构成风险）；`tests/test_lane.py` 零处引用 `day.html`/`OUT_DIR`（不构成风险）；`SCHEDULING.md:204` 与 `dashboard.py:9` 是仅有的两处描述旧约定的文本，前者设计已点名要改，后者被遗漏（见本轮新问题 B2-2）。",
+    "hero/面板/趋势图『不随视图变』的代价量化：用真实数据（anchor=今天，N=3）算出 view=all 与 view=new 下六个分段各自的 raw 计数，六段全部相差 8-14 倍（如①段 99 vs 7，⑤段 703 vs 66）——设计的 R21 决定本身成立，但代价比『一句说明文字』字面上听起来的更大，量化结果作为本轮新问题 B9-residual 的证据。"
+  ],
+  "summary": "第 2 轮设计对我第 1 轮的两条 must_fix（首屏重复、hashchange 同 hash 不重触发）和全部 9 条 nice_to_have 都给出了具体、可验证的关闭方式，我用独立编写的脚本（不是照抄 PM 自己的复现脚本）在真实语料和真实水位线上重新验证了其中最关键的三条数学声明（趋势柱 N 无关且含『anchor 不是今天』的场景、三视图 Σraw==dedup、B1 的重复率确实从约 40% 降到约 2-3%），结果与设计文档一致，本轮零新增 must_fix；仅发现三处值得记录的 nice_to_have（F23 黑名单只覆盖 2/6 段 key、dashboard.py 自身 docstring 的旧约定未被验收清单点名、hero/面板『不随视图变』这条决定的实际数字落差比预想更大）。"
+}

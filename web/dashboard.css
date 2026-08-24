@@ -1,0 +1,130 @@
+:root{
+  --bg:#ffffff; --fg:#16202b; --muted:#5b6876; --line:#e2e7ee; --card:#f7f9fc;
+  --link:#1a4f9c; --visited:#6b5b95;
+  /* single-hue sequential ramp, 5 steps, strongest = most important segment */
+  --s1:#12447f; --s2:#2a78d6; --s3:#5b9ee6; --s4:#93c1f0; --s5:#c7ddf5;
+  /* the intermediary lane is off-ramp on purpose: neutral + warning, never a weak blue */
+  --cgrey:#6b7280; --cwarn:#a2560c; --cwarn-bg:#fdf3e6;
+  --ok:#1b7a4b; --bad:#b3261e;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171d; --fg:#e6ecf3; --muted:#9aa7b4; --line:#28313b; --card:#1a212a;
+    --link:#8ab8ff; --visited:#c0a8e8;
+    --s1:#9ec8ff; --s2:#6ea8f0; --s3:#4a83c8; --s4:#35618f; --s5:#27455f;
+    --cgrey:#8b95a1; --cwarn:#f0a44a; --cwarn-bg:#2a2118;
+    --ok:#5ed09a; --bad:#ff8b82;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171d; --fg:#e6ecf3; --muted:#9aa7b4; --line:#28313b; --card:#1a212a;
+  --link:#8ab8ff; --visited:#c0a8e8;
+  --s1:#9ec8ff; --s2:#6ea8f0; --s3:#4a83c8; --s4:#35618f; --s5:#27455f;
+  --cgrey:#8b95a1; --cwarn:#f0a44a; --cwarn-bg:#2a2118;
+  --ok:#5ed09a; --bad:#ff8b82;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:20px 18px 60px;background:var(--bg);color:var(--fg);
+  font:14px/1.5 "Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:19px;margin:0 0 2px}
+h2{font-size:15px;margin:26px 0 8px}
+.sub{color:var(--muted);font-size:12px;margin:0 0 14px}
+a{color:var(--link)}
+a:visited{color:var(--visited)}
+a:hover{text-decoration:none}
+.hero{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch;margin:14px 0 6px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 16px;min-width:150px}
+.tile .k{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.tile .v{font-size:30px;font-weight:650;line-height:1.15}
+.tile .d{font-size:11px;color:var(--muted)}
+.tile.main{border-left:5px solid var(--s1)}
+.tile.warn{border-left:5px solid var(--cwarn);background:var(--cwarn-bg)}
+.banner{border:1px solid var(--cwarn);background:var(--cwarn-bg);color:var(--fg);
+  border-radius:8px;padding:9px 12px;margin:12px 0;font-size:13px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;margin:10px 0}
+details{border:1px solid var(--line);border-radius:9px;margin:9px 0;background:var(--bg);
+  overflow:hidden}
+details>summary{cursor:pointer;padding:9px 12px;font-weight:600;list-style:none;
+  display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"\25B8";color:var(--muted);font-weight:400}
+details[open]>summary::before{content:"\25BE"}
+details>summary .cnt{color:var(--muted);font-weight:400;font-size:12px}
+details>summary .sub{margin:0;font-size:11px}
+details .body{padding:0 12px 10px;overflow-x:auto}
+details details{margin:8px 0 2px;border-style:dashed}
+.seg1>summary{border-left:5px solid var(--s1)}
+.seg2>summary{border-left:5px solid var(--s2)}
+.seg3>summary{border-left:5px solid var(--s3)}
+.seg4>summary{border-left:5px solid var(--s4)}
+.seg5>summary{border-left:5px solid var(--s5)}
+.segc>summary{border-left:5px solid var(--cgrey);background:var(--cwarn-bg)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;
+  border-bottom:1px solid var(--line);padding:5px 8px 5px 0;white-space:nowrap}
+td{padding:4px 8px 4px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.co{white-space:nowrap;max-width:230px;overflow:hidden;text-overflow:ellipsis}
+td.num{text-align:right;color:var(--muted);white-space:nowrap}
+td.sm{color:var(--muted);font-size:11px;white-space:nowrap}
+td.sig{max-width:210px;white-space:normal}
+.t{display:inline-block;min-width:20px;text-align:center;border-radius:4px;
+  font-size:10px;font-weight:700;padding:1px 3px;color:#fff}
+.t3{background:var(--s1)} .t2{background:var(--s2)} .t1{background:var(--s3);color:#08243f}
+.t0{background:var(--cgrey)}
+.new{color:var(--cwarn);font-size:10px;font-weight:700}
+.empty{color:var(--muted);font-size:12px;margin:6px 0}
+.trend .bar{fill:var(--s3)} .trend .bar.cur{fill:var(--s1)}
+.trend .tick,.trend .val{fill:var(--muted);font-size:9px}
+.stack .sl1{fill:var(--s1)} .stack .sl2{fill:var(--s2)} .stack .sl3{fill:var(--s3)}
+.stack .sl4{fill:var(--s4)} .stack .sl5{fill:var(--s5)} .stack .sc{fill:var(--cgrey)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+.st{font-size:11px;white-space:nowrap}
+.st.ok{color:var(--ok)} .st.warn{color:var(--cwarn)} .st.bad{color:var(--bad)}
+footer{margin-top:34px;border-top:1px solid var(--line);padding-top:12px;
+  color:var(--muted);font-size:11px}
+footer li{margin:3px 0}
+code{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+
+/* ---------------------------------------------------------------- v2 additions
+   Everything above this line is dashboard.py's v1 CSS constant, moved verbatim
+   into a real file (R4). Below: what the N / view selectors, the anchor jumps
+   and the reconciliation banner need. */
+
+/* R3: a segment jumped to from the stacked bar must not land under the sticky
+   selector strip. */
+details[id]{scroll-margin-top:76px}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+
+.ctl{position:sticky;top:0;z-index:5;background:var(--bg);
+  border-bottom:1px solid var(--line);padding:8px 0 6px;margin:10px 0 4px}
+.ctlrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 4px}
+.ctllab{font-size:11px;color:var(--muted);letter-spacing:.04em;min-width:34px}
+[role="radiogroup"]{display:inline-flex;flex-wrap:wrap;gap:4px}
+[role="radio"]{font:inherit;font-size:12px;line-height:1.2;cursor:pointer;
+  padding:5px 11px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--fg)}
+[role="radio"][aria-checked="true"]{background:var(--s1);border-color:var(--s1);
+  color:#fff;font-weight:650}
+[role="radio"]:hover{border-color:var(--s2)}
+[aria-busy="true"]{opacity:.55}
+.ctl .sub{margin:2px 0 0}
+
+/* I1 in the browser: never fewer rows in silence. */
+.recon{border:2px solid var(--bad);background:var(--cwarn-bg);color:var(--fg);
+  border-radius:8px;padding:10px 12px;margin:10px 0;font-size:13px}
+.recon b{color:var(--bad)}
+.recon ul{margin:6px 0 0;padding-left:20px}
+.recon li{margin:2px 0}
+.recon code{white-space:nowrap}
+
+.segw>summary{border-left:5px solid var(--cwarn)}
+td.dt{color:var(--muted);font-size:11px;white-space:nowrap}
+.busy{color:var(--muted);font-size:12px;margin:6px 0}
+#selfcheck{white-space:pre-wrap;font-size:11px;background:var(--card);
+  border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto}
+.qual{font-weight:400;color:var(--muted);font-size:11px}

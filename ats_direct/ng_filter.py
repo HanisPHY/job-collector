@@ -70,7 +70,10 @@ NG_PATTERNS = [
 # Negative: too senior (aligned with job_collector.classifiers.seniority,
 # validated against 4898 real titles in this repo's dataset)
 SENIOR_PATTERNS = [
-    r"\bsenior\b", r"\bsr\.?\b", r"\bstaff\b", r"\bprincipal\b",
+    # "Member of Technical Staff" is the standard NEW GRAD title at OpenAI,
+    # Anthropic, Mistral and xAI - a bare \bstaff\b matched it and dropped every
+    # such role, which also made the SDE_PATTERNS entry for it dead code.
+    r"\bsenior\b", r"\bsr\.?\b", r"(?<!technical\s)\bstaff\b", r"\bprincipal\b",
     r"\bdistinguished\b", r"\bmanager\b", r"\bdirector\b", r"\bhead\s+of\b",
     r"\barchitect\b", r"\bvp\b", r"\bvice\s+president\b", r"\bfellow\b",
     r"\bexperienced\b", r"\bmid[-\s]?level\b",
@@ -127,3 +130,74 @@ def classify_title(title: str, strict: bool = True) -> Tuple[bool, Optional[str]
         return False, "no new-grad signal (strict mode)"
 
     return True, None
+
+
+# ---------------------------------------------------------------- three-way verdict
+# The LinkedIn lane drops hard (the row never reaches the CSV), so a false drop is
+# permanent data loss. Two-way classify_title() cannot express "I don't know" and
+# was therefore silently guessing on ~60% of the titles it saw.
+DROP = "drop"
+KEEP = "keep"
+GRAY = "gray"
+
+
+# Occupations that are provably not software engineering. Unlike
+# NON_SDE_DOMAIN_PATTERNS these do NOT require an "engineer" token, because
+# "Mechanical Associate I" and "Junior Designer, Automotive Design" carry no such
+# token at all - which is exactly why they leaked through the LinkedIn lane.
+# Never applied when the title itself says "software" (an explicit software signal
+# outranks a domain word, same guardrail as NON_SDE_DOMAIN_PATTERNS).
+NON_SOFTWARE_OCCUPATION_PATTERNS = [
+    r"\bdesigner\b",
+    r"\bmechanical\b",
+]
+
+_NON_SOFTWARE_OCCUPATION = [re.compile(p, re.I) for p in NON_SOFTWARE_OCCUPATION_PATTERNS]
+
+
+# Unambiguous software signals. Deliberately NARROWER than SDE_PATTERNS: the broad
+# "systems? engineer" alternative in there also matches "Junior Rail Systems Engineer
+# - Traction Power" and "Spaceship Avionics Systems Engineer" (47 such titles in the
+# 6-day sample), which is exactly the sort of call that must reach the adjudicator
+# instead of being decided by a regex.
+SURE_SOFTWARE_PATTERNS = [
+    r"software\s+(?:engineer|developer|development|engineering)",
+    r"\bsoftware\s+dev\b",
+    r"\b(?:swe|sde|sdet)\b",
+    r"\bfull[-\s]?stack\b",
+    r"\b(?:backend|back[-\s]end|frontend|front[-\s]end)\s+(?:engineer|developer)\b",
+    r"\bweb\s+developer\b",
+    r"\b(?:android|ios)\s+(?:engineer|developer)\b",
+    r"\bmember\s+of\s+technical\s+staff\b",
+]
+
+_SURE_SOFTWARE = [re.compile(p, re.I) for p in SURE_SOFTWARE_PATTERNS]
+
+
+def title_verdict(title):
+    """Returns (verdict, reason). verdict is DROP / KEEP / GRAY."""
+    if not title or not title.strip():
+        return DROP, "empty title"
+    t = title.strip()
+
+    for pat in _NONFT:
+        m = pat.search(t)
+        if m:
+            return DROP, "not full-time (%s)" % m.group(0)
+
+    for pat in _SENIOR:
+        m = pat.search(t)
+        if m:
+            return DROP, "too senior (%s)" % m.group(0)
+
+    if not _SOFTWARE_WORD.search(t):
+        for pat in _NON_SOFTWARE_OCCUPATION:
+            m = pat.search(t)
+            if m:
+                return DROP, "non-software occupation (%s)" % m.group(0)
+
+    for pat in _SURE_SOFTWARE:
+        if pat.search(t):
+            return KEEP, None
+
+    return GRAY, None

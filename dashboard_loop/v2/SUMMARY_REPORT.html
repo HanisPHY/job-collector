@@ -1,0 +1,153 @@
+<title>Dashboard v2 Loop Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--paper:#f3f5f7;--card:#ffffff;--ink:#1b2230;--muted:#6b7583;--line:#d5dae1;--accent:#0e6b70;--accent-soft:#e1efef;--pass:#2a7a4b;--pass-soft:#e3f1e7;--fail:#b23a2e;--fail-soft:#f6e3e0;--warn:#9a6b00;--warn-soft:#f6efd9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#141920;--card:#1c232c;--ink:#e6eaef;--muted:#97a1ad;--line:#2e3742;--accent:#5ec2c6;--accent-soft:#17373a;--pass:#6fcf92;--pass-soft:#1d3a29;--fail:#f08a7e;--fail-soft:#45231f;--warn:#e6b84a;--warn-soft:#3d3214}}
+:root[data-theme="dark"]{--paper:#141920;--card:#1c232c;--ink:#e6eaef;--muted:#97a1ad;--line:#2e3742;--accent:#5ec2c6;--accent-soft:#17373a;--pass:#6fcf92;--pass-soft:#1d3a29;--fail:#f08a7e;--fail-soft:#45231f;--warn:#e6b84a;--warn-soft:#3d3214}
+body{background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.55;margin:0;padding:2.5rem 1.25rem 5rem}
+main{max-width:78ch;margin:0 auto;display:flex;flex-direction:column;gap:2.25rem}
+h1,h2,h3{font-family:"IBM Plex Serif",Georgia,serif;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2rem;font-weight:600}h2{font-size:1.3rem;font-weight:600;padding-top:.5rem;border-top:2px solid var(--line)}h3{font-size:1.05rem;font-weight:600;margin-top:.75rem}
+p{margin:.5rem 0}.lede{color:var(--muted);font-size:1.02rem}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.8rem .9rem}
+.kpi b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.8rem;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:.5rem .65rem;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num,.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--accent-soft);padding:.05em .3em;border-radius:3px}
+.pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;padding:.1em .5em;border-radius:3px;white-space:nowrap}
+.pass{background:var(--pass-soft);color:var(--pass)}.fail{background:var(--fail-soft);color:var(--fail)}.warn{background:var(--warn-soft);color:var(--warn)}.acc{background:var(--accent-soft);color:var(--accent)}
+.callout{border-left:3px solid var(--accent);background:var(--card);padding:.75rem 1rem;border-radius:0 6px 6px 0}
+.callout.fail{border-color:var(--fail);background:var(--card);color:var(--ink)}
+ul,ol{margin:.4rem 0 .4rem 1.2rem;padding:0}li{margin:.25rem 0}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1rem;margin:.5rem 0}dt{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--muted)}dd{margin:0}
+small{color:var(--muted)}
+a{color:var(--accent)}
+</style>
+<main>
+<header>
+  <div class="eyebrow">Summary Report · 2026-08-21</div>
+  <h1>Dashboard v2 Loop Report</h1>
+  <p class="lede">Orchestration record for <code>docs/req/req2-dashboard-v2.md</code> under the two-loop framework in <code>docs/multiagent_design_build_loop.md</code>. Three design rounds, two build rounds, one human step left open.</p>
+  <div class="kpis">
+    <div class="kpi"><b>3 + 1</b><span>design rounds + v3.1/v3.2 amendments</span></div>
+    <div class="kpi"><b>2</b><span>build rounds</span></div>
+    <div class="kpi"><b>36 → 60</b><span>tests, all green (2 LLM skips)</span></div>
+    <div class="kpi"><b>9</b><span>times the orchestrator was overruled by measurement</span></div>
+    <div class="kpi"><b>0 B</b><span>change to <code>daily_report.py</code> / <code>company_lane.py</code></span></div>
+  </div>
+</header>
+
+<section>
+  <h2>1. Original requirement</h2>
+  <p>Let the user view the <em>past N days</em> (N ∈ {1, 3, 7, 14, 30}) of segmented job postings and pick from them to apply (R2, core); trend chart follows N (R1); clicking the stacked bar jumps to the segment (R3); split the 583-line HTML-string renderer into real <code>.html/.css/.js</code> (R4). Nine judgment-layer invariants I1–I9 and the six segment criteria were <strong>settled</strong>, not open. Applied/ignored tracking was <strong>explicitly excluded</strong> by the user on 2026-08-21.</p>
+  <p><small>Intake re-measured at 02:10: 2,491 rows (8/19 287 · 8/20 2,072 · 8/21 132), 36 tests = 34 pass + 2 skip. The corpus grew to 2,713 rows by the time the build finished — every number below is tagged with its measurement time in the underlying documents.</small></p>
+</section>
+
+<section>
+  <h2>2. Design iteration history</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Ver</th><th>Core idea</th><th>Evaluator A (data &amp; invariants)</th><th>Evaluator B (real use &amp; maintainability)</th><th>Result</th><th>Changes next round</th></tr></thead>
+    <tbody>
+    <tr><td class="num">v1</td><td>Judgment stays in Python; per-row <code>x</code> bit (keep-newest, scoped <code>_day ≤ anchor</code>) replaces a dedup key string; columnar 80 B/row payload; <code>open_plan</code> with FLOOR 30 / CEIL 47; per-calendar-day chunks; <code>view.py</code> reference impl + runtime <code>check</code> + headless-Chrome F24</td><td><span class="pill warn">conditional</span> A1 pinned <code>&lt;day&gt;.html</code> shares a mutable chunk rewritten at a later anchor → 28 rows flipped, 12 real employers B2→C · A2 floor invariant false (1,931/500k counterexamples) · A3 <code>day_rows == window(1)</code> is coincidence (45 groups differ)</td><td><span class="pill warn">conditional</span> B1 FLOOR buys quantity not freshness (89% day-to-day first-screen overlap) · B7 same-hash re-click never fires <code>hashchange</code> (Chrome)</td><td>revise</td><td>A1 → stop writing historical pages · A2 → publish the true contract <code>openable()</code> · A3 → one dedup rule + canary · B7 → click handler · B1 → three watermark-derived views</td></tr>
+    <tr><td class="num">v2</td><td>All five must-fixes closed by subtraction; trend bars = window survivors by day (N-independent, Σ = dedup); 3-way view switch (all / new / unhandled) with zero persisted user state; non-table chrome pre-rendered per N; <code>check[f][N]</code> + <code>anchors</code></td><td><span class="pill warn">conditional</span> A1–A5 closed (A2 with an algebraic proof; A3 on 3 anchors × 5 N) · A6 <code>anchors</code> 3-point sampling covers 1–12% of big folded segments</td><td><span class="pill pass">pass</span> B1–B11 closed; 3 nice-to-haves</td><td>targeted amendment</td><td>A6 → order checksum over every segment's full head</td></tr>
+    <tr><td class="num">v3</td><td>Integer rolling hash <code>hsum/osum</code> per cell; Python ≡ JS verified in real Chrome (180 cells, 0 divergence; 16k swap/drop/dup mutations, 0 misses); break-it drill gets a 4th item</td><td><span class="pill warn">conditional</span> A6 closed · <strong>A9</strong> §3.10 ordered by day-less <code>r</code>, §3.5 by <code>_recorded</code> — flips CAP-2 head in 54/61 cross-day groups, and an identical error on both sides is invisible to the checksum</td><td><span class="pill acc">skipped</span> (passed v2; amendment-only round)</td><td>approve after v3.1</td><td>v3.1: sort key <code>(d, r, title, idx)</code> everywhere + F29(c) external oracle (1,374 groups, 0 exceptions)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="callout"><strong>Cross-checks only the orchestrator could see.</strong> A2 and B1 attacked the same mechanism from opposite sides (math vs. freshness) — the strongest signal of the loop. A7 and B2-2 independently found the same stale docstring. B's round-1 fix for B1 ("de-emphasize rows seen before") brushed against the excluded applied/ignored feature; the boundary was restated and the PM resolved it without persisting any user state. A2's second option would have broken the ④ ≤ 12 ceiling A2 itself praised — the PM chose the other.</p>
+</section>
+
+<section>
+  <h2>3. Approved design</h2>
+  <p><code>dashboard_loop/v2/design_v3.md</code> (v3.2, 1,002 lines). In one breath:</p>
+  <ul>
+    <li><strong>Division of labour.</strong> Python decides everything (segment, tier/prom, sort rank, dedup bit, checksum expectations); <code>dashboard.js</code> filters, counts, builds DOM and reconciles. F23 greps the JS for judgment vocabulary and hard-coded segment arrays.</li>
+    <li><strong>Data.</strong> <code>data-index.js</code> + one <code>data-&lt;day&gt;.js</code> per calendar day (≈75–98 B/row), rewritten daily under today's resolver; <code>latest.html</code> is the only page; <code>--out DIR</code> produces a frozen self-contained bundle.</li>
+    <li><strong>First screen.</strong> <code>open_plan</code>: ①/④ capped at 35/12, ② fills only up to FLOOR 30; contract <code>min(FLOOR, openable) ≤ open ≤ 47</code> with 47 derived, never typed. Measured at the real 08:00 generation hour — the previous "47-row" figures were all end-of-day.</li>
+    <li><strong>Two sevens.</strong> The judgment window is <code>w7</code>, a constant in the payload; the viewing window is N. They never meet.</li>
+    <li><strong>Guards for what left Python.</strong> <code>view.py</code> reference impl asserted by fixtures → runtime <code>check[view][N]</code> (Σraw = dedup, per-segment counts, head sequence, chunk row counts, anchors, order checksums) → red banner → F24 drives the real page in headless Chrome → a mandatory break-it-on-purpose drill.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>4. Implementation and verification history</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Ver</th><th>Change</th><th>QA</th><th>Type</th><th>Resolution</th></tr></thead>
+    <tbody>
+    <tr><td class="num">impl 1</td><td>New <code>view.py</code> (540), <code>web/shell.html · dashboard.css · dashboard.js</code> (856), rewritten <code>dashboard.py</code> (627), tests 36→58, <code>SCHEDULING.md</code></td><td><span class="pill pass">pass</span> 11/11 steps, but step 9 only reused <code>#selfcheck</code></td><td>3 × <code>design_defect</code>, 9 deviations</td><td>PM ruled all three defects were design errors (D1 <code>&gt; cutoff</code> matches 0 rows vs 285; D2 F27 contradicted the design's own measurement; D3 a real title contained "WebSockets") — implementation kept, design patched to v3.2. 9/9 deviations ratified, two with conditions.</td></tr>
+    <tr><td class="num">impl 2</td><td>Prune old <code>&lt;day&gt;.html</code> only in the default output dir (+F26b); F9 self-guarding banner promise</td><td><span class="pill pass">pass</span> orchestrator final gate</td><td>—</td><td>60 tests OK; watermark byte-identical to backup; see §5 evidence</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>5. Definition of Done — req2 §8, item by item</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Criterion</th><th>Evidence (final tree)</th><th></th></tr></thead>
+    <tbody>
+    <tr><td class="num">1</td><td><code>tests/test_lane.py</code> green; F10/F11/F12 widened to windows without loosening invariants</td><td><code>Ran 60 tests … OK (skipped=2)</code>; F10/F11/F12 iterate 5 N × 2 anchors; F11's literal 50 replaced by derived bounds; A3 canary F27; new F20–F29</td><td><span class="pill pass">done</span></td></tr>
+    <tr><td class="num">2</td><td>Zero-loss on the window; JS reconciliation visible</td><td><code>raw total 1895 == deduped rows in the window 1895</code> (8/20 anchor); <code>#selfcheck</code> → <code>SELFCHECK ok (15 cells)</code>; banner lights on all four deliberate corruptions</td><td><span class="pill pass">done</span></td></tr>
+    <tr><td class="num">3</td><td>First screen 30–50, independent of N and volume</td><td>8/20 N=1: 30 · N≥3: 46; 8/21 N=1: 11 (openable = 11, honest floor) · N≥3: 47; degraded table: 16 = openable</td><td><span class="pill pass">done</span></td></tr>
+    <tr><td class="num">4</td><td>All 5 N: dedup correct, counts reconcile, no reload, open state + scroll kept</td><td>Headless Chrome on <code>file://</code>, final bundle: 6 N-switches + 3 view-switches — <code>window</code> marker alive every time, banner hidden, ③ still open, viewport offset −44 px constant, 0 duplicate (company,title) in every segment. <code>_orch_dod4_result.txt</code></td><td><span class="pill pass">done</span></td></tr>
+    <tr><td class="num">5</td><td>Generate with profile table missing / empty <code>{}</code> / offline; no real employer in ⑥</td><td>Both <code>JOB_PROFILE_PATH</code> cases: 6-file bundle, ⑥ raw 0, Σraw = dedup; page is static files so offline = same path. Only network use is the enricher, which is not invoked.</td><td><span class="pill pass">done</span></td></tr>
+    <tr><td class="num">6</td><td>Double-click <code>latest.html</code>, not localhost</td><td>Verified under <code>file://</code> in Chrome 151 (headless). <strong>Edge is the machine's default <code>.html</code> handler and Edge headless returns 0 bytes</strong> — the actual double-click in Edge is the one step left to a human; checklist in <code>impl_v1_report.md</code> §5.1</td><td><span class="pill warn">human</span></td></tr>
+    <tr><td class="num">7</td><td><code>daily_report.py</code> byte-identical</td><td><code>git diff --stat daily_report.py company_lane.py</code> empty; F17 passes</td><td><span class="pill pass">done</span></td></tr>
+    </tbody>
+  </table></div>
+  <p><small>Also run in the real environment: <code>run_daily_report.bat</code> (exit 0, watermark restored), and <code>dashboard.py</code> from a codepage-1252 PowerShell with <code>PYTHONIOENCODING</code> unset (exit 0) — the trap that escaped the previous round.</small></p>
+</section>
+
+<section>
+  <h2>6. Where the orchestrator was overruled by measurement</h2>
+  <p>Every suggestion below was offered as a target, not a conclusion. Each was rejected with a script, and each rejection was right.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Round</th><th>Orchestrator said</th><th>Who</th><th>What the data said</th></tr></thead>
+    <tbody>
+    <tr><td>design 1</td><td>Keep <code>OPEN_CAP = 35/12</code>, just prove N=30 stays in 30–50</td><td>PM</td><td>The page is generated at 08:00; at that hour the first screen was 21 / 26 / 7 rows on the three days — it had <em>never</em> been in 30–50. 35/12 is a ceiling with no floor.</td></tr>
+    <tr><td>design 1</td><td>Five offset chunks <code>d0 / d1_2 / d3_6 / d7_13 / d14_29</code> (req2 §5.5)</td><td>PM</td><td>30 per-day files inject in 17.9 ms vs 20.2 ms for five; offset names change daily so all five rewrite every morning.</td></tr>
+    <tr><td>design 1</td><td>Send the dedup key <code>k</code> and let JS dedup</td><td>PM</td><td>Windows are nested suffixes, so keep-newest survivors are N-independent (0 mismatches vs 20 for keep-oldest) → one bit suffices and JS never sees a key.</td></tr>
+    <tr><td>design 1</td><td>Switch ⑦ between "segment" and "toggle" depending on N</td><td>PM</td><td>One N-blind rule ("last issue's ①②④ rows not in the window") yields 83 rows at N=1 and 0 at N≥3 by itself.</td></tr>
+    <tr><td>design 1</td><td>Without a test framework, only a tiny JS assertion is feasible</td><td>PM</td><td>Headless Chrome runs <code>file://</code> pages on this machine; it became F24 and the checksum harness.</td></tr>
+    <tr><td>design 2</td><td>Offered "patch <code>open_plan</code> to reach the floor" as one of two options</td><td>PM</td><td>Would lift ④'s 12-row cap and let small ATS companies own the first screen — the very thing <code>OPEN_CAP</code> exists to prevent. Redefine the contract instead.</td></tr>
+    <tr><td>design 2</td><td>(via Eval B) Default N = 1</td><td>PM</td><td>At 08:00, N=1 adds no more <em>new</em> rows than N=3 (30 vs 29; 11 vs 27) but shows 16–36 fewer total.</td></tr>
+    <tr><td>design 3</td><td>Approve v3 as-is after A6</td><td>Eval A</td><td>Found A9 while auditing the checksum: a day-less sort field would flip 88.5% of cross-day heads, invisibly to a Python-vs-JS agreement check.</td></tr>
+    <tr><td>build 1</td><td>Trust QA's "N-switching verified" for DoD #4</td><td>orchestrator's own re-check</td><td>QA had only re-run <code>#selfcheck</code>; the interactive switch / open-state / scroll test had not been executed. It was then driven for real.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>7. Known limitations and follow-ups</h2>
+  <ul>
+    <li><strong>Edge unverified.</strong> <code>file://</code> behaviour (dynamic script injection, <code>localStorage</code>) is measured in Chrome only. One human double-click in Edge closes DoD #6.</li>
+    <li><strong>Only three days of corpus.</strong> N = 3/7/14/30 currently render the same rows; the chunk-injection path for not-yet-loaded days is exercised by F24/unit tests with synthetic days, not by real data yet.</li>
+    <li><strong>Daily rewrite volume.</strong> All retained day chunks are rewritten each morning (≈4.5 MB/day at 2,000 rows/day) so historical rows carry today's judgment. A frozen-chunk + patch scheme (rejected as R5) is the first optimization if OneDrive sync becomes noisy.</li>
+    <li><strong>Repetition across days</strong> is inherent to a window view and was a known, accepted consequence; the "new" / "unhandled" views mitigate it (first-screen day-to-day repeat 39–42% → 2–3%) without persisting user state. Applied/ignored remains out of scope.</li>
+    <li>Nothing is committed. Working tree: <code>dashboard.py</code>, <code>tests/test_lane.py</code>, <code>SCHEDULING.md</code> modified; <code>view.py</code>, <code>web/</code>, <code>.claude/agents/</code>, <code>dashboard_loop/v2/</code> new.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>8. Appendix — rejected alternatives</h2>
+  <p>Full table with measurements in <code>design_v3.md</code> §6 (R1–R23). The ones most likely to be re-proposed:</p>
+  <dl>
+    <dt>R1</dt><dd>Send <code>k</code> strings, dedup in JS — survivors depend on N, and two normalizers drift.</dd>
+    <dt>R3</dt><dd>Five offset chunks — rewrite everything daily, slower than 30 per-day files.</dd>
+    <dt>R5</dt><dd>Frozen chunks + daily judgment patch — position-aligned patches fail silently; revisit only if sync cost bites.</dd>
+    <dt>R6</dt><dd>JS recomputes segments from tier/is_entry — moves I2/I3/I5/I6/I7 out of fixture coverage.</dd>
+    <dt>R8</dt><dd>N in the URL hash — stacked-bar anchors would clobber it.</dd>
+    <dt>R16</dt><dd>Pinned historical <code>&lt;day&gt;.html</code> sharing mutable chunks — 28 rows flipped, 12 misclassified after one day.</dd>
+    <dt>R17</dt><dd>Patch <code>open_plan</code> to guarantee the floor — breaks the ④ ceiling.</dd>
+    <dt>R20</dt><dd>Visually de-emphasize rows already shown — requires persisted state; collides with the excluded feature.</dd>
+    <dt>R22</dt><dd>Denser <code>anchors</code> sampling — still partial; the checksum covers 100% for ≈2.9 KB.</dd>
+  </dl>
+</section>
+
+<footer><small>State: <code>dashboard_loop/v2/state.json</code> · Prompts, designs, evaluations, rulings, QA and all reproduction scripts live in <code>dashboard_loop/v2/</code>.</small></footer>
+</main>

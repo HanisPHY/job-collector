@@ -1,0 +1,263 @@
+{
+ "task_id": "dashboard-v2-2026-08-21",
+ "original_requirement": "docs/req/req2-dashboard-v2.md (逐字传递,不摘要)",
+ "framework": "docs/multiagent_design_build_loop.md",
+ "context": {
+  "data_summary": {
+   "measured_at": "2026-08-21 02:10 local (America/Los_Angeles 机器时钟), shell: Git Bash, PYTHONIOENCODING=utf-8, interpreter D:/Apps/Miniconda/envs/job-classifier/python.exe",
+   "load_rows_total": 2491,
+   "per_day": {
+    "2026-08-19": 287,
+    "2026-08-20": 2072,
+    "2026-08-21": 132
+   },
+   "note": "与 req2 §2 数字一致(req2 写于同一天)。语料每小时增长,下游 agent 要自己重测并标时间。",
+   "tests": "tests/test_lane.py: Ran 36 tests, OK (skipped=2) -> 34 pass + 2 skip",
+   "dashboard_2026-08-20_no_watermark": "raw total 1674 == deduped 1674; 1a_t3 raw70/cap2 61, 1a_t2 101/97, 1b 554/458, B1 13/12, B2 601/574, C 335/185; default visible (1+4)=47 (OPEN_CAP 截断后)",
+   "existing_outputs": "logs/dashboard/{2026-08-20.html (439KB), 2026-08-21.html, latest.html}",
+   "pm_remeasure": "PM 02:32: 2581 行(8/19 287, 8/20 2072, 8/21 222), 语料在一小时内从 2491 涨到 2581"
+  },
+  "codebase_notes": [
+   "company_lane.py = 判定层(load_rows/dedup_rows/day_rows/LaneResolver/SEGMENTS/SEGMENT_ORDER/DEFAULT_VISIBLE). LaneResolver(rows, profiles, day, overrides, priority, window_days=WINDOW_DAYS) 自带固定 7 天判定窗口(win_lo..day)。",
+   "dashboard.py 583 行 = 渲染层: CAP=2, TREND_DAYS=7, OPEN_CAP={'1a_t3':35,'B1':12}, SEG_META, group_segment(), split_cap(), svg_*, row_html, table_html, CSS 常量, build(day, rows, profiles, overrides, priority, state) -> (page, new_state, stats), main() 写 logs/dashboard/<day>.html + latest.html(原子写), 只在真实定时运行时推进 logs/last_report.json 水位线。",
+   "tests/test_lane.py 依赖 dashboard.py 的公开面: DB.split_cap, DB.group_segment, DB.OPEN_CAP, DASH.build(day, rows, profiles, overrides, priority, state) 返回 (page, state, stats) 且 stats 有 raw/cap2/total/visible/unenriched; F9 断言 page 含 '家未分层'; test_dashboard_has_no_external_dependency 断言 page 里没有 '<script' 且没有 <link href —— 这条测试把『零外部依赖』写成了『零 script 标签』,R4 必然改变它;只能改成『src/href 里不出现 http(s):// 除岗位链接外』这类保住不变量的形式,不许删除。",
+   "F10/F11/F12 + segment_counts/segment_head/expanded_rows 全部以 CL.day_rows(rows, day) 单日为作用域。",
+   "F17 通过 subprocess 跑 daily_report.py --date <HARVEST_DAY> --no-prune 逐字节比对 logs/daily/<day>.md。",
+   "F16 要求 run_daily_report.bat 里 dashboard.py 是独立语句。",
+   "run_daily_report.bat: resolve_python.bat 设 JOB_PYTHON 与 PYTHONIOENCODING;07:30 富化 -> 08:00 日报 + dashboard。",
+   "环境变量 JOB_LOG_ROOT / JOB_PROFILE_PATH 可重定向输出与档案表(测试用)。",
+   "OneDrive 目录下一律原子写(tmp + os.replace);CL.atomic_write_json 已封好。"
+  ],
+  "tool_access": [
+   "PM: Read/Grep/Glob/Bash(可跑探查脚本)",
+   "Evaluators: Read/Grep/Glob/Bash",
+   "Engineer: Read/Edit/Write/Bash",
+   "QA: Read/Bash/Grep/Glob + 浏览器真双击"
+  ],
+  "constraints": [
+   "零外部依赖、离线 file:// 双击可开;fetch()/XHR/<script type=module> 在 file:// 下不可用;只允许经典脚本 + 相对路径 <link>/<script src>;无 build step",
+   "daily_report.py 一行不改(F17)",
+   "tests/test_lane.py 保持全绿;F10/F11/F12 与辅助函数从按日推广到按窗口——只放宽作用域,不放宽 req2 §3 任何不变量",
+   "不做已投/已忽略(用户 2026-08-21 否掉)",
+   "断言不变性和结构性质,不写死会过期的点值",
+   "MAX_DESIGN_ITERS=3, MAX_IMPL_ITERS=3"
+  ]
+ },
+ "design_iterations": [
+  {
+   "version": 1,
+   "design": "dashboard_loop/v2/design_v1.md",
+   "pm_prompt": "dashboard_loop/v2/pm_prompt_v1.md",
+   "pm_summary": "判定层不动;x 位(keep-NEWEST, 作用域 _day<=day)代替 k 字符串;E4 列式编码 80B/行;open_plan FLOOR=30/CEIL=47 派生;按自然日绝对命名分块,每天全部重写;⑦ 段用不看 N 的单一规则;view.py 纯数据参考实现 + check 对账 + F24 headless Chrome;新增 F20-F26;默认 N=3",
+   "evaluator_A_feedback": {
+    "verdict": "conditional_pass",
+    "must_fix": [
+     "A1",
+     "A2",
+     "A3"
+    ],
+    "nice": [
+     "A4",
+     "A5"
+    ],
+    "file": "dashboard_loop/v2/evalA_v1.json"
+   },
+   "evaluator_B_feedback": {
+    "verdict": "conditional_pass",
+    "must_fix": [
+     "B1",
+     "B7"
+    ],
+    "nice": [
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "B6",
+     "B8",
+     "B9",
+     "B10",
+     "B11"
+    ],
+    "file": "dashboard_loop/v2/evalB_v1.json"
+   },
+   "merged_decision": "revise",
+   "cross_check": {
+    "independent_convergence": [
+     "A2+B1: open_plan/FLOOR 被两边从不同角度(数学下界/新鲜度)独立判定为过度承诺",
+     "A1 证实 orchestrator 对 PIN_DAY 共享块漂移的怀疑(28 行 x 翻转 + 12 行 B2->C)"
+    ],
+    "contradictions": [
+     "B1 建议的『视觉降权已出现过的行』贴近明确不做的已投/已忽略;req2 §1 已记录重复是已知后果且用户仍否掉 → 传给 PM 时限定:不得持久化用户状态,可用文档化权衡+默认 N 选择解决",
+     "A2 的修法②(借用①④封顶外的量)会破坏它自己肯定的 ④<=12 天花板;PM 需二选一"
+    ],
+    "internal": [
+     "B3 与 B8 叠加:折叠段内部无对账 + rAF 无取消令牌 → 同一盲区"
+    ]
+   },
+   "rejected_reason_summary": "PIN_DAY 页面共享可变块会漂移;open_plan 下界不成立;F6/F7/F19 等价性是巧合;hashchange 同 hash 不触发;首屏重复率 89%"
+  },
+  {
+   "version": 2,
+   "design": "dashboard_loop/v2/design_v2.md",
+   "pm_prompt": "dashboard_loop/v2/pm_prompt_v2.md",
+   "pm_summary": "A1→不再写历史 <day>.html(减法);A2→改合同 openable()/open_expected() 闭式,50万随机 0 违例;A3→唯一去重规则 keep-NEWEST,趋势柱=窗口幸存者按天归属,canary F27;B7→click 委托直调 openSegment();B1→三选一水位线派生筛选(全部/新增/上一期未处理),零用户状态,日重复 39-42%→2.3-2.6%,补日期列;非行表 chrome 由 Python 预渲染 5 份;check[f][N]+anchors",
+   "evaluator_A_feedback": {
+    "verdict": "conditional_pass",
+    "must_fix": [
+     "A6"
+    ],
+    "nice": [
+     "A7",
+     "A8"
+    ],
+    "v1_followup": "A1-A5 all closed (A2 with algebraic proof; A3 verified on 3 anchors x 5 N)",
+    "file": "dashboard_loop/v2/evalA_v2.json"
+   },
+   "evaluator_B_feedback": {
+    "verdict": "pass",
+    "must_fix": [],
+    "nice": [
+     "B2-1",
+     "B2-2",
+     "B9-residual"
+    ],
+    "v1_followup": "B1-B11 all closed",
+    "file": "dashboard_loop/v2/evalB_v2.json"
+   },
+   "merged_decision": "revise (targeted amendment only: A6)",
+   "cross_check": {
+    "independent_convergence": [
+     "A7 与 B2-2 独立发现同一处:dashboard.py docstring 第 9 行过时描述未列入验收 → 可信度极高,直接纳入",
+     "A 与 B 各自独立复现了趋势柱 N 无关恒等式和三视图 Σraw==dedup(15 格)"
+    ],
+    "contradictions": [],
+    "internal": [
+     "B 在 B3 followup 判 anchors『合理』,而 A6 量化出覆盖率 1.3%-12% —— 不是矛盾,是 B 没量化;采纳 A6"
+    ]
+   }
+  },
+  {
+   "version": 3,
+   "design": "dashboard_loop/v2/design_v3.md",
+   "pm_prompt": "dashboard_loop/v2/pm_prompt_v3.md",
+   "pm_summary": "定向修订:check[f][N] 加 hsum/osum 顺序校验和(整数滚动哈希,Python/JS 逐字等价,Chrome 实测 180 cell 分歧 0,16k 次互换/增删漏检 0,覆盖 100%,+2.9KB);§5.10 加互换 ⑤ 段两行验红条;F29 跨语言等价测试;F23 加数组形状正则;hero 常驻『全部窗口』限定词;验收第 12 条加 dashboard.py:9 grep 标准;anchors 字节数更正 973→3005",
+   "evaluator_A_feedback": {
+    "verdict": "conditional_pass",
+    "must_fix": [
+     "A9 (§3.10 组内序用 r(HHMM) vs §3.5 用 _recorded 不一致;跨天组 54/61 head 翻转;两边一致地错则校验和看不见)"
+    ],
+    "v2_followup": "A6 closed (独立复现 + 证明 Math.imul 必要性), A7/A8 adopted, diff 无漂移",
+    "file": "dashboard_loop/v2/evalA_v3.json"
+   },
+   "evaluator_B_feedback": "skipped (passed v2; v3 is amendment-only, B's nice-to-haves adopted)",
+   "merged_decision": "approve after v3.1 one-line amendment (orchestrator discretion: MAX_DESIGN_ITERS reached; A9 is an internal inconsistency with a single resolution consistent with §3.5, not a design question)",
+   "v3_1": "A9 修正:§3.10/§3.5 统一为 (d desc, r desc, title desc, idx desc);F29(c) 跨天组外部 oracle 1374 组 0 例外;180 cell 三方校验和仍 0 分歧"
+  }
+ ],
+ "approved_design": "dashboard_loop/v2/design_v3.md (v3.1, 972 lines)",
+ "impl_iterations": [
+  {
+   "version": 1,
+   "report": "dashboard_loop/v2/impl_v1_report.md",
+   "diff_summary": "新增 view.py, web/{shell.html,dashboard.css,dashboard.js}; 重写 dashboard.py 渲染部分(build_bundle/render_shell/write_bundle, --out 目录, --retain); tests/test_lane.py 36→58(F10/F11/F12 推广到窗口, 新增 F20-F29); SCHEDULING.md:204 与 docstring 更新",
+   "engineer_self_test": "58 tests OK(skipped=2); selfcheck 15/15 ok; 故意破坏 4/4 红条; 降级三连通过; .bat 与无 UTF-8 cmd 通过; daily_report.py/company_lane.py 逐字节未改",
+   "design_defects": [
+    "D1 ●新 谓词 cutoff vs prev_cutoff(按 prev_cutoff 实现)",
+    "D2 F27 字面断言必红(改为键集+段相等)",
+    "D3 assert_offline 黑名单误伤数据块中的岗位标题(数据块改为 JSON 可解析断言)"
+   ],
+   "deviations": 9,
+   "qa_feedback": {
+    "verdict": "pass",
+    "defect_type": null,
+    "file": "dashboard_loop/v2/qa_v1.json",
+    "orchestrator_note": "QA 第 9 步只复用了 F24 的 #selfcheck 模式,没有真切 N;orchestrator 自己用 headless Chrome 在 file:// 上补做(见 dod4_drill)"
+   },
+   "pm_ruling": {
+    "file": "dashboard_loop/v2/pm_ruling_impl_v1.md",
+    "D1": "accept(设计错:>cutoff 命中 0 行,>prev_cutoff 285 行)",
+    "D2": "accept(设计自相矛盾;F27 改为行数+键+段)",
+    "D3": "accept(数据块 JSON 可解析断言更强)",
+    "deviations": "9/9 ratify;#7 加条件(只在默认目录删 <day>.html),#8 加 F9 断言",
+    "design": "v3.2"
+   },
+   "dod4_drill": {
+    "by": "orchestrator",
+    "driver": "dashboard_loop/v2/_orch_dod4_driver.js",
+    "result": "dashboard_loop/v2/_orch_dod4_result.txt",
+    "summary": "6 次切 N(1/3/7/14/30/3)+3 次切视图: marker 全程存活(不重载), 红条全程隐藏, ③ 段保持展开且视口偏移恒为 -44px, 每段 0 重复 (公司,标题)"
+   }
+  },
+  {
+   "version": 2,
+   "diff_summary": "write_bundle(prune_html) 只在默认目录删旧 <day>.html + F26 新 fixture;F9 横幅承诺自守断言",
+   "qa_feedback": {
+    "verdict": "pass",
+    "by": "orchestrator final gate",
+    "evidence": "60 tests OK(skipped=2); daily_report.py/company_lane.py diff 空; 水位线与备份 cmp 一致; JOB_PROFILE_PATH 不存在/{} 两种下生成成功且 ⑥ raw 0、raw total==dedup; PowerShell cp1252 无 PYTHONIOENCODING 退出 0; headless Chrome file:// 切 N×6 + 切视图×3 全部 marker 存活/无红条/③保持展开/偏移恒 -44/0 重复; #selfcheck 15 cells ok"
+   }
+  }
+ ],
+ "orchestrator_overruled": [
+  {
+   "round": "design v1",
+   "suggestion": "S2 OPEN_CAP 沿用 35/12 就够",
+   "overruled_by": "PM",
+   "evidence": "_pm_09_default_n.py: 08:00 生成时刻首屏 21/26/7 行,从未进 30-50;8/20 全天 2072 行中 08:00 前只有 790"
+  },
+  {
+   "round": "design v1",
+   "suggestion": "S3 五个偏移块 d0/d1_2/...",
+   "overruled_by": "PM",
+   "evidence": "_pm_08_chunks.py: 30 个按日块注入 17.9ms < 五块 20.2ms;偏移名每天全变,历史快照无法复用"
+  },
+  {
+   "round": "design v1",
+   "suggestion": "S1 发 k 字符串给 JS 去重",
+   "overruled_by": "PM(部分)",
+   "evidence": "_pm_03_payload.py: 窗口嵌套 → keep-NEWEST 幸存者与 N 无关(0 次不一致),可固化为 1 bit;keep-OLDEST 20 次不一致"
+  },
+  {
+   "round": "design v1",
+   "suggestion": "S5 按 N 切换 ⑦ 段形态",
+   "overruled_by": "PM",
+   "evidence": "_pm_04: 规则『区间内①②④且不在窗口里』N=1 给 83 行、N>=3 给 0 行,自动退化"
+  },
+  {
+   "round": "design v1",
+   "suggestion": "S7 只能写极小断言保护 JS",
+   "overruled_by": "PM",
+   "evidence": "_pm_05_fileproto.py: 本机 Chrome --headless=new 可跑 file:// 页面,可做端到端 selfcheck"
+  },
+  {
+   "round": "design v2",
+   "suggestion": "orchestrator/A2: 二选一里『改 open_plan 补地板』",
+   "overruled_by": "PM",
+   "evidence": "放开 ④ 的 12 行天花板会让小公司 ATS 段在 ①② 空那天独占首屏,正是 OPEN_CAP 要防的(req2 §3.3);改合同定义即可,R17"
+  },
+  {
+   "round": "design v2",
+   "suggestion": "EvalB B1(b): 默认 N 改 1",
+   "overruled_by": "PM",
+   "evidence": "_pm2_02_freshness.py [T2]: N=1 首屏绝对新增行数不比 N=3 多(8/20 30 vs 29; 8/21 11 vs 27),却少 16-36 行存量,R18"
+  },
+  {
+   "round": "design v2",
+   "suggestion": "EvalB B1(a): 对上过首屏的行视觉降权",
+   "overruled_by": "PM(依据 orchestrator 重申的边界)",
+   "evidence": "需要持久化出现次数=用户/报告状态,撞『不做已投/已忽略』;改用纯水位线派生三视图,R20"
+  },
+  {
+   "round": "design v2",
+   "suggestion": "EvalB B1 的 89% 重复率",
+   "overruled_by": "PM(口径修正,非否定)",
+   "evidence": "评审用整天语料;在 08:00 生成时刻复测为 39%/42%,方向一致,两个数都写进文档"
+  }
+ ],
+ "final_output": "view.py (540), dashboard.py (627), web/{shell.html,dashboard.css,dashboard.js}, tests/test_lane.py 36→60 tests, logs/dashboard/{latest.html,dashboard.css,dashboard.js,data-index.js,data-<day>.js}",
+ "status": "completed (pending one human step: double-click latest.html in Edge)",
+ "orchestrator_notes": [
+  "v3.1: 未开第 4 轮设计;A9 由 PM 原地修正并由 QA 阶段的 F29 断言守住。如 QA 发现此处仍有歧义 → design_escalated。"
+ ]
+}

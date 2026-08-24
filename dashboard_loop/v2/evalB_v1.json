@@ -1,0 +1,101 @@
+{
+  "verdict": "conditional_pass",
+  "issues": [
+    {
+      "id": "B1",
+      "severity": "must_fix",
+      "where": "design_v1.md §3 S2 / §4.5 (open_plan, FLOOR=30, default N=3)",
+      "description": "open_plan/FLOOR 只是一个『数量』机制，不是『新鲜度』机制：它保证首屏 30-50 行，但不保证这 30-50 行每天不同。用真实语料跑一遍『从公司挑岗位投递』这条使用场景后发现：默认 N=3 下，8/20→8/21 两天的首屏（open_plan 选中的 47 行）有 42/47 = 89% 是同一批 (公司, 归一化标题)；8/19、8/20、8/21 三个连续早晨的首屏交集有 15 条完全相同的岗位（如 Palantir 两个 New Grad 岗位、Morgan Stanley、Accenture Federal Services、Prosidian 等），连续三天原封不动出现在『今日必看』。原因是 sort_key 以 prom/tier 为主序且短期内几乎不变，N=3 窗口逐日高度重叠，cap-2 又限制了每家公司的可见岗位，于是同一批头部公司持续占满首屏名额。『●新』水位线标记不解决这个问题——它只标『上次生成后新增』，不会给『已经在首屏出现过 N 天、用户大概率已经看过/跳过』的行做任何视觉降权。这与用户原话『看过去 N 天…从里面挑 job 来投递』的诉求直接冲突：如果首屏天天是同一批，工作台的『挑』的效率反而被 floor 机制拖累。",
+      "evidence": "跑了 dashboard_loop/v2/_evalB_repeat.py（新建，只读 CL.load_rows 等既有函数，未改任何仓库文件），对 3 个真实 anchor 日期（2026-08-19/20/21）用生成日 resolver + N=3 默认窗口复现 open_plan 选中的首屏 key 集合。输出：`N=3: 2026-08-19 -> 2026-08-20 : first-screen size 30/47, overlap 19 (40%)`；`2026-08-20 -> 2026-08-21 : first-screen size 47/47, overlap 42 (89%)`；三天交集：`in all 3 days first screen (N=3): 15`，样例包括 `palantir software engineer new grad infrastructure`、`morgan stanley associate investment engineer parametric`、`accenture federal services junior systems engineer` 等。N=1 下同一批对比：8/19→8/20 重合仅 2%，8/20→8/21 重合 0%——证明重复现象是 N=3 默认窗口本身（而不是数据巧合）造成的结构性后果。",
+      "suggested_fix": "在设计里明确写清这个权衡（floor 机制的代价是重复），并给出至少一种缓解：(a) 对『前一个/前两个首屏周期已经出现过』的行做视觉降权（灰化或折到段内靠后位置），而不必做完整的『已投/已忽略』功能（那是明确不做的范围）；或 (b) 重新评估默认 N——如果 N=1 首屏经常不满 30 行是可以接受的『诚实』（design 自己在别处也这么论证过），也许默认 N=1 但允许 floor 机制在其基础上做『N=1 不够就借用 wm_days 之外必要的最少天数』而不是直接默认 N=3。"
+    },
+    {
+      "id": "B2",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.2 数据结构 / §5.3 (F23 黑名单) / §5 新增 fixture 表",
+      "description": "check/co/rows 里所有跟段相关的数组（如 `check[\"7\"].raw/cap2/plan`、每行的 `g`）都是**位置数组**，顺序『= SEGMENT_ORDER』，但 JOB_INDEX 从未把 SEGMENT_ORDER 这份『6 个 key 字符串 + 顺序』本身发给 JS。JS 要把某一行的 `g`（一个 0-5 的整数）映射到骨架里对应的 `<details id=\"seg-...\">` 容器，设计文本完全没说这一步怎么做。最直接、工程师最可能采用的实现是在 dashboard.js 里手写一份 `[\"1a_t3\",\"1a_t2\",\"1b\",\"B1\",\"B2\",\"C\"]`（或等价的 id 字符串数组）——这正是与 company_lane.py 的 SEGMENT_ORDER 『同一个事实两边各写一份』，一旦 company_lane.py 改了顺序或增删段，这份副本不会自动同步。更值得注意的是：F23 的黑名单正则 `tier|prom|stage|kind|staffing|outsourcing|job_board|new\\s*grad|entry.level|tnorm` 里不含任何段 key 字符串，完全不会检测到这种硬编码副本——三层守卫里没有一层能发现这处潜在漂移。",
+      "evidence": "逐字核对 design_v1.md §4.2/§4.3 中 check/co/rows 的字段定义（`raw:[97,151,634,90,692,371]` 等注释『顺序=SEGMENT_ORDER』），以及 §5.3 F23 那一行给出的黑名单正则原文，两者对照：payload 里没有任何字段传出段 key 列表，F23 正则不含段 key 词汇。这是对设计文本本身的核验（grep/通读），不是对已构建代码的运行时实测，因此按证据标准降级为 nice_to_have。",
+      "suggested_fix": "二选一并写进规格：(a) JOB_INDEX 增加一个 `seg_ids` 字段（从 CL.SEGMENT_ORDER 直接生成），JS 按位置索引，不需要知道字符串本身；或 (b) 骨架里给 6 个 `<details>` 加 `data-gidx=\"0\"..\"5\"` 属性，JS 用 `wrap.children[g]` 定位，连数组都不用发。两种都能让『段顺序』保持单一事实来源。顺带把段 key 字符串也纳入 F23 或新开一条 F27，防止硬编码副本悄悄长出来。"
+    },
+    {
+      "id": "B3",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.3 (check 对账四条) / §5 新增 fixture 表 (F20-F26)",
+      "description": "★ 三层守卫（L1 view.py 参考实现 fixture / L2 JS 运行时对账 / L3 F24 无头 Chrome selfcheck）逐条核对下来，全部只验证『总数对不对』，没有一条验证『折叠段内部具体是哪几行、按什么顺序』。§4.3 明确列出的四条对账是：(1) Σraw==dedup；(2) 自己数出来的 raw/cap2 逐段等于 check[N]（仍是计数）；(3) 首屏渲染出的 [天下标,行下标] 序列逐项等于 check[N].head（只覆盖 open_plan 选中的 ≤47 行）；(4) 每个天块的 nrows 校验（块是否加载）。对③⑤⑥三个默认折叠段、以及①④超出 open_plan 之后折进嵌套 `<details>` 的『还有 N 条』部分，JS 挑出的具体是哪几行、组内 tie-break 顺序对不对——没有任何一层能验证：只要 JS 选错了行（比如某家公司该显示第 1/2 条却显示了第 3/4 条，或者 tie-break 顺序反了），只要总数不变，四条对账全部通过，红条不会出现。§6 人工验收里唯一涉及这块的步骤（『切N前展开③段…切完仍展开』）只是肉眼抽查一次某个 N 值某个时刻的某一段，不是穷举，也不是自动化。",
+      "evidence": "通读 design_v1.md §4.3『JS 渲染完做四件对账』原文（四条逐一核对如上），以及 §5『新增 fixture』表 F20-F26 逐条核对（F20 序列化行数、F21 去重无重复、F22 check==window_view、F23 黑名单、F24 selfcheck、F25 w7_days、F26 retain 数量）——没有一条覆盖『折叠段内部行 identity/顺序』。这是对设计文本本身的完整性核验，不是运行时实测（此时也没有可运行的 JS 代码），按证据标准降级为 nice_to_have，但因为是★号最高优先级问题仍需在正文强调。",
+      "suggested_fix": "至少给最大的默认折叠段（⑤长尾）也生成一个类似 `head` 的『抽样锚点』（比如该段第 1 行和第 cap2 行的 [天,行] 坐标），塞进 check 供 F22/F24 对账，把行 identity 验证的覆盖面从『仅首屏 47 行』扩到『每个段至少一个可验证锚点』，费用极小（≤6 段 × 2 个坐标 × 5 档 N）。"
+    },
+    {
+      "id": "B4",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.7 (『●新』) / §5 新增 fixture 表",
+      "description": "v1 里『●新』标记由 Python 的 row_html 直接输出成 HTML，属于渲染层但至少是 Python 侧产物，可被现有 fixture 间接看到；v2 把它完全搬进 JS（纯比较 `(days[d], r) > cutoff`）之后，F20-F26、F24 selfcheck 的描述、以及 §6 人工双击清单的 5 条步骤里，没有任何一处提到要验证『●新』标记显示是否正确。这是一个用户每天依赖的可见特征（『上次生成后新增』），搬到 JS 之后在整个三层守卫体系里没有任何测试或人工检查点覆盖它。",
+      "evidence": "通读 §4.7 全文与 §5/§6 涉及测试和验收的所有条目，确认『●新』/cutoff 比较逻辑未出现在任何一条 fixture 描述或人工检查步骤中。文本核验，非运行时实测，故为 nice_to_have。",
+      "suggested_fix": "在 check[N] 里加一个『预期●新行』的坐标列表（复用 head 的坐标格式），F24 selfcheck 顺带断言；同时把『核对●新标记』加进 §6 人工双击清单第 4 条。"
+    },
+    {
+      "id": "B5",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.7 (check_wm) / §5 新增 fixture 表 (F20-F26)",
+      "description": "⑦ 段（上一期未处理）和『只看上一期未处理』筛选开关是 R2 明确新增/改变的行为（S5 的结论）。§4.7 提到会『另存一份 check_wm[N] 供对账』，但通读 §5 的新增 fixture 表 F20-F26，没有一条提到 check_wm、⑦ 段或筛选开关——这块新行为在整个测试推广方案里实际上是空白，既没有 L1 fixture，也没有被列进 F24 selfcheck 要 assert 的内容里。",
+      "evidence": "在 design_v1.md 全文中定位『check_wm』出现的唯一位置（§4.7），并核对 §5 F20-F26 表格逐条描述，确认没有任何一条覆盖它。文本核验，非运行时实测，故为 nice_to_have。",
+      "suggested_fix": "补一条 F27：对 5 档 N 断言 `check_wm[N]` 的 Σraw == 筛选后 dedup 行数（I1 的筛选版），并在 F24 selfcheck 里让 `#selfcheck` 模式也跑一遍『开关勾选』状态下的对账。"
+    },
+    {
+      "id": "B6",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.8 『切 N 不重载 + 保持展开与滚动』四步",
+      "description": "切 N 时『记录当前视口最靠上的那个 `<details id>`』这一步隐含假设：用户滚动位置总是落在某个 `<details>` 内。但骨架里 hero、『近 7 天/今日构成』趋势面板、面板②′、面板③、footer 都不是 `<details>`（只有六个分段 + ⑦ 段是）。如果用户切 N 前正好停留在这些非 `<details>` 区域（很常见——用户读完段①④正打算看面板②′的中介占比表），算法找不到锚点，设计文本完全没说这时候怎么办：是退化成不恢复滚动位置（可能仅仅体验上突兀），还是脚本在拿 `undefined` 元素做 `getBoundingClientRect()`/`scrollIntoView` 时直接抛异常从而中断了同一个函数里后续要跑的 check 对账代码（可能连红条机制都被连累失效）——这两种后果的严重程度完全不同，但设计没有交代走的是哪一条。",
+      "evidence": "逐字核对 §4.8『切N不重载+保持展开与滚动』四步原文，以及 §4.1 骨架内容清单（列出哪些区块是 `<details>`、哪些不是），确认非 `<details>` 区域没有被算法覆盖，且没有 fallback 说明。文本核验，非运行时实测（尚无可运行的 dashboard.js），故为 nice_to_have。",
+      "suggested_fix": "明确写一条 fallback：找不到视口内的 `<details>` 锚点时，改记录 `document.scrollingElement.scrollTop` 的绝对值做尽力恢复（不追求精确，只求『不报错、不乱跳到顶部』），并且这一分支要和主分支一样被 F24/selfcheck 或人工验收覆盖到。"
+    },
+    {
+      "id": "B7",
+      "severity": "must_fix",
+      "where": "design_v1.md §4.3 R3 (『JS 只做一件事：hashchange + 首屏读 location.hash』)",
+      "description": "R3 点击跳转的唯一机制是监听 `hashchange` 事件。浏览器规范决定：如果 `location.hash` 设置成和当前完全相同的字符串，不会触发 `hashchange` 事件。这意味着用户第一次点堆叠条/图例跳到某段并展开后，如果手动把该段折叠起来（比如看完想收起），再点一次同一个堆叠条/图例——因为 hash 没有变化，`hashchange` 不会再触发，`el.open = true` 这行代码根本不会被执行，段不会重新展开，也不会重新滚动/focus。设计文本对这个真实存在的浏览器行为完全没有提及任何应对（比如不依赖 hashchange、点击时直接调用展开函数）。",
+      "evidence": "跑了 dashboard_loop/v2/_evalB_hashclick.py（新建，未改任何仓库文件），用本机 Chrome 151.0.7922.172 `--headless=new --dump-dom` 加载一个最小复现页面：先点击 `<a href=\"#seg-1a_t3\">`（hash 从空变为 `#seg-1a_t3`，触发 1 次 hashchange），然后手动把对应 `<details>` 的 `open` 设为 false 模拟用户折叠，再点击同一个链接（hash 保持 `#seg-1a_t3` 不变）。输出：`[\"after_click_1 hash=#seg-1a_t3 events=1\",\"after_click_2_same_hash hash=#seg-1a_t3 events=1\"]`——第二次点击后 `events` 计数仍是 1，确认 hashchange 没有再次触发。（Edge 无头在本机同样产出 0 字节，与 design_v1.md §3 S7/§8 已披露的『Edge 无头不可用』一致，Edge 与 Chrome 同属 Chromium 151，行为差异的可能性很低，但无法用本机 Edge 独立确认。）",
+      "suggested_fix": "锚点/堆叠条/图例的点击不要只依赖 `hashchange` 监听：给这些 `<a href=\"#seg-...\">` 加一个 click 事件处理器，直接调用『展开+滚动+focus』的那段逻辑（不管 hash 是否真的变化），`hashchange` 监听只保留给『用户手动改地址栏/前进后退』这类不经过点击的场景。"
+    },
+    {
+      "id": "B8",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.8 (『单段超过2000行时分片，requestAnimationFrame 每帧 500 行』 + 『切N/切筛选开关：所有段body清空并标记dirty』)",
+      "description": "设计同时提出了两个会在时间上重叠的异步机制：(a) 大段（如⑤长尾，30 天视图下可能几千行）用 rAF 分帧渲染；(b) 切 N / 切筛选开关时把所有段 body 清空、标记 dirty、当前 open 的段立即重渲染。如果用户在⑤段的分帧渲染还没跑完时又切了一次 N（或勾选/取消筛选开关），设计文本没有说怎么终止/丢弃上一轮还在排队的 rAF 帧——如果没有版本号/取消令牌，很可能出现『上一轮遗留的帧』把行继续 append 到已经被清空重建的新容器里，导致重复行或顺序错乱，而这类 bug 恰好发生在折叠段内部，正是 B3 指出的『没有任何对账层能验证』的区域，两个问题会叠加。",
+      "evidence": "逐字核对 §4.8 全文，确认两处机制的描述里都没有取消/版本号相关的字样。文本核验，非运行时实测（没有可运行的 dashboard.js），按规则为 nice_to_have，且属于分析推断，请工程师在实现时留意。",
+      "suggested_fix": "给每次『dirty』标记加一个自增的渲染世代号（generation id），rAF 回调里每帧检查世代号是否还是发起时的那个，不是就直接丢弃剩余分片，不再 append。"
+    },
+    {
+      "id": "B9",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §4.2 (`panels` 字段) vs §4.8 (JS 渲染与交互)",
+      "description": "JOB_INDEX 里 `panels: {\"1\":{...},\"3\":{...},...}` 明确按 5 档 N 分别预计算了面板②′（中介占比）和面板③（转贴证据）的数据，暗示这两个面板应该随 N 切换更新；但 §4.1 说这两个面板是骨架里『Python 算好』的静态内容，§4.8『JS 渲染与交互』整节只讲六个分段 `<details>` 和⑦段在切 N 时怎么重渲染，完全没提面板②′/③是否/如何跟着 N 变化重新渲染。要么这份按 N 预计算的 panels 数据从未被 JS 使用（白算白传），要么设计遗漏了一段该写的交互说明——两种情况都值得在正式规格里说清楚，否则工程师大概率会漏掉这一处，而且不会被任何 fixture 发现（它不在 raw/cap2/dedup 那套对账体系里）。",
+      "evidence": "通读 §4.2 数据结构、§4.1 骨架清单、§4.7、§4.8 全文，确认 `panels` 字段只在数据结构处定义了一次，此后『渲染/交互』相关章节完全没有再提及它的使用方式。文本核验，非运行时实测，故为 nice_to_have。",
+      "suggested_fix": "在 §4.8 里补一句：切 N 时面板②′/③ 是否要用 `panels[N]` 重渲染；如果决定『两个面板固定用 N_DEFAULT 那份，不跟着切 N 变』，也要明说，并且把这个决定写进骨架的文案里（不然用户以为面板数字是当前 N 下的）。"
+    },
+    {
+      "id": "B10",
+      "severity": "nice_to_have",
+      "where": "design_v1.md §6 验收第 2 条",
+      "description": "『必须用 .bat 真跑一次：cmd /c run_daily_report.bat』这一条没有写清楚判定标准是什么——退出码为 0？某个文件确实生成？控制台没有 traceback？只隐含引用了历史上那次 UnicodeEncodeError 的教训作为背景，但没有给出这次验收具体『看什么才算过』。相比 §6 其余 8 条（大多有明确的可判定标准），这一条略显含糊。",
+      "evidence": "逐字核对 design_v1.md §6 第 2 条原文与其余 8 条对比。文本核验，非运行时实测，故为 nice_to_have。",
+      "suggested_fix": "补一句判定标准，例如『退出码 0，且 stdout/stderr 都不含 Traceback，且 logs/dashboard/<今天>.html 与 latest.html 的 mtime 是本次运行产生的』。"
+    },
+    {
+      "id": "B11",
+      "severity": "nice_to_have",
+      "where": "design_v1.md 全文（工程量提醒，非 must_fix，见 rubric 第 8 条）",
+      "description": "这份设计给 Engineer 一轮要交付的东西不小：新 view.py（含 superseded_flags/build_payload/window_view/open_plan/encode_index/encode_day 六个函数）、重写 dashboard.py（build_bundle/build 兼容壳/render_shell/main --retain）、三个新 web/ 源文件（shell.html 的 SLOT 替换、dashboard.css 从字符串常量搬文件、dashboard.js 从零写起，包含渲染、懒渲染 toggle、切N状态保存与恢复、hashchange 跳转、localStorage、#selfcheck、四件对账、rAF 分片七八个相互交织的异步子系统)、以及 7 条新 fixture + 5 条老 fixture 的推广改造。综合 B1-B9 指出的缺口，最可能被工程师第一轮做错、且出错后不会被任何自动化手段发现的两三处是：①§4.8 的『切N状态保存/恢复』与 rAF 分片、toggle 懒渲染三者叠加时的时序竞态（B6/B8）；② JS 里如何把 `g` 映射到段容器很可能悄悄长出一份跟 SEGMENT_ORDER 重复的硬编码（B2），且没有 fixture 会报警；③ 四件对账函数本身的正确性（比如逐段计数比较写反、或 head 序列比较用了浅比较导致永远判定相同）——F24 复用的正是这同一份对账代码，本身有 bug 时会跟生产环境一起『自我印证』为 ok，这条纯属结构性限制，不算某一处代码错，而是『没有独立于 JS 自身的第二套 oracle』这件事本身的局限，值得在 Engineer 完成后额外做一次『故意改错某个计数、看红条是否真的出现』的手工回归。",
+      "evidence": "无实测（这是对工程量与交付风险的判断性提醒，rubric 第 8 条本身注明『给Engineer的提醒，不算must_fix』），综合 B1-B9 的分析。",
+      "suggested_fix": "建议 Engineer 完成后，在真正验收前先跑一次『故意破坏』回归：手动把某个 cap2 数字改错 1、把 `x` 位取反几个、把 head 坐标顺序打乱，确认红条真的会出现——这是唯一能验证『对账机制本身没写反』的办法，成本很低但设计和验收清单里都没有把它列为必须步骤。"
+    }
+  ],
+  "reproduced": [
+    "[T5] file:// 能力表：独立重跑 _pm_05_fileproto.py（未改动），Chrome 151.0.7922.172 输出与设计一致：static_script=ok, stylesheet=rgb(1,2,3), localStorage=v（可用）, fetch=REJECT:TypeError, xhr=THROW:NetworkError, dyn_script=ok:onload+data, multi_chunk=1,2,3（3块全部到达）, module=BLOCKED, origin=file://（不是 null）。Edge 无头同样产出 0 字节的 DOM，与设计 §3 S7/§8 已披露的限制一致——独立确认，非新发现。",
+    "DB.OPEN_CAP 兼容性声明：grep tests/test_lane.py 确认第 141/143/175 行直接 import 并使用 `dashboard.OPEN_CAP`（如 `sum(min(cap2[s], DB.OPEN_CAP.get(s, cap2[s])) for s in (...))`），与设计 §4.9『dashboard.py 里 OPEN_CAP = view.SEG_OPEN_CAP，保留这个名字给 tests/test_lane.py』的兼容性承诺相符，未发现矛盾。",
+    "F9 系列测试与 build()/build_bundle() 兼容壳的一致性：读 tests/test_lane.py 448-478 行，现有测试对 page 断言 `startswith('<!doctype html>')`、包含『家未分层』、`stats['raw']/['total']` 等键——与设计 §5 fixture 推广表『F9 改成 files=DASH.build_bundle(...)[0]; page=files[\"latest.html\"]，三键断言逐字保留』的计划吻合；但 `test_dashboard_has_no_external_dependency`（467-478 行）现状断言 `<script` 不出现在 page 里，这条在 v2 下字面上必然失败（latest.html 必然含 `<script src=...>`），设计已明确知道并计划把该测试方法体换成 `assert_offline(files)`（§5 末段），核对无矛盾。",
+    "SEGMENT_ORDER / sort_key / WINDOW_DAYS：grep company_lane.py 确认 `S5_MIN, WINDOW_DAYS = 5, 7`、`SEGMENT_ORDER = [s[0] for s in SEGMENTS]`、`sort_key` 返回 `(0 if c in self.prio else 1, -v['prom'], -v['tier'], -self.window_count(c), name)`——与设计 §4.6 指出的『req2 正文把 tier/prom 顺序写反，代码实际是 prom 优先』一致，且与 §5.4 的 w7=7 常量一致。",
+    "首屏日复一日重复内容：不是设计里已经给出的数字，是我用真实数据独立复现的新发现（见 B1 evidence），design_v1.md 通篇没有测过这个角度（PM 的 10 个探查脚本关注的是计数/边界/性能/编码，没有一个测『同一批内容连续几天出现』）。"
+  ],
+  "summary": "架构方向（判定留 Python、取景交 JS、check 四件对账、按日分块）站得住脚且证据扎实，但『真实使用』视角下有两处经实测确认的硬伤——默认 N=3 下首屏 89% 内容与前一天重复、连续三天有 15 条完全相同的岗位（有违『挑岗位投递』的初衷），以及 R3 锚点跳转在『re-click 同一 hash』时因浏览器不重发 hashchange 而彻底失效——另外还有多处经文本核验但未及实测的覆盖缺口（段 key 顺序可能在 JS 里长出硬编码副本且 F23 抓不到、折叠段内部的行 identity/顺序没有任何一层测试保护、『●新』和⑦段/筛选开关这两块新行为完全没有 fixture 覆盖），建议在批准前补齐这两个 must_fix 并认真评估其余 nice_to_have。"
+}

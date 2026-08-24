@@ -1,0 +1,78 @@
+{
+  "verdict": "pass",
+  "defect_type": null,
+  "details": "All 11 QA steps executed in real environment. 58 unit tests pass (skipped 2 LLM tests). Offline bundle generation succeeds with UTF-8 and without UTF-8 (with degraded character display). Daily report batch succeeds with proper water line management. Chrome headless confirms 15 selfcheck cells (3 views × 5 N) all OK. Offline capability verified: no fetch/XMLHttpRequest/type=module in JS. Corruption detection functional (all 4 corruption types trigger red banner). Degradation scenarios tested (missing profile, empty profile). N-switching verified through test coverage (F24 covers all 5 N choices). First screen rows consistently [30,47]. No corpus-dependent hardcoded values found in tests - point values are either synthetic (local tests), constants (BATCH=20), or fixed cache snapshots (680 seed entries).",
+  "steps": [
+    {
+      "id": 1,
+      "ran": true,
+      "result": "pass",
+      "output": "Ran 58 tests in 5.633s\nOK (skipped=2)\n[F1/F2 skip: needs live LLM enrichment; set JOB_TEST_LLM=1]\nAll core tests including F10-F29, fixture tests for window views, N-choices, browser validation, corruption detection, all passed."
+    },
+    {
+      "id": 2,
+      "ran": true,
+      "result": "pass",
+      "output": "git diff --stat daily_report.py company_lane.py:\n(empty - no changes)\nFull git diff --stat shows changes only in: SCHEDULING.md, ats_registry.json, dashboard.py, docs/multiagent_design_build_loop.md, tests/test_lane.py"
+    },
+    {
+      "id": 3,
+      "ran": true,
+      "result": "pass",
+      "output": "cmd /c \"set PYTHONIOENCODING=& dashboard.py --date 2026-08-20 --no-watermark --out scratchpad/qa_out\"\nExit code: 0\nNo Traceback\nOutput files created: latest.html, dashboard.css, dashboard.js, data-index.js, data-2026-08-19.js, data-2026-08-20.js\nNote: Segment names display as ? due to cp1252 encoding, but bundle generated successfully."
+    },
+    {
+      "id": 4,
+      "ran": true,
+      "result": "pass",
+      "output": "cmd.exe /c run_daily_report.bat (with JOB_UNATTENDED=1)\nExit code: 0\nNo Traceback in stdout/stderr\nFiles updated with mtime 2026/8/21 4:31:11:\n- latest.html, dashboard.css, dashboard.js\n- data-2026-08-19.js, data-2026-08-20.js, data-2026-08-21.js\n- data-index.js\nWater line restored from backup after test."
+    },
+    {
+      "id": 5,
+      "ran": true,
+      "result": "pass",
+      "output": "test_F24_headless_browser_reports_all_cells_ok: PASS\nChrome headless confirmed 15 cells (all/new/wm × 1/3/7/14/30 days) all report ok:true\nSelfcheck output format validated with JSON parsing."
+    },
+    {
+      "id": 6,
+      "ran": true,
+      "result": "pass",
+      "output": "grep -E 'http|://' logs/dashboard/*.html logs/dashboard/*.js web/*.html web/*.js\nOnly allowed patterns found:\n- Comments mentioning file://\n- Job links (linkedin.com, ashbyhq.com)\nNo matches for: type=\"module\", fetch(, XMLHttpRequest\nOffline capability: VERIFIED"
+    },
+    {
+      "id": 7,
+      "ran": true,
+      "result": "pass",
+      "output": "test_F24_a_broken_check_really_does_light_the_banner: PASS\n(a) check[all][3].cap2 incremented by 1 → red banner appeared\n(b) 22 x bits flipped → cap2 counts, trend, dedup count, first screen, hsum all showed mismatches\n(c) head array elements swapped → first screen sequence mismatch detected\n(d) segment 5 middle rows swapped (avoiding first/mid/last anchors) → hsum detected, anchors did not\nAll 4 corruption types successfully triggered error banners."
+    },
+    {
+      "id": 8,
+      "ran": true,
+      "result": "pass",
+      "output": "test_F9_dashboard_renders_with_no_profile_table_at_all: PASS\ntest_F9_degraded_payload_functions_never_raise: PASS\nDegradation scenarios tested:\n- JOB_PROFILE_PATH pointing to non-existent file → no crash, ⑥ segment shows raw 0\n- JOB_PROFILE_PATH pointing to empty {} file → no crash, ⑥ segment shows raw 0\n- First screen falls in [min(30, openable), 47] = [16, 47] when degraded\n- No exceptions thrown in view.build_payload or view.window_view"
+    },
+    {
+      "id": 9,
+      "ran": true,
+      "result": "pass",
+      "output": "N-switching coverage verified through test_F24_headless_browser_reports_all_cells_ok\nAll 5 N choices (1/3/7/14/30) load and validate without errors.\nSelfcheck confirms each N choice loads correct data and passes reconciliation.\nDynamic script injection mechanism tested via F24 which runs all 5 N variants.\nNo manual browser testing of page reload behavior performed (headless limitations), but data layer verified complete."
+    },
+    {
+      "id": 10,
+      "ran": true,
+      "result": "pass",
+      "output": "First screen row counts verified:\n- 2026-08-20 N=1: 30 rows\n- 2026-08-20 N≥3: 46 rows\n- 2026-08-21 N=1: 11 rows (openable=11 < FLOOR)\n- 2026-08-21 N≥3: 47 rows\nAll fall within [min(30, openable), 47] range.\nBundle test output: 'first screen (1 + 4 + 2 filler): 47   [30, 47]' confirmed."
+    },
+    {
+      "id": 11,
+      "ran": true,
+      "result": "pass",
+      "output": "Point value analysis of tests/test_lane.py:\n1. Line 273: Comment explaining why NOT to use == 931 (corpus grows) - OK\n2. Line 442: R.window_count(c) == 40 (synthetic 40 rows, local test) - OK\n3. Line 495: Comment explaining why NOT to use == 680 (corpus grows) - OK\n4. Line 498: len(seed) == 680 (SEED_CACHE is fixed repo file, not corpus-dependent) - OK\n5. Line 668: EC.BATCH == 20 (constant in enrich_companies.py) - OK\n6. Line 676: len(chunk) == 20 (synthetic test with 20 entries) - OK\n7. Line 677: len(merged) == 25 (structural: 20+5 anchors=25, not corpus-dependent) - OK\nConclusion: All point values are either synthetic tests, constants, or fixed snapshots. None will go stale."
+    }
+  ],
+  "left_for_human": [
+    "Step 9 manual verification: Actual browser N-switching with展开状态/scroll position preservation - requires human double-click and manual interaction on Edge (headless Edge produces 0-byte dump-dom output, so Chrome headless was used instead)",
+    "Step 5.1 Edge double-click test: Page displays no red banner, all N choices work, hero/trend/stack/legend panels don't change with view filter, ● 新 marks are present and correct",
+    "Step 5.2 Visual confirmation: ③ segment can be expanded/collapsed, scrolling position preserved across N switches,堆叠条 links work and auto-expand corresponding segment"
+  ]
+}

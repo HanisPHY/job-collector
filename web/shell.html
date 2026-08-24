@@ -1,0 +1,45 @@
+<!doctype html><html lang="zh"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>岗位 Dashboard <!--SLOT:DAY--></title>
+<link rel="stylesheet" href="dashboard.css">
+</head><body>
+<div class="wrap">
+
+<div id="recon" class="recon" hidden></div>
+
+<h1>岗位 Dashboard · <!--SLOT:DAY--></h1>
+<p class="sub"><!--SLOT:SUB--></p>
+
+<!--SLOT:CONTROLS-->
+
+<div id="ch-hero" class="hero"><!--SLOT:HERO--></div>
+
+<!--SLOT:BANNER-->
+
+<h2>窗口趋势 / 构成 <span class="qual">（全部窗口，不随「显示」开关变）</span></h2>
+<div class="panel">
+  <div id="ch-trend"><!--SLOT:TREND--></div>
+  <div id="ch-stack"><!--SLOT:STACK--></div>
+  <div id="ch-legend" class="legend"><!--SLOT:LEGEND--></div>
+  <p id="ch-note" class="sub"><!--SLOT:NOTE--></p>
+</div>
+
+<h2>分段 <span class="qual">（raw = 窗口内去重后的行，cap2 = 每家公司每段在整个窗口内最多先看 2 条）</span></h2>
+<!--SLOT:SEGMENTS-->
+
+<h2>面板 ②′ 中介 / 刷屏占比 <span class="qual">（全部窗口）</span></h2>
+<div id="ch-p2" class="panel"><!--SLOT:PANEL2--></div>
+
+<h2>面板 ③ 转贴证据 <span class="qual">（全部窗口，<b>不参与判定</b>）</span></h2>
+<div id="ch-p3" class="panel"><!--SLOT:PANEL3--></div>
+
+<pre id="selfcheck" hidden></pre>
+
+<!--SLOT:FOOTER-->
+</div>
+
+<script src="data-index.js"></script>
+<!--SLOT:SCRIPTS-->
+<script src="dashboard.js"></script>
+</body></html>

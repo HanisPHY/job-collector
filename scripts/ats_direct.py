@@ -28,11 +28,15 @@ import os
 import paths
 import run_log
 
-sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
-from ats_direct.registry import Registry
-from ats_direct.collector import collect
-from ats_direct.rate_limiter import make_default_limiter
-from ats_direct.seed_companies import PRE_RESOLVED, PROBE_NAMES
+_this_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.remove(_this_dir)
+try:
+    from ats_direct.registry import Registry
+    from ats_direct.collector import collect
+    from ats_direct.rate_limiter import make_default_limiter
+    from ats_direct.seed_companies import PRE_RESOLVED, PROBE_NAMES
+finally:
+    sys.path.insert(0, _this_dir)
 
 
 def seed_and_probe(registry_path: str, probe: bool):

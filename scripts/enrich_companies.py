@@ -46,8 +46,16 @@ import paths
 import company_lane as CL          # noqa: E402
 import run_log                     # noqa: E402
 
+# HERE was already inserted once above (for company_lane/run_log) on top of
+# Python's own automatic sys.path[0] for a direct `python enrich_companies.py`
+# invocation, so it can appear twice here - strip every occurrence, not just
+# the first, or the second copy still shadows the ats_direct/job_collector
+# packages during the import below.
 sys.path = [p for p in sys.path if p != HERE]
-from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
+try:
+    from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
+finally:
+    sys.path.insert(0, HERE)
 
 SCRIPT = "run_enrich_companies"
 STAGE1_MODEL = "gpt-4o-mini"

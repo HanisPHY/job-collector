@@ -29,12 +29,16 @@ from datetime import datetime
 
 import paths
 
-sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
-from job_collector.classifiers.title_relevance import (
-    OpenAIChatClient,
-    TitleAdjudicator,
-    TitleFilter,
-)
+_this_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.remove(_this_dir)
+try:
+    from job_collector.classifiers.title_relevance import (
+        OpenAIChatClient,
+        TitleAdjudicator,
+        TitleFilter,
+    )
+finally:
+    sys.path.insert(0, _this_dir)
 
 DEFAULT_CSV = str(paths.DATA_DIR / "newgrad_classifications.csv")
 

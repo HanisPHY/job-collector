@@ -31,8 +31,12 @@ import os
 import paths
 import run_log
 
-sys.path = [p for p in sys.path if p != os.path.dirname(os.path.abspath(__file__))]
-from ddg_search.collector import collect
+_this_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.remove(_this_dir)
+try:
+    from ddg_search.collector import collect
+finally:
+    sys.path.insert(0, _this_dir)
 
 
 def main():

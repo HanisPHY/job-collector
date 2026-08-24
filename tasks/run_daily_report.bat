@@ -1,25 +1,31 @@
 @echo off
-REM DDG X-ray discovery collector - for Windows Task Scheduler
-REM Suggested schedule: 2-3 times per DAY maximum (NOT hourly).
-REM DDG rate-challenges aggressively; see ddg_search/RATE_LIMITS.md.
-REM Yield is intermittent by design - its main job is discovering new
-REM company boards and feeding them into ats_registry.json.
+REM Daily report over the collector runs.
+REM
+REM Schedule this once a day (e.g. 08:00) via run_logged.bat:
+REM   Program:   run_logged.bat
+REM   Arguments: run_daily_report
+REM See SCHEDULING.md.
 
-cd /d "%~dp0"
-
-echo [%TIME%] Starting DDG collector...
-echo.
-
+cd /d "%~dp0.."
 
 REM Resolve the interpreter without `conda activate` - see resolve_python.bat
 REM for why (concurrent tasks race on conda's %TEMP% file).
 call "%~dp0resolve_python.bat"
 if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
-"%JOB_PYTHON%" -u ddg_search.py --queries 5 --update-registry --output ddg_jobs.csv
+"%JOB_PYTHON%" -u scripts\daily_report.py
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%
+)
+
+REM The HTML dashboard runs unconditionally, NOT chained behind the markdown report:
+REM they read the same CSVs but nothing else is shared, and a failure in one must not
+REM take the other down. Keep this as its own statement, never `&&`.
+"%JOB_PYTHON%" -u scripts\dashboard.py
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Dashboard error. Exit code: %ERRORLEVEL%
 )
 
 REM Hold the window open when double-clicked from Explorer.

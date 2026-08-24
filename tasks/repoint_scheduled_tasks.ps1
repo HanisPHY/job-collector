@@ -16,7 +16,7 @@
 
 .EXAMPLE
     Right-click PowerShell -> Run as administrator, then:
-        cd "D:\OneDrive\work\school\project\Job"
+        cd "D:\Dev\job-collector\tasks"
         .\repoint_scheduled_tasks.ps1
 
 .EXAMPLE
@@ -29,8 +29,9 @@ param()
 $ErrorActionPreference = 'Stop'
 
 $dir     = Split-Path -Parent $MyInvocation.MyCommand.Path
+$root    = Split-Path -Parent $dir
 $wrapper = Join-Path $dir 'run_logged.bat'
-$backup  = Join-Path $dir 'logs\_task_backup'
+$backup  = Join-Path $root 'logs\_task_backup'
 
 # Task name -> the run_logged.bat argument it should be launched with.
 # "Job collector" is deliberately absent: it is disabled and deprecated.

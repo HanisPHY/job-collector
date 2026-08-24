@@ -3,7 +3,7 @@ REM ATS-direct NG SDE collector - for Windows Task Scheduler
 REM Suggested schedule: every 6-12 hours (ATS boards change slowly;
 REM hourly polling would waste requests without finding new jobs)
 
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 echo [%TIME%] Starting ATS collector...
 echo Registry has ~225 companies; --cleanup re-validates each at ~1 req/s,
@@ -18,7 +18,7 @@ if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
 REM Weekly maintenance flags (cheap to run every time; cleanup re-validates
 REM boards ~1 req/company, expand is 2 GitHub fetches + probes for new boards)
-"%JOB_PYTHON%" -u ats_direct.py --cleanup --expand --output ats_jobs.csv
+"%JOB_PYTHON%" -u scripts\ats_direct.py --cleanup --expand --output data\ats_jobs.csv
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%

@@ -33,7 +33,7 @@
 
 .EXAMPLE
     # PowerShell, Run as administrator
-    cd "D:\OneDrive\work\school\project\Job"
+    cd "D:\Dev\job-collector\tasks"
     .\retime_ddg12.ps1 -WhatIf      # preview
     .\retime_ddg12.ps1              # do it
 #>
@@ -53,7 +53,8 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 $dir     = Split-Path -Parent $MyInvocation.MyCommand.Path
-$backups = Join-Path $dir 'logs\_task_backup'
+$root    = Split-Path -Parent $dir
+$backups = Join-Path $root 'logs\_task_backup'
 if (-not (Test-Path $backups)) { New-Item -ItemType Directory -Path $backups | Out-Null }
 
 $task = Get-ScheduledTask -TaskName $TaskName

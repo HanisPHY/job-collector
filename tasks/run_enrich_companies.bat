@@ -15,14 +15,14 @@ REM Monthly manual catch-up (gpt-4o, ~$0.17, recovers intermediary labels that
 REM gpt-4o-mini misses) - NOT part of this scheduled run:
 REM     python -u enrich_companies.py --deep
 
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 REM Resolve the interpreter without `conda activate` - see resolve_python.bat
 REM for why (concurrent tasks race on conda's %TEMP% file).
 call "%~dp0resolve_python.bat"
 if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
-"%JOB_PYTHON%" -u enrich_companies.py
+"%JOB_PYTHON%" -u scripts\enrich_companies.py
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error occurred. Exit code: %ERRORLEVEL%

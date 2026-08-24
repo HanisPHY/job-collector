@@ -9,7 +9,7 @@ REM the argument - see SCHEDULING.md. The collector scripts themselves stay
 REM unchanged; everything they print lands in logs\<script_name>\<ts>.log and
 REM a run_start/run_end pair lands in logs\runs.jsonl for daily_report.py.
 
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 if "%~1"=="" (
     echo Usage: run_logged.bat ^<script_name^>

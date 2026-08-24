@@ -14,7 +14,7 @@
     repoint_scheduled_tasks.ps1, which modifies tasks somebody else registered.
 
 .EXAMPLE
-    cd "D:\OneDrive\work\school\project\Job"
+    cd "D:\Dev\job-collector\tasks"
     .\register_enrich_task.ps1
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -24,11 +24,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$dir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$dir  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$root = Split-Path -Parent $dir
 
 $action    = New-ScheduledTaskAction -Execute (Join-Path $dir 'run_logged.bat') `
                                      -Argument 'run_enrich_companies' `
-                                     -WorkingDirectory $dir
+                                     -WorkingDirectory $root
 $trigger   = New-ScheduledTaskTrigger -Daily -At $At
 $settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable `
                                           -DontStopIfGoingOnBatteries `

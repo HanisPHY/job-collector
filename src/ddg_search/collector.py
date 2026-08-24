@@ -16,6 +16,7 @@ import json
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import paths
 from job_collector.utils import generate_job_id
 from job_collector.database.company_db import CompanyDatabase
 from ats_direct.ng_filter import classify_title
@@ -46,7 +47,7 @@ QUERY_SET = [
     'site:jobs.ashbyhq.com "software engineer" 2027',
 ]
 
-STATE_FILE = "ddg_state.json"
+STATE_FILE = str(paths.STATE_DIR / "ddg_state.json")
 
 
 def _load_state(path):
@@ -83,7 +84,7 @@ def _atomic_write(rows, output_file):
     os.replace(tmp, output_file)
 
 
-def collect(output_file: str = "ddg_jobs.csv",
+def collect(output_file: str = str(paths.DATA_DIR / "ddg_jobs.csv"),
             queries_per_run: int = 5,
             strict: bool = True,
             update_registry: bool = False,

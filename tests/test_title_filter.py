@@ -30,16 +30,18 @@ import sys
 import tempfile
 import unittest
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
-
-from ats_direct.ng_filter import DROP, GRAY, KEEP, title_verdict   # noqa: E402
-from job_collector.classifiers.title_relevance import (   # noqa: E402
+from ats_direct.ng_filter import DROP, GRAY, KEEP, title_verdict
+from job_collector.classifiers.title_relevance import (
     OpenAIChatClient,
     TitleAdjudicator,
     TitleFilter,
 )
-from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
+from job_collector.tracking.cost_tracker import LLMCostTracker
+
+import paths
+
+sys.path.insert(0, str(paths.ROOT / "scripts"))
+
 from backfill_titles import backfill_csv   # noqa: E402
 
 

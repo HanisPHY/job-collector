@@ -27,23 +27,30 @@ import tempfile
 import unittest
 from datetime import datetime, timedelta
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
+import paths
+
+# job_collector must be imported (pulling in the installed ats_direct package)
+# before scripts/ is put on sys.path below - scripts/ats_direct.py is an
+# unrelated CLI script that shares its module name with the installed
+# ats_direct package, and would shadow it for this process if scripts/ were
+# searched first.
+from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
+
+sys.path.insert(0, str(paths.ROOT / "scripts"))
 
 import company_lane as CL           # noqa: E402
 import dashboard as DASH            # noqa: E402
 import view as VIEW                 # noqa: E402
-from job_collector.tracking.cost_tracker import LLMCostTracker   # noqa: E402
 
 HARVEST_DAY = "2026-08-19"          # ats_direct first-day full harvest
 STEADY_DAY = "2026-08-20"           # ordinary day
 
-_ROWS = CL.load_rows(ROOT)
+_ROWS = CL.load_rows(paths.DATA_DIR)
 _PROFILES = CL.load_profiles()
 _OVERRIDES = CL.load_overrides()
 _PRIORITY = CL.load_priority()
 
-SEED_CACHE = os.path.join(ROOT, "dashboard_loop", "company_profiles.round2.json")
+SEED_CACHE = os.path.join(paths.ROOT, "dashboard_loop", "company_profiles.round2.json")
 
 ANCHOR_DAY = max(r["_day"] for r in _ROWS)   # what a real run generates for
 
@@ -514,7 +521,7 @@ class F3F15F16F17Wiring(unittest.TestCase):
     def test_F16_dashboard_runs_even_if_daily_report_fails(self):
         """run_daily_report.bat must invoke dashboard.py as its own statement: no &&,
         and no `exit /b` between the two, so a non-zero daily_report cannot skip it."""
-        bat = io.open(os.path.join(ROOT, "run_daily_report.bat"), encoding="utf-8").read()
+        bat = io.open(os.path.join(paths.ROOT, "run_daily_report.bat"), encoding="utf-8").read()
         # Match on the script, not the interpreter: the collectors stopped saying
         # `python` when they dropped `conda activate` for "%JOB_PYTHON%".
         def invocation(script):
@@ -530,7 +537,7 @@ class F3F15F16F17Wiring(unittest.TestCase):
         self.assertNotIn("exit /b", between.lower())
 
     def test_F16_dashboard_does_not_import_daily_report(self):
-        src = io.open(os.path.join(ROOT, "dashboard.py"), encoding="utf-8").read()
+        src = io.open(os.path.join(paths.ROOT, "dashboard.py"), encoding="utf-8").read()
         self.assertNotIn("import daily_report", src)
 
     def test_F17_daily_report_output_is_byte_identical(self):
@@ -557,7 +564,7 @@ class F3F15F16F17Wiring(unittest.TestCase):
             JOB_LOG_ROOT=<tmp> python -u daily_report.py --date 2026-08-19 --no-prune
             cp <tmp>/daily/2026-08-19.md tests/fixtures/daily_report-2026-08-19.md
         """
-        fixture = os.path.join(ROOT, "tests", "fixtures",
+        fixture = os.path.join(paths.ROOT, "tests", "fixtures",
                                "daily_report-%s.md" % HARVEST_DAY)
         if not os.path.exists(fixture):
             self.skipTest("no fixture for %s" % HARVEST_DAY)
@@ -568,7 +575,7 @@ class F3F15F16F17Wiring(unittest.TestCase):
         env = dict(os.environ, PYTHONIOENCODING="utf-8", JOB_LOG_ROOT=tmp_log_root)
         p = subprocess.run([sys.executable, "-u", "daily_report.py",
                             "--date", HARVEST_DAY, "--no-prune"],
-                           cwd=ROOT, env=env, stdout=subprocess.PIPE,
+                           cwd=paths.ROOT, env=env, stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
         self.assertEqual(p.returncode, 0, p.stdout.decode("utf-8", "replace"))
 
@@ -583,7 +590,7 @@ class F3F15F16F17Wiring(unittest.TestCase):
         """The guard above must never write into logs/daily/. Regression test for the
         old in-place-regenerate-and-restore approach, which lost the archive whenever
         a test run was killed between the two steps."""
-        archived = os.path.join(ROOT, "logs", "daily", "%s.md" % HARVEST_DAY)
+        archived = os.path.join(paths.ROOT, "logs", "daily", "%s.md" % HARVEST_DAY)
         if not os.path.exists(archived):
             self.skipTest("no archived report for %s" % HARVEST_DAY)
         before = io.open(archived, "rb").read()
@@ -778,7 +785,7 @@ class F1F2Enrichment(unittest.TestCase):
         import queue as stdlib_queue
         self.assertTrue(hasattr(stdlib_queue, "SimpleQueue"))
         for name in ("queue.py", "json.py", "types.py", "csv.py", "html.py", "logging.py"):
-            self.assertFalse(os.path.exists(os.path.join(ROOT, name)),
+            self.assertFalse(os.path.exists(os.path.join(paths.ROOT, name)),
                              "%s in the repo root shadows the stdlib" % name)
 
 
@@ -1000,7 +1007,7 @@ class F23DivisionOfLabour(unittest.TestCase):
              "new grad", "entry level", "tnorm", "1a_t3", "1a_t2"]
 
     def _source(self):
-        with io.open(os.path.join(ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
+        with io.open(os.path.join(paths.ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
             src = fh.read()
         return re.sub(r"/\*.*?\*/", " ", src, flags=re.S)
 
@@ -1154,7 +1161,7 @@ class F29Checksum(unittest.TestCase):
         exe = find_chromium()
         if not exe:
             self.skipTest("no Chromium on this machine")
-        with io.open(os.path.join(ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
+        with io.open(os.path.join(paths.ROOT, "web", "dashboard.js"), encoding="utf-8") as fh:
             src = fh.read()
         m_mix = re.search(r"function mix\(h, v\) \{[^}]*\}", src)
         m_seq = re.search(r"function seqHash\(pairs\) \{.*?\n  \}", src, re.S)

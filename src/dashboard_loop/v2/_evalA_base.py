@@ -10,13 +10,13 @@ Run with:
     export PYTHONIOENCODING=utf-8
     D:/Apps/Miniconda/envs/job-classifier/python.exe dashboard_loop/v2/_evalA_XX.py
 """
-import os
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, ROOT)
+import paths
+
+sys.path.insert(0, str(paths.ROOT / "scripts"))
 
 import company_lane as CL      # noqa: E402
 import dashboard as DB         # noqa: E402
@@ -49,7 +49,7 @@ def open_plan(cap2):
 
 
 def load():
-    rows = CL.load_rows(ROOT)
+    rows = CL.load_rows(str(paths.ROOT))
     return rows, CL.load_profiles(), CL.load_overrides(), CL.load_priority()
 
 

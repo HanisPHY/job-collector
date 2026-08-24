@@ -8,12 +8,12 @@ Run everything with:
 Nothing here writes to the repo. It only imports the shipped decision layer
 (company_lane) and the shipped render layer (dashboard) read-only.
 """
-import os
 import sys
 from datetime import datetime, timedelta
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, ROOT)
+import paths
+
+sys.path.insert(0, str(paths.ROOT / "scripts"))
 
 import company_lane as CL      # noqa: E402
 import dashboard as DB         # noqa: E402
@@ -22,7 +22,7 @@ N_CHOICES = [1, 3, 7, 14, 30]
 
 
 def load():
-    rows = CL.load_rows(ROOT)
+    rows = CL.load_rows(str(paths.ROOT))
     return (rows, CL.load_profiles(), CL.load_overrides(), CL.load_priority())
 
 

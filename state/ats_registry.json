@@ -788,13 +788,6 @@
       "added": "2026-08-19"
     },
     {
-      "name": "Mach Industries",
-      "platform": "ashby",
-      "slug": "mach",
-      "source": "github",
-      "added": "2026-08-19"
-    },
-    {
       "name": "United Placement Group",
       "platform": "workable",
       "slug": "unitedplacementgroup",
@@ -882,13 +875,6 @@
       "name": "Agate Software",
       "platform": "lever",
       "slug": "agatesoftware",
-      "source": "github",
-      "added": "2026-08-19"
-    },
-    {
-      "name": "Idea Entity",
-      "platform": "workable",
-      "slug": "idea-entity",
       "source": "github",
       "added": "2026-08-19"
     },
@@ -1127,13 +1113,6 @@
       "name": "OptiTrack",
       "platform": "workable",
       "slug": "optitrack",
-      "source": "github",
-      "added": "2026-08-19"
-    },
-    {
-      "name": "ThreatLocker",
-      "platform": "greenhouse",
-      "slug": "threatlocker",
       "source": "github",
       "added": "2026-08-19"
     },
@@ -1717,6 +1696,377 @@
       "slug": "hipp",
       "source": "ddg",
       "added": "2026-08-22"
+    },
+    {
+      "name": "Power Digital",
+      "platform": "greenhouse",
+      "slug": "powerdigitalmarketing",
+      "source": "github",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "PlayStation",
+      "platform": "greenhouse",
+      "slug": "sonyinteractiveentertainmentglobal",
+      "source": "github",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "SteerBridge",
+      "platform": "lever",
+      "slug": "steerbridge",
+      "source": "github",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "Geneva Trading",
+      "platform": "greenhouse",
+      "slug": "genevatrading",
+      "source": "github",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "Shopback 2",
+      "platform": "lever",
+      "slug": "shopback-2",
+      "source": "ddg",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "Kikoff",
+      "platform": "greenhouse",
+      "slug": "kikoff",
+      "source": "ddg",
+      "added": "2026-08-25"
+    },
+    {
+      "name": "Addepar",
+      "platform": "greenhouse",
+      "slug": "addepar1",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Alarm.com",
+      "platform": "greenhouse",
+      "slug": "alarmcom",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Archer",
+      "platform": "greenhouse",
+      "slug": "archer56",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Maximor AI",
+      "platform": "ashby",
+      "slug": "maximor",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Metron",
+      "platform": "greenhouse",
+      "slug": "metron",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Murray Company Mechanical Contractors",
+      "platform": "workable",
+      "slug": "murray-company",
+      "source": "github",
+      "added": "2026-08-26"
+    },
+    {
+      "name": "Quadric Dot I O Inc",
+      "platform": "workable",
+      "slug": "quadric-dot-i-o-inc",
+      "source": "ddg",
+      "added": "2026-08-27"
+    },
+    {
+      "name": "Cssmerge",
+      "platform": "greenhouse",
+      "slug": "cssmerge",
+      "source": "ddg",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Energy Solutions",
+      "platform": "greenhouse",
+      "slug": "energysolutions",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Anatomage",
+      "platform": "workable",
+      "slug": "anatomage",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Inductive Automation",
+      "platform": "ashby",
+      "slug": "inductive-automation-llc",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Ontic",
+      "platform": "ashby",
+      "slug": "ontic",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Allegiant",
+      "platform": "lever",
+      "slug": "allegiantair",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Delta Solutions & Strategies",
+      "platform": "lever",
+      "slug": "deltasands",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "TeleTracking Technologies",
+      "platform": "greenhouse",
+      "slug": "teletrackingtechnologiesinc",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Relay",
+      "platform": "greenhouse",
+      "slug": "relaypro",
+      "source": "github",
+      "added": "2026-08-28"
+    },
+    {
+      "name": "Shieldai",
+      "platform": "lever",
+      "slug": "shieldai",
+      "source": "ddg",
+      "added": "2026-08-29"
+    },
+    {
+      "name": "Trace3",
+      "platform": "greenhouse",
+      "slug": "trace3",
+      "source": "github",
+      "added": "2026-08-30"
+    },
+    {
+      "name": "Zynga",
+      "platform": "greenhouse",
+      "slug": "zyngacareers",
+      "source": "github",
+      "added": "2026-08-30"
+    },
+    {
+      "name": "HP IQ",
+      "platform": "greenhouse",
+      "slug": "hpiq",
+      "source": "github",
+      "added": "2026-08-30"
+    },
+    {
+      "name": "Glide",
+      "platform": "ashby",
+      "slug": "glide",
+      "source": "ddg",
+      "added": "2026-08-30"
+    },
+    {
+      "name": "Highlightai",
+      "platform": "ashby",
+      "slug": "highlightai",
+      "source": "ddg",
+      "added": "2026-08-30"
+    },
+    {
+      "name": "Credence",
+      "platform": "workable",
+      "slug": "credence",
+      "source": "github",
+      "added": "2026-08-31"
+    },
+    {
+      "name": "Agave",
+      "platform": "ashby",
+      "slug": "agave",
+      "source": "ddg",
+      "added": "2026-08-31"
+    },
+    {
+      "name": "Mach Industries",
+      "platform": "greenhouse",
+      "slug": "machindustries",
+      "source": "probe",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "Avalore",
+      "platform": "workable",
+      "slug": "avalore",
+      "source": "github",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "Everlaw",
+      "platform": "greenhouse",
+      "slug": "everlaw",
+      "source": "github",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "City of Philadelphia",
+      "platform": "smartrecruiters",
+      "slug": "cityofphiladelphia",
+      "source": "github",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "Wealth.com",
+      "platform": "ashby",
+      "slug": "wealth-com",
+      "source": "github",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "ICONIQ Capital",
+      "platform": "greenhouse",
+      "slug": "icapitalnetwork",
+      "source": "github",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "Glsllc",
+      "platform": "lever",
+      "slug": "glsllc",
+      "source": "ddg",
+      "added": "2026-09-01"
+    },
+    {
+      "name": "Self Financial",
+      "platform": "greenhouse",
+      "slug": "selffinancial",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Kobie",
+      "platform": "lever",
+      "slug": "kobie",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Trulioo",
+      "platform": "ashby",
+      "slug": "trulioo",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Diversified Services Network",
+      "platform": "workable",
+      "slug": "dsn",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "PagerDuty",
+      "platform": "greenhouse",
+      "slug": "pagerduty",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Re:Build Manufacturing",
+      "platform": "greenhouse",
+      "slug": "rebuildmanufacturing",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Garner Health",
+      "platform": "greenhouse",
+      "slug": "garnerhealth",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Vestwell",
+      "platform": "greenhouse",
+      "slug": "vestwell",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "Yext",
+      "platform": "greenhouse",
+      "slug": "yext",
+      "source": "github",
+      "added": "2026-09-05"
+    },
+    {
+      "name": "AiPrise",
+      "platform": "ashby",
+      "slug": "aiprise",
+      "source": "github",
+      "added": "2026-09-06"
+    },
+    {
+      "name": "Singlestore",
+      "platform": "greenhouse",
+      "slug": "singlestore",
+      "source": "ddg",
+      "added": "2026-09-07"
+    },
+    {
+      "name": "Lodestar",
+      "platform": "greenhouse",
+      "slug": "lodestarspace",
+      "source": "github",
+      "added": "2026-09-08"
+    },
+    {
+      "name": "Altaml",
+      "platform": "lever",
+      "slug": "altaml",
+      "source": "ddg",
+      "added": "2026-09-09"
+    },
+    {
+      "name": "Kustomer",
+      "platform": "ashby",
+      "slug": "kustomer",
+      "source": "github",
+      "added": "2026-09-09"
+    },
+    {
+      "name": "National Journal",
+      "platform": "lever",
+      "slug": "nationaljournal",
+      "source": "github",
+      "added": "2026-09-09"
+    },
+    {
+      "name": "BIP Ventures",
+      "platform": "workable",
+      "slug": "bipventures",
+      "source": "github",
+      "added": "2026-09-09"
     }
   ],
   "failed_probes": {
@@ -1810,13 +2160,6 @@
       "smartrecruiters:retool": "2026-08-19",
       "workable:retool": "2026-08-19"
     },
-    "Whatnot": {
-      "greenhouse:whatnot": "2026-08-19",
-      "lever:whatnot": "2026-08-19",
-      "ashby:whatnot": "2026-08-19",
-      "smartrecruiters:whatnot": "2026-08-19",
-      "workable:whatnot": "2026-08-19"
-    },
     "Deel": {
       "greenhouse:deel": "2026-08-19",
       "lever:deel": "2026-08-19",
@@ -1874,7 +2217,33 @@
       "ashby:visa": "2026-08-21",
       "smartrecruiters:visa": "2026-08-21",
       "workable:visa": "2026-08-21"
+    },
+    "Idea Entity": {
+      "greenhouse:ideaentity": "2026-08-28",
+      "lever:ideaentity": "2026-08-28",
+      "ashby:ideaentity": "2026-08-28",
+      "smartrecruiters:ideaentity": "2026-08-28",
+      "workable:ideaentity": "2026-08-28",
+      "greenhouse:idea-entity": "2026-08-28",
+      "lever:idea-entity": "2026-08-28",
+      "ashby:idea-entity": "2026-08-28",
+      "smartrecruiters:idea-entity": "2026-08-28",
+      "workable:idea-entity": "2026-08-28"
+    },
+    "ThreatLocker": {
+      "greenhouse:threatlocker": "2026-08-31",
+      "lever:threatlocker": "2026-08-31",
+      "ashby:threatlocker": "2026-08-31",
+      "smartrecruiters:threatlocker": "2026-08-31",
+      "workable:threatlocker": "2026-08-31"
+    },
+    "Whatnot": {
+      "greenhouse:whatnot": "2026-09-09",
+      "lever:whatnot": "2026-09-09",
+      "ashby:whatnot": "2026-09-09",
+      "smartrecruiters:whatnot": "2026-09-09",
+      "workable:whatnot": "2026-09-09"
     }
   },
-  "last_updated": "2026-08-24T00:16:50.532449"
+  "last_updated": "2026-09-09T21:11:49.893245"
 }
